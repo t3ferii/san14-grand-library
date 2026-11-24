@@ -1,6 +1,6 @@
 # 원작 함수 지도 통합 (FUNC)
 
-> **이 문서에서 찾는 법**: 1 개요·표기 · 2 분류별 함수표(역할·입출력·엔진 위치·근거·확신도) · 3 호출 체인(날짜 상태기계 32 case, 월 이벤트, 교전 단계표, 칸 소유 호출자) · 4 충돌 · 5 정정 기록 · 6 미해결 · 7 자동 색인(미정리 함수) · 8 출처와 낡음 확인.
+> **이 문서에서 찾는 법**: 1 개요·표기 · 2 분류별 함수표(역할·입출력·엔진 위치·근거·확신도) · 3 호출 체인(날짜 상태기계 32 case, 월 이벤트, 교전 단계표, 칸 소유 호출자) · 4 충돌 · 5 정정 기록 · 6 미해결 · 7 자동 색인(미정리 함수) · 8 출처와 낡음 확인.  
 > **새 확정 사실은 이 문서의 해당 절에 추가한다.** 기계가 읽는 사본은 `functions.json`(새 RVA→역할·분류·입출력·엔진 위치·근거). 주소 변환은 `build_addresses.md`.
 
 작성 2026-11-07 (M1). 정리한 함수 218개(큐레이션) + 자동 색인 690개. 기준 빌드 `1a4a447d`(Steam buildid 25953386). **모든 RVA는 `새(옛)`로 적는다.**
@@ -63,8 +63,10 @@
 | `26AB00` (269150) | 하루 이동 점수(갱신당) | int(100 x 2B2550 / (100 + 2B7BC0)), 상한 1000. 부대 누산기 +0x14에 더하고 다음 칸 비용 이상이면 한 칸 이동 — 옛 269150 | 입력: 부대. 출력: 점수 | rules/battle.cpp:179, rules/battle.cpp:180, rules/battle.cpp:185 | worldmap_spec.md §4.2 | 확정 |
 | `26E260` (26C940) | 이동 명령 부대 경로 계산·이동량 상위 | 엔진 Map::path 역할 주석에 나오는 상위 함수(명령 처리 일부) — 옛 26C940 | - | ai/agent.cpp:14, rules/battle.cpp:155 | FIDELITY.md; agent.cpp:14 | 추정 |
 | `273AC0` (272190) | 부대 상시 옵션·목표 유효성(핵심) | 매 칸 부대마다: 행동(+0x37)·목표 유효성, 옵션 +0x26 bit2(사기<40/병력<1000/단절이면 퇴각 2EC570), +0x40==2(3칸 안 적 교전), 명령 종료 2A2C90→2A3470(사후명령) 등 — 옛 272190; case 0x1C(276250 경유) | 입력: 부대 | rules/battle.cpp:160, rules/battle.cpp:162, rules/battle.cpp:169 | lane_L4.md §2.1 | 확정 |
+| `2A0CF0` | 부대 거점 입성 | 부대가 도시·관문에 입성 시 거점에 병력·부상병 합산. 대상 거점 소속 세력(vt+0xB0)==부대 세력(`22E690`) 경로: 거점 `+0x3C += 부대+0x16`, `+0x40 += 부대+0x18`; 각각 0..거점 상한(vt+0xC8)으로 클램프. 지휘 무장 옛 소속(`+0xE2`) ≠ 도착 거점(`+0x4E`) && 종류 2 조건에서 적재량 기반 경험치(`16A4E0`, 공적 0x2E). `2DB9A0` 도착 분기·`2FAFD0`(포로 처우)·`43A50` 출진 처리 등 광범위 호출 | 입력: 부대, 거점 | rules/battle.cpp:76~113 | rules_combat.md §10 U8; rules_movement.md 행동 2·3; build_addresses.md `2A0CF0`; SOURCES.json battle.cpp | 확정(코드) |
 | `2A9A80` (2A7890) | 헥스 이웃 열거(열 오프셋 평탑) | 짝수 x/홀수 x 방향표(1413afd88)로 이웃 6칸, 범위 0..48399 — 옛 2A7890; 엔진 core/hex.h | 입력: 칸, 방향. 출력: 이웃 칸 | ai/schema.cpp:16, core/hex.h:4, core/hex.h:35 | worldmap_spec.md §0.3 | 확정 |
 | `2A9C90` (2A7AA0) | 헥스 링 열거 | 링 k = 6k칸, 반경 k 합 (k+1)k*6/2 (중심 제외) — 옛 2A7AA0 | - | core/hex.h:5, core/hex.h:9, core/init.cpp:88 | worldmap_spec.md §0.3 | 확정 |
+| `2ACB80` (2AA850) | HEX 거리 계산 | 두 HEX 칸 인덱스의 헥스 거리. 행=÷0xDC, 열=%0xDC; 열 절대차(dq)와 행차 2배에 홀짝 보정(dr) 비교: `dq<=dr`이면 `(dr-dq)/2+dq`, 아니면 `dq`. A* 휴리스틱(×배율; rules_movement.md), 조건 노드 HEX거리≤(op5; ai/conditions.md), 군단 AI 대상 선정(ai/roles.md), 내정 토지확장 중심거리 정렬(rules_domestic.md §4.1). 호출자 광범위. | 입력: 칸 인덱스 2개(int). 출력: int 거리 | core/hex.h(APPROX) | decomp 직접 확인; ai/conditions.md op5 사용처; rules_movement.md 휴리스틱 행; rules_domestic.md §4.1 | 확정(코드) |
 | `2B0A20` (2AE6F0) | 헥스 이동 비용 | BF1B0(지형 객체) + (hex+0x16≠0이면 x5000/100) [+ 불 칸 x5000/100] — 옛 2AE6F0 | - | core/path.cpp:13, rules/battle.cpp:190 | worldmap_spec.md §4.1; command_audit.md §15 | 확정 |
 | `2B2390` (2B00D0) | 부대 수집(이동 case 7·8 앞) | 이동 갱신 앞에서 부대를 모아 2DC550(50개 청크)에 넘김 | - |  | lane_L4.md §2 | 확정 |
 | `2B24D0` (2B0210) | 진형 기동력 | 진형 +0x7F(mobility) 또는 특수 진형이면 가상함수+0x48(상한 30); 세력+0x193 bit1 && 진형5면 +2 — 옛 2B0210 | - | rules/battle.cpp:185 | dump_measurements.md:176 | 확정 |
@@ -106,6 +108,7 @@
 | `242C70` (2412D0) | 칸 소유 raw 쓰기 | 0x33 중립은 0, 이민족 0x2E~0x32는 조건부로 hex+0x14에 씀 | - |  | worldmap_spec.md §1.2 | 확정 |
 | `26EEB0` (26D590) | 거점 점령(함락) 적용 | 거점 함락 시 소유·시설 이전·링 칠하기(2E1A50) 호출 본체(1,720줄) — 옛 26D590 | - | rules/battle.cpp:75, rules/battle.cpp:84, rules/combat_formulas.h:169 | worldmap_spec.md §1.2; pre6_occupation.md | 확정 |
 | `285DB0` (284010) | 세력 멸망·청소 처리 | 멸망 시 칸·부대 청소 — 옛 284010 | - | rules/battle.cpp:67, rules/battle.cpp:69 | worldmap_spec.md §1.2 | 코드 |
+| `286B00` (284D60) | 거점 점령 처리 본체 (일반 세력) | 거점 수비 병력 `+0x3C ≤ 0` 조건 시 `1754D0`에서 호출(내구 무관). 거점 무장마다 `2801C0`(포획 판정) → 포로/도주 목록 작성 후 `26EEB0`(함락 적용)으로 넘김. 이민족 소유 거점은 `285DB0` 분기. — 옛 284D60 | - | rules/battle.cpp:60 | rules_combat.md §점령 트리거; rules_people.md §포로 목록; pre6_occupation.md §4 | 확정(코드) |
 | `294670` (292760) | 외교 변화 칸 재칠하기·보급 재판정 | 동맹·종전 등 변화 시 상대 칸 위 부대 칸을 새 관계로 다시 칠하고 모든 부대 보급 재판정(278290) — 옛 292760 | - |  | worldmap_spec.md §1.2 | 코드 |
 | `29F660` (29D750) | 적령개발감소(정책 효과 0x16) | 부대 한 걸음마다 서 있는 칸 지역이 비동맹 세력의 것이면 상업·농업·병영(+0x3C/+0x3E/+0x40)을 141A4BCB0 % x 효과값만큼 감소 — 엔진 미구현 | - |  | lane_L4.md 20 | 확정 |
 | `2AF740` (2AD410) | 몸 모양 병력 단계 임계 | 진형 +0x70/+0x71(레코드; 객체 +0x80/0x81) x100 임계로 1/3/5칸 단계 결정(지휘관 개성 0xE로 하향) — 엔진 Map::formation_n0/n1 | - | core/sim.h:59, rules/worldmap.h:47 | sim.h 주석; RULES.md S1 | 확정 |
@@ -126,6 +129,7 @@
 | `192110` (190D80) | 시설 효과 적용(class 2, 시설마다) | 18F9D0→190E10이 모은 완성 class 2 시설마다 호출 | - |  | lane_L3.md | 확정 |
 | `192AF0` (191760) | 시설 효과 처리 관리(class 2) | 완성된 class 2 시설을 모아 시설마다 192110: 2AD8F0이 대상 목록, 거리 범위 [+0x2B, +0x2C] — 옛 191760 | - | rules/facility_game.h:71, rules/facility_game.h:95, rules/l1_effects.h:87 | lane_L3.md | 확정(구조)/미해결(효과 의미) |
 | `1F5680` (1F42B0) | 건물 내구 설정(set_durability) | +0x14 = clamp(값, 0, 최대). 새 내구값(증감 아님), 호출 95,313건/23년 — 옛 1F42B0 | 입력: 건물, 값 | rules/battle.cpp:400 | dump_measurements.md:8; worldmap_spec.md §3.2 | 확정(trace) |
+| `296AA0` (294B90) | 건물 소멸 처리·알림 | 시설 레코드 제거 및 알림. 계략 「건물파괴」(종류 20) 맥락에서 `1F5680`(내구 설정)으로 대상 시설 내구를 감소시키고 0이면 레코드 제거(worldmap_spec §3.2 "0이면 철거"; pre6_occupation §4). 함정(class 4 1회용) 발동(`192110`) 후 함정 레코드를 즉시 삭제·알림(rules_combat_effects 153행). 행동 10(지역 점령형) 지역 인수(`2EA1D0`→`2EA130`; 덤프 0건) 분기. 개성 효과 0x7C와 대응(역할 미해독). | - | - | worldmap_spec.md §3.2; pre6_occupation §4; rules_combat_effects.md 153; rules_domestic.md §7.3; rules_diplomacy.md §5.3 | 추정 |
 | `27A8D0` (278FA0) | 건설 가능 최종 판정 | def+0x32가 0 아니면 건설 담당 목록에서 번호(석병팔진 49) 검색. 시설 정의는 world+0x73958[id] — 옛 278FA0 | 입력: builder ctx, 칸, 시설 정의 | ai/agent.cpp:25, core/sim.h:111, rules/facility.h:2 | worldmap_spec.md §3.2 항 9 | 확정(위치)/미해결(의미) |
 | `27AAC0` (279190) | 건설 가능 칸 판정 | 칸 유효·시설 정의 지형 마스크·기존 시설(함정만 적 소유 덮어쓰기)·칸 소유(자기·적대·무주)·지역 시설 수<+0x6E·함정은 지역이 자기·간격(27DAF0)·해방 조건(2C6D40) — 옛 279190; 엔진 Game::can_build | 입력: 군단/부대 ctx, 칸, 정의. 출력: bool | ai/agent.cpp:25, core/sim.h:111, rules/facility.h:2 | worldmap_spec.md §3.2 | 확정 |
 | `27DAF0` (27BD50) | 시설 간격 검사 | 새 시설 칸 거리 1~4 링의 기존 시설 중 클래스 ∉{3,4}의 간격값 ≥ 거리면 불가 | - | rules/facility.h:2, rules/facility.h:16, rules/facility.h:26 | worldmap_spec.md §3.2 항 7 | 확정 |
@@ -205,6 +209,7 @@
 | `179420` (178470) | 전법 상태 부여(혼란·저지·도발) | 양=int(위력 x 상성 x 단계 x 16E820 x (세력비트2?120:100)/100), 상한 120 + 2F0E50 저항 — 옛 178470 | - |  | command_audit.md §12a | 확정 |
 | `1798B0` (178900) | 전법 효과 종류 분기 dispatch | switch(16E4C0(자료,칸))으로 종류별 처리: 1 피해, 2~4 상태, 5~9/10~14 능력 상승/하락, 15 사기↑, 16 사기↓, 17 화염, 18 시설, 19 정화, 20 치료, 21/22 5능력, 23 계략형 — 옛 178900 | 입력: 전법 대상 1건. 함수 경계 주의(1798A0 안 중간) | rules/battle.cpp:302, rules/battle.cpp:325 | command_audit.md §12a | 확정 |
 | `179DE0` (178E30) | 전법 출력 적용(178E30 계열) | 전법 결과를 적용하는 출력 단계 — 옛 178E30 | - | rules/battle.cpp:287, rules/battle.cpp:379, rules/battle.cpp:385 | BUILD_25953386_COMBAT.md | 확정 |
+| `17E210` | 부상병 비율 계산 | 피격 부대의 부상병 비율(퍼센트) 계산. 사기×10/100 + 매력×30/100 + 15(인접) + 개성 0x6F + 난이도 보정(≥3이고 플레이어 세력 −20). 호출자: `179DE0`; rules_combat.md "피격 부대 부상병 가산 = int(`17E210` 퍼센트/100 × 피해) − int(0.15 × 피해)". 개성 0x6F(부상병 비율 증감) 적용. 난이도 게이트 `17E3AE..17E3FB` | 출력: int 퍼센트 | - | rules_combat.md 주소표 56; rules_combat.md §325; rules_combat.md §341; rules_combat_effects.md §137(0x6F) | 확정(코드) |
 | `2C5B00` (2C3780) | 상태 면역 판정(전 게이지) | 개성 면역(2C3780) — 옛 2C3780 | - | rules/battle.cpp:368, rules/combat_formulas.h:179 | command_audit.md §12 | 확정 |
 | `2EE790` (2EC3D0) | 능력 변경 기록 병합(전법 5~14) | 능력 칸 하나: 단계 lv(+0x4A+i, -10..10)·기간 ld(+0x50+i, 0..0xF0). 같은 부호 (ld_old lv_old²+ld_new lv_new²)/lv², 반대 부호 /A+B//lv² — 엔진 combat::ability_change | - | core/sim.h:55, rules/battle.cpp:325, rules/combat_formulas.h:196 | command_audit.md §12a | 확정 |
 | `2F0E50` (2EEA60) | 상태이상 저항 판정 | r=(대상 슬롯9 + 종류 슬롯 10/11/..) 기반 저항 — 옛 2EEA60 | - | rules/battle.cpp:313, rules/combat_formulas.h:178 | command_audit.md §12 | 확정 |
@@ -219,7 +224,9 @@
 | `22DB30` (22C0F0) | 정책 효과 값 getter(person/force, id) | 특기·정책 효과 값(예: id 0x30). 방책판은 22C0F0 경로 — 옛 22C0F0 | - | rules/battle.cpp:223, rules/battle.cpp:328, rules/combat_formulas.h:9 | build_remap.md; worldmap_spec_b.md §5.3 | 확정 |
 | `22DFD0` (22C590) | 정책 레벨 → 값 | 효과 표(표 26)에서 레벨의 값 — 옛 22C590 | - |  | worldmap_spec_b.md §5.3 | 확정 |
 | `22E070` (22C630) | 개성 같은 효과 id 합산 병합 | 같은 효과 id를 첫 일치 값 [-100,2000]으로 잘라 합산 — 옛 22C630 | - | core/init.cpp:59 | worldmap_spec_b.md §5.2 | 확정 |
+| `232030` | 무장 개성 슬롯 번호 조회 | 무장의 개성 슬롯(`+0x118[idx]`, u16)에서 슬롯 idx의 개성 번호를 반환. 원작은 5칸만 사용(상한 5). `2320D0`(개성 목록 조립)이 이 함수로 슬롯별 번호를 얻은 뒤 `world+0x7DD18[356]` 표에서 개성 객체를 모은다. command_audit.md: "개성 = `+0x118[5]`(`232030`)" | 입력: 무장, 슬롯 idx. 출력: u16 개성 번호 | - | ai/conditions.md op 113 주석; rules_people.md §+0x118; command_audit.md | 확정(코드) |
 | `26BBE0` (26A2C0) | 부대 개성 효과 합산 26BBE0 | 부대 개성 슬롯 127(무장 + 부대 +0x64 36)칸 합산, 값 -100..2000 자름. +0xB4==-1이거나 27FCB0 참일 때 — 새 26BBE0 | 입력: 부대, 효과, 버퍼, 모드 | rules/battle.cpp:256, rules/battle.cpp:269, rules/combat_formulas.h:40 | lane_L1.md; command_audit.md §12b | 확정 |
+| `2A8160` | 숙련 항 | 전투 보정합의 숙련 항 계산. 공격·파성·방어 보정합에 가산: `보정합 = 26BBE0(슬롯 5 + 슬롯 19) + 2A8160(부대 +0x10==1일 때만)`, `eff = 슬롯 8 + 19 + 2A8160 ±10`. rules_combat.md 주소표 49행 "숙련 항". command_audit.md 주석: "개성 97/31 항은 미반영" | 입력: 부대. 출력: int 보정값 | - | rules_combat.md 주소표 49; rules_combat.md §116·§131·§222 | 확정(코드) |
 | `26C070` (26A750) | 무장 개성 효과 합산(단독판) | 무장 +0x184 비트마스크 기반 합 | - | rules/l1_effects.h:89 | lane_L1.md | 확정 |
 | `26C340` (26AA20) | 세력 정책 효과 합 계산 | 활성 군사·시정 무장 정책 레벨 합산 — 옛 26AA20 | - | core/init.cpp:110 | worldmap_spec_b.md §5.3 | 추정 |
 | `27FCB0` (27DF10) | 개성 조건 평가기 | 0x65칸 함수 포인터 표(조건 바이트 +0xA4, 값 +0xA8)로 (종류, 값, 부대, 번호) 평가, 표가 NULL이면 거짓. 표는 34칸만 채워짐 — 옛 27DF10 | 입력: 무장, 개성, 칸, 목록 | core/init.cpp:67 | command_audit.md §12b | 확정 |
@@ -270,6 +277,7 @@
 | `1DD4B0` (1DC320) | 탐색 명령 | 탐색 실행(시간 비용 600 계열 가산 AddMerit 포함) — 옛 1DC320 | - | rules/people.cpp:1, rules/people.cpp:33, rules/people.cpp:35 | command_audit.md #11 | 확정 |
 | `1ED620` (1EC280) | 공훈 지급 | 금 2500 + 명령서 1(최대 3명) | - | ai/schema.cpp:375, core/sim.h:27, core/sim.h:119 | sim.h S16; command_audit.md #9 | 확정(식) |
 | `1ED8F0` (1EC550) | 공훈 승진 | 100금 + 명령서 1/명 | - | ai/schema.cpp:375, core/sim.h:27, core/sim.h:119 | sim.h S16; command_audit.md | 확정(식) |
+| `1EECC0` (1ED920) | 등용 명령 전달 | 등용 명령 전달 처리. `1D8DF0`으로 행동 객체를 만들고 `1DF330`으로 등록한 뒤 `1F71B0`으로 입력을 넘김. 명령 검사 `1F1210`과 쌍. — 옛 1ED920 | - | - | rules_people.md §등용; ui_native.md §1EECC0 | 확정(코드) |
 | `1F16B0` (1F0300) | 명품 하사 | 명령서 1장, 받는 이 충성=min(100, L+min(50,가치)), 이전 소유자(군주 아님)는 L-가치-5. 충성식 2B20C0 — 옛 1F0300 | - | ai/schema.cpp:344, rules/people.cpp:70 | command_audit.md #22 | 확정 |
 | `1F18E0` (1F0520) | 학습(전법 습득) | 무장 +0x130[10] 전법 습득, 전법서 재고 의존 | - | ai/schema.cpp:375, core/sim.h:28, core/sim.h:119 | command_audit.md #23 §13c | 확정(함수)/엔진 일부 구현(S16) |
 | `1F2B10` (1F1750) | 관직 임명 루프 | 충성 += (옛 관직 rank - 새 rank) x 2(141A4B62C), 상승 100까지, 군주가 혈연·애호 아니거나 미워할 때만(충성 증감 1EEE10) — 옛 1F1750 | - | ai/schema.cpp:341, rules/people.cpp:64 | command_audit.md #7 | 확정 |
@@ -301,6 +309,7 @@
 | `2B6D90` (-) | 무장 배분 병력(효과 0x2E) | 식 확정, 엔진에 무장별 배분 상태가 없어 미구현 | - |  | lane_L1_4.md | 확정(식) |
 | `2BC0D0` (-) | 능력 경험 가산(효과 0x4B) | 식 확정, 구현 보류(덤프 23년 1인당 +0.4점) | - |  | lane_L1_4.md | 확정(식) |
 | `266780` (-) | 무장 거점 복귀 | (무장,0,0) 소속 거점 +0xE2로 복귀 — 교역 귀환(CCmdActionCaravan)도 이 경로 | - |  | lane_L1_4.md | 확정 |
+| `2EFA70` (2ED6B0) | 시정 명단 적용 | `void(force, category, GameList*, notify)` 시정 명단 한 줄을 세력의 해당 카테고리 슬롯에 적용. 명령서는 이 함수 자체가 아닌 `051FF0`(옛 `051380`)이 차감. Force+54부터 5줄(줄마다 0x1E바이트, u16×7 무장), Force+52 군사, Person+14D 정책번호, Policy+A0 시정 줄 분류. 이민족은 시정 미사용. 모드 본초학 자동 배치가 이 함수로 인사 줄을 보완. | 입력: 세력, 카테고리, GameList*, 알림. 반환: void | ai/agent.cpp:103 | rules_map.md §시정·인사·명령 진입; action_schema.md GovernmentOfficer; command_audit.md §6; rules_people.md 모드 본초학 주석 | 확정(코드) |
 
 ### 2.12 외교
 
@@ -343,10 +352,13 @@
 
 | 새 RVA (옛) | 이름 | 역할·식 | 입출력 | 엔진 위치 | 근거 | 확신도 |
 |---|---|---|---|---|---|---|
+| `C36A0` | AI 조건 평가 디스패처 | 판단표 조건 노드 평가 dispatcher. switch 167칸, 현재 사용 132종. 조건 노드 `params[6]` = op로 각 조건 평가 함수(`AAE10`·`ADC70`·`A9BF0`·`AF3B0`…)를 디스패치. op 141=`break`(조건 없음), op 148·149=인라인. 쓰이지 않는 57칸은 직접 호출자가 이 함수 1개뿐인 예약 슬롯 | (op, context, ?, ?, &result, ?) → bool | - | ai/conditions.md 도입 명시·switch 확인; decomp | 확정(코드) |
 | `1F380` (1F3A0) | BT 노드 cut(병참 절단) | 통솔≤64 그리고 지력≤64이면 실패하는 문턱 + 군세 행동 종류 8 제외 + 경로 설정 성공 조건 — 옛 1F3A0(노드 vtable 슬롯) | 입력: node, context |  | mechanisms_20261017/능력치.md; BUILD_25953386_COMBAT.md | 확정(문턱) |
+| `201C0` | CSetRelayHexEvadeFlameHexNode Execute (화염 회피 경유점 설정 BT 노드) | 화염 회피 경유점 설정 BT 노드 Execute. kind `0xcf856e80`. 불길 헥스 회피용 경유점을 설정하는 BT 노드. ai/roles.md "화염 회피 `201C0`, 병참 단절 `1F380`" | 입력: node, context | - | ai/node_kinds.md RTTI; ai/roles.md | 확정(RTTI) |
 | `37210` (366B0) | AI 건설 후보 함수(비용·구분·요구 조건 필터) | 별도 건설 군세(방식 5)의 후보. 세부 임계 미상 — 옛 366B0 | - |  | worldmap_spec.md §3.2 | 추정 |
 | `43A50` (42E70) | 출진 명령 생성 | 군단 판단표 → 출진 명령 — 옛 42E70 | - | core/sim.h:25 | worldmap_spec.md §3.4 | 확정 |
 | `61F10` (613A0) | 성 공략 군세(지역 공략) 계획 | 성 공략 군세 안: 진 건설 준비(72D30), 매 턴 구성원 초기화 전제(새 빌드에서 낡음) — 옛 613A0; 훅 안전(same-hook) | - |  | worldmap_spec.md §3.4; BUILD_25953386_COMBAT.md | 확정 |
+| `738A0` (728C0) | 군세 주변 적 부대 공격 목표 설정 | `61F10`(성 공략 군세 계획) 내부에서 `+0x24`가 1 또는 2일 때 호출. `2ECEA0(7)`로 행동 종류 7 설정 + `2ECF00(0x1B, 적 부대)`로 대상 적 부대 지정. 플래그 `+0x24` 1→2. — 옛 728C0 | 입력: node, context | - | ai/roles.md 234~272 | 추정 |
 | `69AB0` (68CE0) | 전투 DLL city_node(거점 점령 노드 Execute) | CExecuteFootholdOccupyNode.Execute. 새 빌드 본문에 troops 모드 8~10·0x16 분기 추가(동작 전제 변경) — 옛 68CE0(changed same-hook); 새 전용 27D490이 공격 부대 구성원을 적 요새 공격(action 6/kind 11)으로 재배정 | 입력: node, context, troops |  | BUILD_25953386_COMBAT.md §3 충돌 2; BUILD_25953386_REMAP.md | 확정 |
 | `6AA10` (69BD0) | 요격·출진 실행 | 요격 실행(69BD0) — 옛 69BD0 | - |  | mechanisms_20261017/출진과요격.md; FIDELITY.md | 확정 |
 | `35A70` (34F10) | CDepartureNode Execute (출진 BT 노드) | 출진 BT 노드 Execute. kind `0x5de944ee`. 군단 BT 19회 사용. FIDELITY.md 옛 출진 함수 목록(295B0·2F2B0·34F10·32230·613A0·68CE0·69BD0) 중 하나 | 입력: node, context | - | ai/node_kinds.md RTTI; fidelity/FIDELITY.md 출진 함수 목록 | 확정(RTTI) |
@@ -357,6 +369,21 @@
 | `45790` (44A80) | 군세 방식 22 출진 편성 (추가 출진) | `2FE10` 호출, 이미 공격 중인 목표에 추가 출진하는 분기. 군세 방식 22. 계획 객체 `+0x60`에 목표를 쓴다 | - | - | 군세방식8_결정로직.md §1(옛); 호출 계약 보강 2026-11-23 | 확정(코드, 옛 빌드) |
 | `4B830` (4ABE0) | 군세 방식 11 출진 편성 (목표 세력 무효 시) | `2FE10` 호출, 목표 소유 세력 객체가 유효하지 않을 때 방식 8/9/10 비율 분기 앞에서 먼저 시도. 군세 방식 11 | - | - | 군세방식8_결정로직.md §1(옛 빌드 직접 확인) | 확정(코드, 옛 빌드) |
 | `65A60` (64E10) | CExecuteAreaAttackNode Execute (지역 공격 실행 BT 노드) | 지역 공격 실행 BT 노드 Execute. kind `0x33bb60bd`. 군세 BT 5회. BUILD_25953386_COMBAT: 새 빌드에서 `27D490`/`2A3E30`(새 RVA) 호출 추가. `69AB0`(거점 점령)·`61F10`(성 공략 군세)과 같은 그룹 | 입력: node, context | - | ai/node_kinds.md RTTI; BUILD_25953386_COMBAT.md | 확정(RTTI) |
+| `2D720` (2CC50) | CCommandExecutionEmployNode Execute (임용 명령 실행 BT 노드) | 임용 명령 실행 BT 노드 Execute. kind `0x6a4f6b51`. 세력 BT 3회. — 옛 2CC50 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `6F070` (6E190) | CSpecifiedTroopsSetPurposeNode Execute (지정 부대 임무 설정 BT 노드) | 지정 부대 임무(목적) 설정 BT 노드 Execute. kind `0xc9ec061b`. 군단 BT 22회, 군세 BT 23회. — 옛 6E190 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `7BE80` (7AEE0) | CGetBattlePowerSoldierNumNode Execute (전투력·병력수 조회 BT 노드) | 전투력·병력수 조회 BT 노드 Execute. kind `0x339cbcee`. 군세 BT 3회. — 옛 7AEE0 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `7C300` (7B360) | CGetCanServePersonListNode Execute (임용 가능 무장 목록 BT 노드) | 임용 가능 무장 목록 조회 BT 노드 Execute. kind `0x1870191c`. 세력 BT 3회. — 옛 7B360 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `3E750` | CRecruitOfficerSetNode Execute (등용 담당관 설정 BT 노드) | 등용 담당관 설정 BT 노드 Execute. kind `0x16bf303f`. 군단 BT 6회 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `3EF50` | CTrainingOfficerSetNode Execute (훈련 담당관 설정 BT 노드) | 훈련 담당관 설정 BT 노드 Execute. kind `0x5733c979`. 군단 BT 6회 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `53B80` | CCommandExecutionGovernmentAutoNode Execute (내정 자동 명령 실행 BT 노드) | 내정 자동 명령 실행 BT 노드 Execute. kind `0x9a6f523b`. 세력 BT 1회 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `7CB80` | CGetEarthenStoneWallBuildHexNode Execute (토석벽 건설 칸 조회 BT 노드) | 토석벽 건설 가능 칸 조회 BT 노드 Execute. kind `0x73ed3a57`. 군단 BT 2회 | 입력: node, context | - | ai/node_kinds.md RTTI | 확정(RTTI) |
+| `7EBA0` | CGetFootholdFightingStrengthNode Execute (거점 전투력 조회 BT 노드) | 거점 전투력 조회 BT 노드 Execute. kind `0x184b7500`. 군단 BT 19회, 군세 BT 1회. BUILD "foothold 7DC00"(옛 주소) | 입력: node, context | - | ai/node_kinds.md RTTI; BUILD_25953386_COMBAT.md | 확정(RTTI) |
+| `8F5A0` | CVariableGetMoveCostNode Execute (이동 비용 조회 BT 노드) | 이동 비용 조회 BT 노드 Execute. kind `0xbf7b2a0b`. 군단 BT 13회. rules_movement.md: "군단 판단 반복 노드 아래에서 한 출발지에 목적지 5~7개씩 묻는다(한 턴 71~143회, 회당 약 6ms)". `185710`(A* 경로 탐색) 호출. core/hex.h:10 | 입력: node, context | core/hex.h:10 | ai/node_kinds.md RTTI; rules_movement.md §호출자 | 확정(RTTI)/확정(코드) |
+| `365A0` | CDepartureTroopsCreateNode Execute (출진 부대 생성 BT 노드) | 출진 부대 생성 BT 노드 Execute. kind `0xd6821309`. 군단 BT 19회. FIDELITY.md 옛 출진 함수 목록 중 `35A40` 포함 | 입력: node, context | - | ai/node_kinds.md RTTI; fidelity/FIDELITY.md 출진 함수 목록 | 확정(RTTI) |
+| `29BA0` (295B0) | CCommandAreaOccupyDepatureNode Execute (지역 점령 출진 명령 BT 노드) | 지역 점령 출진 명령 BT 노드 Execute. kind `0x9c3384c2`. 군단 BT 9회. 후보 지역 목록 → ① 소유 세력 관계 표·항구·거점 핵심 조건으로 제외 ② 군단 방식(13·14·15·16)에 따라 편성 함수(`44B60`·`446A0`·`441E0`·`43D10`) 호출 ③ 출발 성 10칸 안 적 전투력 합이 성 5칸 안 아군 + 신군세 전투력보다 크면 군세 취소(`9F860`). | 입력: node, context | - | ai/node_kinds.md RTTI; ai/rulebase.md §지역 점령 걸러내기; ai/roles.md §취소 29BA0 | 확정(RTTI)/확정(코드) |
+| `8F810` | CVariableGetPersonInfoNode Execute (무장 정보 조회 BT 변수 노드) | 무장 정보 조회 BT 변수 노드 Execute. kind `0xbb9f92d`. 세력 BT 13회, 군단 BT 396회. BUILD "person_info 8E7C0"(옛 주소). 군단 BT에서 가장 많이 쓰이는 Variable 노드 중 하나 | 입력: node, context | - | ai/node_kinds.md RTTI; BUILD_25953386_COMBAT.md | 확정(RTTI) |
+| `871D0` (861A0) | CVariableGetArmyInfoNode Execute (부대 정보 조회 BT 변수 노드) | 부대 정보 조회 BT 변수 노드 Execute. kind `0xd67cbd65`. 주소 변경(`changed`). 세력 BT 0회, 군단 BT 98회, 군세 BT 21회, 부대 BT 19회. 판독된 항목: case 8 목표 종류 변환, case 16 현재 HEX 지역(`22B8E0`), case 22 병사 수(`+0x16`), case 24 가장 가까운 적대 거점, case 25 이동력(`2B2550`), case 26 공군 공격 입력(`2B4460`), case 28 파성 입력(`2AC5A0`). | 입력: node, context | - | ai/node_kinds.md RTTI; ai/unresolved.md §3 Army; BUILD_25953386_REMAP.md | 확정(RTTI)/확정(코드) |
+| `8B190` | CVariableGetFootholdInfoNode Execute (거점 정보 조회 BT 변수 노드) | 거점 정보 조회 BT 변수 노드 Execute. kind `0x513bad95`. 세력 BT 1회, 군단 BT 385회, 군세 BT 4회, 부대 BT 2회. 주소 변경(`changed` 대응) | 입력: node, context | - | ai/node_kinds.md RTTI; BUILD_25953386_REMAP.md | 확정(RTTI) |
 | `72D30` (71D50) | 건설 준비(진 고정) | 시설=3(진) 고정, 후보 칸 BA100, 71140 명령 갱신 — 옛 71D50 | - |  | worldmap_spec.md §3.4 | 확정 |
 | `B6F50` (B5EC0) | AI 부대 전력 | 2AAF30 공통 배율 x 병력/1000. 통솔 50 병력 10,000 사기 100 → 3,660 — 옛 B5EC0 | 입력: 부대. 출력: 전력 |  | mechanisms_20261017/능력치.md | 확정 |
 | `BA100` (B9070) | 건설 후보 칸 선택 | 성 공략 건설 후보 칸 — 옛 B9070 | - |  | worldmap_spec.md §3.4 | 추정 |
@@ -365,10 +392,25 @@
 | `4403E0` (43E030) | AI 관리자 초기화·활성 검사 | 세력→군단→군세→부대 순으로 행동트리를 돌리는 AI 관리자 입구. 정적 호출자 0건(작업 큐에 제출되는 `std::function` 썽크 `4590C0` 경유; 제출처 `44DD30`(COtherStrategyState 슬롯 5). 진행 상태 44DEE0은 부르지 않음; L3b 확정, 옛 "442200→44F2F0" 사슬 표기는 정정) — 순 도중 AI 재명령 없음(L4 A0) | - |  | lane_L4.md A0; calendar.md | 확정 |
 | `4590C0 / 4591A0 (썽크)` (-) | AI 갱신 람다 썽크 | `mov rcx,[rcx+8]; jmp 4403E0`(4590C0) / `jmp 440B30`(4591A0). `std::function<void()>` `_Func_impl` vftable `13DB940`/`13DB908` 의 call 슬롯이며 ghidra 가 함수로 잡지 못해 `4403E0`·`440B30` 의 정적 호출자가 0건으로 보였다 | - |  | L3b(L3b 직접 바이트 스캔) | 확정 |
 | `44DD30` (-) | COtherStrategyState 슬롯 5 (세력 턴 상태) | vtable `13DA440` 슬롯 5. 세력 객체 `+0x478`, 상태 `+0x470`: 0 = 작업 큐(`140934D60`, 객체 +0x480)에 `4403E0` 제출(이민족 세력 46~50 제외, 상태 -> 1), 1 = 완료 대기(`1409355E0`) 후 `FUN_140935D40`, 2 = 이민족 공격 `2C4D40`->`2607E0`->`259310` | - |  | L3b | 확정 |
-| `44E8B0` (-) | CStrategyState 슬롯 5 (세력 턴 배정; vtable `13DA3B8`+0x28) | 순서 목록 노드 `+0x470`(int 세력 번호 +0, 다음 +8; 끝 `+0x478`)을 돌며 살아 있는(331780) 세력마다 `235150` 거짓이거나 관전 플래그 `334C30` 참이면 `434AF0(mgr,"COtherStrategyState",&세력)`, 아니면 `438620(mgr,"CUserStrategyState",0)`을 만들고 같은 호출 안에서 노드를 전진시킨다(죽은 세력은 상태 없이 건너뜀). 목록이 끝나면 `124A0` pop. 상단 조건: `572670(this)`가 맨 위일 때만 | 입력: 상태 `+0x470/+0x478/+0x480/+0x48C/+0x498`. 출력: 자식 상태 | - | 2026-11-24 디컴파일(AI_TacticsMod multiplay) | 확정(코드)/실게임 미확인 |
+| `44E8B0` (-) | CStrategyState 슬롯 5 (세력 턴 배정; vtable `13DA3B8`+0x28) | 순서 목록 노드 `+0x470`(int 세력 번호 +0, 다음 +8; 끝 `+0x478`)을 돌며 살아 있는(331780) 세력마다 `235150` 거짓이거나 관전 플래그 `334C30` 참이면 `434AF0(mgr,"COtherStrategyState",&세력)`, 아니면 `438620(mgr,"CUserStrategyState",0)`을 만들고 같은 호출 안에서 노드를 전진시킨다(죽은 세력은 상태 없이 건너뜀). `+0x490` = 지금 차례 세력(맨 위 프레임마다 0으로 지운 뒤 상태를 만들기 직전에 그 노드 세력). 목록이 끝나면 `124A0` pop. 상단 조건: `572670(this)`가 맨 위일 때만 | 입력: 상태 `+0x470/+0x478/+0x480/+0x48C/+0x498`. 출력: 자식 상태 | - | 2026-11-24 디컴파일(AI_TacticsMod multiplay) | 확정(코드)/실게임 미확인 |
 | `44BAD0` (449880) 보강 | 세력 순서 목록 삽입 규칙 | 살아 있는 세력마다 `18C30(목록, 칸, flag)`: `235150` 참이고 `3EC370(3EC1A0())`≥3이면 flag 0(앞), 아니면 flag 1(뒤). 세력 번호 → 세력 객체는 `root+0xDF30[번호]`(번호 ≥ 0x34면 [0]) | - | - | 2026-11-24 디컴파일 | 확정(코드) |
-| `334C30` (-) | 관전(데모) 플래그 | `세계(+0x871E8 객체)+0x16A8` bit 8. `33C890(on)`이 켜고 끈다(켤 때 `+0x17CD` bit 1도; 끌 때 `+0x3a` 플레이어 세력 수도로 카메라 `890D30`). 참이면 플레이어 세력도 `COtherStrategyState` | - | - | 2026-11-24 디컴파일 | 확정(코드)/의미 추정(관전) |
+| `334C30` (-) | 관전(데모) 플래그 | `세계(+0x871E8 객체)+0x16A8` bit 8. `33C890(on)`이 켜고 끈다(켤 때 `+0x17CD` bit 1도; 끌 때 `+0x3a` 플레이어 세력의 직할 군단으로 메인 화면 왼쪽 위 패널 `890D30`; 2026-11-25 정정: 카메라가 아니라 패널). 참이면 플레이어 세력도 `COtherStrategyState` | - | - | 2026-11-24 디컴파일 | 확정(코드)/의미 추정(관전) |
 | `44ED30 / 43C1A0` (-) | CUserStrategyState 슬롯 5 / 플레이어 쪽 AI 제출 | `44ED30`(vtable `13D9430` 슬롯 5) 상태 3 에서 `43C1A0` 호출: 상태 +0x66C 0 = 작업 큐(객체 +0x678)에 `440B30` 제출(`CGameState` +0x480 갱신·`CStrategyState +0x48C = 1`), 1 = 완료 대기 후 +0x470 = 4 | - |  | L3b | 확정 |
+| `890D30 / 452F70 / 890D50` (-) | 메인 화면 왼쪽 위 패널 다시 채우기 | `890D30(CGameLayout+0x178 객체, 군단)`·`452F70(CGameLayout, 군단)` → 패널(`+0x178`의 `+0x178`, 레이아웃 `00_02_00_mein_offset_10`)에 `890D50`: 군주 초상화 `+0x190`·이름·명령서(`235300`, 노드 8·9·10)·군단 `+0x188`. 패널은 처음 만들 때(`887F00`, `330B50`) 군단을 담고 스스로 다시 읽지 않는다. 호출처: 관전 전환 `33C890`, 순 시작 `44BAD0`(관전일 때만), 계승 `28F910`·군주 교체 `2B7E80`(그 세력 == `330B90`일 때), 연초 `272DE0`, 플레이어 확정 뒤 `624F10` = `452F70(441E80(CGameState), 330B50(문맥))`. 현재 군단 읽기 `442180`, 현재 군주 `883990` | - | - | 2026-11-25 디컴파일(AI_TacticsMod multiplay) | 확정(코드) |
+| `572670` (-) | 상태가 관리자 스택 맨 위인가 | `11040()` 관리자 스택 `+0x20`[개수 `+0x10` − 1] == this | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `438620 / 124A0` (-) | 상태 추가 / 맨 위 빼기 | 둘 다 관리자 명령 대기열(개수 `+0x30`, 16바이트 칸 배열 `+0x40`)에 넣는 지연 처리. `438620`은 객체(0x6F0)를 바로 만들고, 진입(슬롯 1)은 대기열 처리 때 돈다. `44E8B0`이 같은 순서 목록에서 두 번 만들지 않으려면 대기열은 다음 갱신 전에 처리돼야 한다 | - | - | 2026-11-25 디컴파일 | 확정(코드)/처리 시점 추정 |
+| `44C340` (-) | CUserStrategyState 슬롯 1(진입) | `CUserStrategyLayout`(vtable `13D9778`)을 `state+0x478`에 만들고 설정 `4465A0` → 메인 명령 HUD `87F3C0`/`885720`(이때 `330B90`으로 작위 기준 6/7개, 전역 `27D72BC`). 전법 개입 목록 `G+0x165E`/`+0x1668`을 `state+0x480`에 복사. 사람 차례마다 새로 만든다 | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `28CBE0 / 33CD90 / 32E5B0` (-) | 세력 목록 `G+0x1630` | 매 순 단계 56(`429FF0`)이 세계 `+0xC0` 목록(모든 세력으로 추정)을 `256270` 순서로 정렬해 `33CD90`으로 `G+0x1630`에 넣는다(반환 = 세력 2개 이상). **플레이어 목록이 아니다.** `32E5B0`으로 읽는 곳 7곳: 관전 패널(`33C890`·`44BAD0`·`887F00`, 모두 관전 플래그 분기), 반 연합 안내 `2A5140`, `3E1AD0`·`42E5A0`·`4306B0` | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `1DB900 / 807910 / 819540` (-) | 외교 사신 도착 | 보낸 쪽이나 받는 쪽이 플레이어(`235150`)면 진행 중 모달 교섭 창 `CTreatDiplomacyState`(`807910`, 닫힐 때까지 `574750`), 둘 다 아니면 AI 판정 `8080B0`. 교섭 단계 1 `819540`: 받는 쪽이 플레이어면 단계 2(받는 쪽 응답), 아니면 3. 응답 단계 8 `8180C0`의 군정은 받는 세력 직할 군단(`230270(대상)`). 단계 2 `81D0D0`(교섭 창 상태 처리)는 내용 미확인: 두 플레이어 사이 외교(항복권고 포함)에서 보낸 쪽이 무엇을 보는지는 모른다 | - | - | 2026-11-25 디컴파일 | 확정(단계 1 분기)/단계 2 미확인 |
+| `66B290` (-) | 기록 창 항목 거르기 | 분류 `+0x86`이 2·4·6이면 항목 군단(`world+0xE0D0[+0x12]`)이 플레이어 소유(`2350F0`)일 때만 넣는다(`2350F0` 호출 위치 `66B32D`). `43C9D0`(29바이트)이 이 함수로 꼬리 점프한다 ← 기록 추가 `936980`(외교 `1DB509` 등 진행 중 사건마다). 거르기는 항목이 추가되는 순간에 일어난다(창을 그릴 때 다시 거르는지는 미확인) | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `2FAFD0` (-) | 포로 처우 진입 | 잡은 세력이 플레이어(`235150`)면 그 세력을 인자로 `CTreatPrisonerState`를 연다. 호출 `2A0CF0` | - | - | 2026-11-25 디컴파일 | 확정(코드, 분기 일부) |
+| `440B30` 보강 (-) | 플레이어 쪽 AI가 도는 범위 | 세력 = `330B90(문맥)`(+0x670 저장). 그 세력 군단 중 직할(`330B50`)이 아닌 군단만 `D4D70`, 그 부대 `D4D00`. 다른 세력 군단은 돌지 않는다 | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `678F30` (-) | 보고 화면 채우기(4901바이트; 이름·시점 추정: 직접 호출 없음 = vtable 경유, 모드 `report_enter`가 같은 표를 같은 조건으로 읽고 사람 차례마다 돈다) | 세계 보고 표 `root+0x79E90`..`+0x7DD18`을 돈다. 안 읽은 항목(`+0x82` bit 2 켜짐·bit 4 꺼짐)은 **먼저 모두 읽음으로 바꾸고**(`+0x82 = (값 & ~2) | 4`) 그다음에 항목 군단(`+0x12`)이 플레이어 소유(`2350F0`)이거나 bit 1이면 화면에 넣는다. 자세한 줄(`+0x8A`)은 직할 군단(`330B50`) 항목만. 그래서 그 순에 보고를 처음 연 쪽이 다른 세력 항목까지 소비한다 | - | - | 2026-11-25 디컴파일 | 확정(읽음 처리 뒤 거르기)/이름·시점 추정 |
+| `D4E20` 보강 (-) | 군세 AI 입구 | `330B50` 직할 군단의 군세면(관전 아닐 때) 건너뛰고, 아니면 `B6B00`. 호출 `4403E0`(컴퓨터 세력 AI)·`440B30`(플레이어 쪽 AI). 군단 `D4D70`·부대 `D4D00`과 같은 모양의 세 번째 거르기 | - | - | 2026-11-25 디컴파일 | 확정(코드) |
+| `D4DE0` | 세력 AI 반복 | `4403E0`(AI 관리자)에서 호출. 모든 세력에 대해 `D4D70`(군단 반복)을 순회. 반복 체계: D4DE0(세력)→D4D70(군단)→D4E20(군세)→D4D00(부대) | 입력: AI 관리자 | - | ai/roles.md 반복 체계; `4403E0` 보강; `D4E20` 보강; decomp | 확정(코드) |
+| `D4D70` | 군단 AI 반복 | 세력의 각 군단에 대해 `D4E20`(군세 AI 입구)을 순회. `4403E0`·`440B30` 양쪽에서 호출(`440B30`은 직할 군단 제외). ai/roles.md "군단 판단 → 군단의 군세마다 군세 판단표" | 입력: AI 관리자, 세력 | - | ai/roles.md; `440B30` 보강 `D4D70`; `D4E20` 보강 `D4D70`; decomp | 확정(코드) |
+| `D4D00` | 부대 AI 판단표 | 군세의 각 부대에 대해 BT 판단표를 실행. `D4E20` → 각 부대 `D4D00`. `440B30`(직할 아닌 군단·부대)에서도 호출. ai/roles.md "그 군세의 부대마다 부대 판단표(`D4D00`)" | 입력: AI 관리자, 군세 | - | ai/roles.md 반복 체계; `440B30` 보강 `D4D00`; `D4E20` 보강 `D4D00`; decomp | 확정(코드) |
+| `2B2A90` 보강 (-) | 원작 인접 비율 | 세력이 플레이어인지 `235150`으로 판정(`2B2CF8`·`2B2DF3`·`2B2E5D`) | - | - | 2026-11-25 디컴파일 | 확정(호출만) |
 | `8EB70` (-) | CVariableGetGameDataNode | 게임정보 항목: 0 년, 1 월, 2 일(date +0x37), 3 순 카운터(G+0x454), 4/5 `G+0x1656/0x1657` 바이트가 가리키는 세력, 6 AI 설정 비율 | (항목, 컨텍스트) |  | L3b | 확정 |
 | `B2CF40 / B2CC80` (-) | BT 엔진 초기화 / 고정 풀 구성 | 13칸 표(크기, 개수, 정렬 비트) = 메모리 풀. rulebase.md 7절 | - |  | L3b | 확정 |
 | `56A40` (-) | CForceSetPurposeNode 실행 | 세력 `+0x4A` 에 행동방침(s8)을 쓴다 | (세력, 값) |  | L3b | 확정 |
@@ -384,6 +426,7 @@
 | `234880 / 2343A0` (-) | 친애·혐오 판정 | `234880(a, b)` b 가 a 의 친애 목록(+0xC0 u16[8]) 에 있음; `2343A0(a, b)` b 가 a 의 혐오 목록(+0xD0 u16[8]) 에 있음. (이전 문서의 "혐오 234880" 은 오기) | (무장, 무장) | - | L3 5차 | 확정 |
 | `2CB6C0 / 234250 / 234150 / 2341C0 / 2340D0 / 2342C0` (-) | 부대 거점 위 판정 / 이민족 소속 검사 5종 | 2CB6C0 부대가 거점 칸 위(주둔); 234250 세력, 234150 군단, 2341C0 거점, 2340D0 부대, 2342C0 무장의 소속이 이민족(세력 번호 46~50)인가(조건 135) | - |  | L3b | 확정 |
 | `1EC080 / 1EC1C0 / 1EBE90 / 1EBF00` (-) | 무장 관계 판정(조건 161~164) | 의형제 2CBF80·배우자 2CAE70·부모자식 2C7FF0·형제 2CAE20·친애 234880(혐오는 2343A0) + `+0x16C >= 10` & 충성 `<= 98`; 1EBE90 은 항상 0; 1EBF00 은 칸/지역 제외 조건 | - |  | L3b | 추정 |
+| `2C70D0` (2C4D20) | 조합 가능 조건 검사 (위보·결합 판단) | AI 조건 op137 "객체조합점수" 하위 검사. v2 +0x23/0x24/0x25 플래그 모두 0, +0x140==0, +0x10≠2이고 `2AE4A0`(이동표 거리)>0이면 참. 위보 성공확률 조회 직전 대상 가능 여부 판정에 사용. — 옛 2C4D20 | 입력: (v1, v2). 출력: bool | - | ai/conditions.md 134; predicates_recovered.md 일치 | 확정(코드) |
 
 ### 2.16 난이도·설정
 
@@ -393,6 +436,7 @@
 | `3EC370` (3E9E60) | 난이도 getter | *(설정+0xE58)==0이면 설정+0x134, 아니면 +0x28. 0 초급..4 궁극. 호출자 47개 — 옛 3E9E60 | - | core/sim.h:105, rules/difficulty.h:4, rules/difficulty.h:6 | difficulty.md §1 | 확정 |
 | `3EC920` (3EA400) | 숙련 옵션 항목별 값 배열 | 설정1·설정2 항목별 값 배열(기본값 3EEFE0, 거의 100) — 옛 3EA400 | - | rules/difficulty.h:13 | difficulty.md §1; BUILD_25953386_COMBAT.md | 확정 |
 | `3ED7C0` (3EB2A0) | 게임 모드 읽기 | 설정 +0xE58(1 표준, 0 숙련). 쓰기 3EF660, 3ED810은 '==0' 판정 — 옛 3EB2A0; 3ED810=옛 3EB2F0 | - | rules/difficulty.h:6, rules/difficulty.h:38 | difficulty.md §1 | 확정 |
+| `3ED810` | 숙련 모드 판정 | `3ED7C0`이 반환한 게임 모드 값 `==0` 판정(0=숙련). `3ED7C0`의 직접 비교 변형. difficulty.md "3EB2F0은 '== 0'" 명시 | - | rules/difficulty.h:6, rules/difficulty.h:38 | `3ED7C0` 보강 항목 명시; difficulty.md §1 | 확정(코드) |
 
 ### 2.17 난수
 
@@ -406,14 +450,21 @@
 | 새 RVA (옛) | 이름 | 역할·식 | 입출력 | 엔진 위치 | 근거 | 확신도 |
 |---|---|---|---|---|---|---|
 | `331780` (32F500) | 객체 생존 판정 | `param_1==null → false`; `(**(code **)(*param_1 + 0x18))() != 0 → true`. vtable `+0x18` = slot 3. 세력·부대 등 게임 객체에 공통. 호출자 200곳 이상 | 입력: 게임 객체. 출력: bool (1/0) | - | `c/0033.c` byte 42019 (2026-11-23 호출 계약 보강); callers 200+ 확인 | 확정 |
-| `330B90` (-) | 플레이어 세력 객체 getter | `ctx+0x3a`(u8, ctx = 세계 `+0x871E8` 게임 문맥) < 0x34 ? `root+0xDF30[번호]` : `root+0xDF30[0]`. 정적 호출 179곳. `+0x3a`를 getter 없이 직접 읽는 곳은 `33C890` 하나 | 입력: 게임 문맥. 출력: 세력 객체 | - | 2026-11-24 디컴파일·전체 샤드 grep | 확정 |
+| `330B90` (-) | 플레이어 세력 객체 getter | `ctx+0x3a`(u8, ctx = 세계 `+0x871E8` 게임 문맥) < 0x34 ? `root+0xDF30[번호]` : `root+0xDF30[0]`. 정적 호출 179곳(2026-11-25 `--limit 3000`로 다시 세면 340함수 506곳; `235150` 255함수, `330B50` 101함수, `2350F0` 25함수). `+0x3a`를 getter 없이 직접 읽는 곳은 `33C890` 하나 | 입력: 게임 문맥. 출력: 세력 객체 | - | 2026-11-24 디컴파일·전체 샤드 grep | 확정 |
 | `235150` (2337B0) 보강 | 현재 플레이어 세력 판정 | `p=330B90(ctx)`; `id=p->vt+0x60()`; `id!=0 && id==force->vt+0x60()`. 93곳 | - | - | 2026-11-24 디컴파일 | 확정 |
 | `2350F0` (-) | 객체 소속이 플레이어 세력인가 | `p=330B90(ctx)`; `331780(p) && object[0x10]==p->vt+0x60()` (object +0x10 = 소속 세력 번호 u8) | - | - | 2026-11-24 디컴파일 | 확정 |
+| `22E690` | 부대 세력 번호 조회 | 부대 대장(`+0x12`) → 무장 `+0xE0` 군단 슬롯 → 군단 `+0x10` 세력 번호. 번호 ≥ 0x34이면 0 반환. 약 290곳 호출. `18A190`(칸 소유 칠하기)·`2CC630`(적대 판정)·`278290`(병참)·`2A0CF0`(입성) 등 광범위 | 입력: 부대. 출력: u8 세력 번호 | - | rules_tribes.md §소속 조회; rules_combat.md §329; ai/conditions.md 소속 환산표 | 확정(코드) |
+| `22E2A0` | 부대 세력 객체 조회 | `22E690(부대)` 세력 번호 → `DAT_142780f60+0xDF30[번호]` 세력 객체. 번호 ≥ 0x34이면 표[0](무주) 반환. `22E450`(무장→세력 객체)의 부대 버전. 호출자: `278290`(병참 도적 걸러내기)·`44BAD0`(세력 순서 삽입)·`C36A0`(op 3·0xB 소속 환산) | 입력: 부대. 출력: 세력 객체 포인터 | - | ai/conditions.md 소속 환산표 3·0xB; rules_tribes.md §병참; functions.md 주석 §2.2; decomp | 확정(코드) |
+| `22B8E0` | 칸 → 지역 객체 조회 | 칸이 속한 지역 객체를 반환. ai/conditions.md op 130: "각 칸의 지역(`22B8E0`)". ai/unresolved.md "칸이 속한 지역 객체(`22B8E0`)", "부대 현재 칸의 지역". rules_domestic.md: "칸이 이 지역에 있고 적대이면 건너뜀". SOURCES.md core/init.cpp line 70 | 입력: 칸. 출력: 지역 객체 | - | ai/conditions.md op 130; ai/unresolved.md 여러 항목; rules_domestic.md §건너뜀 조건; SOURCES.md core/init.cpp:70 | 확정(코드) |
+| `22CB80` | 지형에 맞는 진형 선택 | 부대의 진형 번호 반환. 지형 분류 비트 2(수상)이면 army+0x1C, 아니면 army+0x1B. ai/conditions.md op 129: "무장 군단/지역 `22CB80` 번호 == 진형(`BE040(n)`) 번호(`22F7A0`)"에서 진형 비교에 사용 | 입력: 부대. 출력: u8 진형 번호 | - | rules_combat.md 주소표 46; ai/conditions.md op 129; dump_measurements.md(22B140 분기) | 확정(코드) |
+| `22F7A0` | 부대 진형 id 조회 | 부대의 진형 id 번호 반환. rules_combat.md "부대 진형 id". extra = 1.5 if 진형(`22F7A0`) ∈ {6,14} && 지형코드 ∈ {5,6,8..11}. ai/conditions.md op 129에서 `BE040(n)` 진형 비교에 사용 | 입력: 부대. 출력: 진형 id | - | rules_combat.md 주소표 45; rules_combat.md §103; ai/conditions.md op 129 | 확정(코드) |
+| `22E110` | 거점 현재 내구 조회 | 거점의 건축 객체(`+0x4E`<3001) `+0x14` 현재 내구 반환. 건축 객체 없으면 6000. SOURCES.md "건축 객체 `+0x14` = 현재 내구 (확정)". rules_combat.md "내구=22E110(없으면 6000)". 거점 방어 B: `20×내구/100`; UI 내구 막대; 공격 효과 계산에 사용 | 입력: 거점. 출력: 현재 내구(기본 6000) | - | rules_combat.md 주소표 47; rules_combat.md §132; rules_combat_effects.md §41; ui_native.md §536; SOURCES.md pre6_tactics.md §4 | 확정(코드) |
 | `22F830` (22DDA0) | 칸 번호 계산 | (객체 - 표[0]) >> 5 | - |  | worldmap_spec.md §0.2 | 확정 |
 | `2AC010` (2A9DC0) | 진형 방어 getter | 진형 객체 +0x86(방어), 1..40 — 옛 2A9DC0 | - |  | formation_mapping.md | 확정 |
 | `2B4A10` (2B2690) | 진형 공성 getter | 진형 객체 +0x84(공성), 1..70 — 옛 2B2690 | - | rules/combat_formulas.h:54 | formation_mapping.md | 확정 |
 | `2B4AA0` (2B2720) | 진형 공군 getter | 진형 객체 +0x83(공군), 동적 경로 1..45 clamp — 옛 2B2720 | - |  | formation_mapping.md | 확정 |
 | `2B4B30` (2B27B0) | 진형 파성 getter | 진형 객체 +0x85(파성), 1..60. 옛 REA는 '후보'였으나 DMs 80에서 확정 사용 — 옛 2B27B0(2B280C 분리 unwind 구간 주의) | - | rules/combat_formulas.h:185 | formation_mapping.md; dump_measurements.md | 확정 |
+| `2B4CA0` | 무장 지휘병사 한도 | 무장의 최대 지휘병사 수(출진 상한). ai/rulebase.md "무장별 출진 상한(2B2920)". rules_combat_effects.md 개성 0x4D 한도로 사용. rules_people.md "지휘병사 `2B4CA0` ... 8.3절의 원작 식". command_audit.md: 모드에서 병력 한도 미반영 | 입력: 무장. 출력: 지휘병사 한도 | - | ai/rulebase.md §경계거점; rules_combat_effects.md §77; rules_people.md §U13 | 확정(코드) |
 | `2A8C90 / 2A8D50 / 2B1DF0 / 2CA530 / 2CBF80 / 2CAE70 / 2C7B30 / 2C92A0 / 2CAE20 / 2C5ED0 / 2A8010 / 2343A0` (-) | 무장 관계 함수군 | 2A8D50(p1, p2, 플래그) 관계 점수, 2A8C90 상성 등급(경계 11/30/47), 2B1DF0 친족 배율(2), 2CA530 "서로 애호·혐오 없음 + 의형제 아님", 2CBF80 의형제, 2CAE70 배우자, 2C7B30/2C92A0 부/모 일치, 2CAE20(a, b) b 가 a 의 부모, 2C5ED0 형제, 2A8010 상성 격차(원형, 최대 75), 2343A0(a, b) b 가 a 의 혐오 목록 | - |  | L2 3차 | 확정 |
 
 ### 2.19 UI
@@ -432,7 +483,11 @@
 | `1B4750` (-) | 부대 행동 패널(unit_action_ot) | 지도 깃발이 아님; 1B4823에서 얼굴 1BA4E0 | - | - | ui_native.md §4.13 | 코드 |
 | `375430` (-) | 표정 분류 | 0x13/0x15/0x18 상수 반환원 — 외교 종류 아님 | - |  | lane_L1_4.md | 확정 |
 | `86E920` (-) | 레이아웃 리소스 로더 | 이름 해시 → common setting KTID → 자원 작업. 동기 경로는 완료와 초기화 슬롯을 처리 | 레이아웃, 논리 이름, 동기/비동기 | - | ui_native.md §2.1 | 확정 |
+| `870470` | 레이아웃 로드 헬퍼 | 논리 이름(문자열) → `CUILayout` 로드 초기화. 외교 창 계열(`06_11_xx`)·부대 깃발 `1A0430` 등 각 화면 설정 함수가 호출. `86E920`(vtable 슬롯 38 KTID 경로)과 다른 호출 경로(논리 이름 직접 전달). ui_native.md §447: "각 함수가 `870470`에 넘기는 논리 이름과 설치 등록표의 최종 자산" | 입력: 논리 이름 | - | ui_native.md §4.13·§11.2; `1A0430` 보강 | 확정(코드) |
+| `85D050` | 라디오 버튼 선택 setter | 라디오 버튼 `+0x198`에 선택 값을 쓴다. 일반 버튼(0x198 B)에 사용하면 객체 밖 메모리 덮어씀 — 주의. ui_native.md "라디오 setter `85AD20`" 가 옛 주소 | 입력: 버튼, 값 | - | ui_native.md §3.1·§(주의사항) | 확정(코드) |
 | `1A4FB0 / 869690 / 86CCF0` (-) | UI 이벤트 등록·디스패치 | 이벤트와 functor를 등록하고 이벤트 코드로 콜백 탐색 | 컨트롤, 이벤트 번호, functor | - | ui_native.md §3.1 | 확정 |
+| `9309C0` (92E430) | UI 컨트롤 생성 | 레이아웃 테이블 인덱스 노드에서 UI 컨트롤 생성. kind 1=라디오(`84D630`, 0x1A0 B), kind 2=kind2 버튼(`84D9D0`), kind 3=kind3 버튼(vt `13E7490` 재설정), 기본=일반 버튼(`84CF00`, 0x198 B). 위치 `92F1B0` 획득, 치수(`+0xF0/+0xF4`) 복사, vt+0x188 초기화. `92E7C0` 원 노드 처리, `930740` 그룹 등록. 노드 종류→4. — 옛 92E430 | 입력: (table, index, style, kind, group, order). 출력: 컨트롤 포인터(실패=0) | - | ui_native.md §3.1; BUILD_25953386_REMAP.md(jump table 변경) | 확정(코드) |
+| `9332B0` (930D20) | UI 노드 값 갱신 | 레이아웃 테이블 인덱스 노드의 텍스트·값 갱신. `9333C0`으로 리소스 노드를 먼저 갱신하고, 런타임 컨트롤이 있으면 종류별 갱신(4~7→vt+0x1D8, 9→`877D50`, 0xC→`85ED10`, 0xD→`859580`, 0xE→하위 노드 `9333C0`). 명품·포상·논공 창 노드 갱신에 사용. — 옛 930D20 | 입력: (table, index, value). 출력: void | - | ui_native.md §3·명품/포상/논공 창; BUILD_25953386_REMAP.md(jump table 변경) | 확정(코드) |
 | `45D850` (45B620) | 무장 선택창 준비 | 원본 설정을 복사해 유형별 창에 저장 | 설정, 종류 | - | ui_native.md §4.3 | 확정 |
 | `45E090` (45BE60) | 무장 선택창 열기 | `460F70`으로 열기 상태를 큐에 등록하고 `574750`을 지나 종료 결과 읽기 | 설정, 종류 → 결과 | - | ui_native.md §4.3 | 확정 |
 | `217900` (216090) | 확인창 열기 | `2047F0`으로 확인 상태를 큐에 등록하고 `574750`을 지나 종료 결과 읽기 | 확인 메시지 → bool | - | ui_native.md §4.3 | 확정 |
@@ -813,7 +868,7 @@
 | `San14Sim/docs/fidelity/pre6_timing.md` | RVA 47개 중 옛 시작 46, changed 4(문서가 1fbe6be7 명시) | 낡음 확인 → command_audit.md §2 + dump_measurements.md | lane_L4.md §2 |
 | `San14Sim/docs/fidelity/systems.md` | RVA 14개 전부 옛 시작, changed 5. coverage.md 복사본 | 낡음 확인 | command_audit.md · lane_L1~L4.md |
 
-현재 문서(read_first)의 RVA 체계 확인:
+현재 문서(read_first)의 RVA 체계 확인: 
 - `AI_TacticsMod/docs/BUILD_25953386_COMBAT.md`: 기준판 전환 분석. RVA 65개(옛 34/새 17) → 현재
 - `AI_TacticsMod/docs/BUILD_25953386_REMAP.md`: 기준판 전환 보고. RVA 331개 → 현재
 - `AI_TacticsMod/docs/GHIDRA_PERSISTENT.md`: 도구 문서 → 현재
