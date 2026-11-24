@@ -36,7 +36,7 @@
       "path": "docs/orig/rules_combat.md",
       "source": "San14Sim/docs/orig/rules_combat.md",
       "source_sha256": "84404d8557f0d0e23e720046111c76381d05d37a2f267d8a81c1214d292d2178",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/rules_combat_effects.md",
@@ -48,13 +48,13 @@
       "path": "docs/orig/rules_diplomacy.md",
       "source": "San14Sim/docs/orig/rules_diplomacy.md",
       "source_sha256": "21b4d310efbf59734700244281a164335753b61cc18ca71e9031943ff8bd477b",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/rules_domestic.md",
       "source": "San14Sim/docs/orig/rules_domestic.md",
       "source_sha256": "51173820b78fab07fe15871bfef7c4a5b066a8b3f087d8cfbd2c6795e8a6bea7",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/rules_movement.md",
@@ -72,25 +72,25 @@
       "path": "docs/orig/rules_people.md",
       "source": "San14Sim/docs/orig/rules_people.md",
       "source_sha256": "8c410071d6693f2340466a4ab817ebfe037ecb37275ec5ba8cee11760fc7e22c",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/rules_time.md",
       "source": "San14Sim/docs/orig/rules_time.md",
       "source_sha256": "537495bfc2c9b0a6e07f85f7ae1c1c586df42a6c8dd03dafa168b23a2a0d6bc8",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/rules_tribes.md",
       "source": "San14Sim/docs/orig/rules_tribes.md",
       "source_sha256": "004ac530a9b5a1469d7576cee8228bc389d528283020f1fa79c06be516edd3aa",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/structs.md",
       "source": "San14Sim/docs/orig/structs.md",
       "source_sha256": "2b297e206581fa056bc291acb61d1d79562a7c3393f0d0df034b7072ac4eca34",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
     },
     {
       "path": "docs/orig/ui_native.md",

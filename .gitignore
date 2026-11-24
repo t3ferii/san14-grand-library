@@ -12,3 +12,9 @@ __pycache__/
 *.gpr
 *.rep/
 *.unpacked*
+*.bin
+*.rdb*
+*.s14
+*.dmp
+*.asm
+*.tsv

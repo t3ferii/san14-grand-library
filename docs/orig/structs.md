@@ -591,21 +591,7 @@
 
 ## 5. 엔진 대응 요약
 
-| 원작 구조체 | 엔진 위치 | 상태 |
-|---|---|---|
-| HEX 소유 +0x14 | `Data::hex_owner[48400]`, `Game::paint/claimable` (engine/rules/worldmap.h) | 구현(S1) |
-| HEX +0x16 화염 | `Data::hex_fire` | 구현(S18; 원작 용도 충돌) |
-| HEX +0x19 감면 | facility_game.h(효과 18) | 구현 |
-| AREA +0x68/+0x76 | `Data::area_owned`, `Map::tile_count` | 구현(S1) |
-| AREA +0x66 인접 마스크 | - | 미구현(APPROX: 소유 지역 100점) |
-| TERRAIN 객체 | `Map::terrain_*` (cost/flag/attr42/drain/fire) | 구현(S18 정정) |
-| FACILITY_DEF | engine/rules/facility_tables.h `FacDef`(생성물, tools/gen_facility_tables.py) | 구현(S4); 효과 종류 일부 APPROX |
-| BUILDING | `struct Facility{id,type,force,source,tile,hp,start}` | 구현(S4; 완성=hp>=정의 내구) |
-| ARMY | `struct Unit` (+supply/st_conf/st_halt/st_taunt/wform/facing/build/lv/ld) | 구현·일부 APPROX(옵션 +0x26/+0x40/+0x41 없음) |
-| PERSON | `Data::person_*[]` 병렬 배열 | 구현·일부(부상 등급 +0x161 없음, 명품 없음) |
-| FORCE | `Data::ruler/alive/friendship/alliance_until/force_*` | 구현·일부 |
-| TRAIT/TACTIC/POLICY | `Map::trait_*`, `tactic_*`, `policy_*` | 구현·효과 일부 미반영(WB §5) |
-| SETTINGS | `Data::difficulty/build`, `g_tune` | 난이도만; 60설정 미모형 |
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 6. 충돌 (둘 다 기록, 출처 표기)
 

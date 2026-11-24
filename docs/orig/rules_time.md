@@ -203,19 +203,7 @@ RVA는 현재 기준 빌드 `1a4a447d`. 옛 빌드(`1fbe6be7`) 문서의 값은 
 
 ## 7. 엔진 `Game::day()` 순서와 원작 대비 (`engine/rules/rules.cpp`)
 
-```
-day():
-  (재개 상태가 아니면)
-    government_wait 감소, refresh_policies, people_tick, rank_track
-    순 날(1/11/21): merit_turn, person_pflag 초기화
-    day == 1: monthly_tick  (monthly_done이면 한 번 건너뜀 = 덤프 정렬용)
-  순 날 turn_block: 명령서 덮어쓰기(2593E0), RuleAgent·망 결정 → (망이 있으면 net 일시정지) → apply → 계승·정책 갱신 → 지역 개발(297070)·훈련(303240) → TURN_HASH 이벤트
-  tribal_tick, bandit_tick
-  update_units: 상태 게이지 −4 → (순 날) turn_start·aura·군량 정산(unit_food_settle) → 점유 색인 → 이동(12틱) → 칠하기·병참 판정 → 건설 진행 → 교전(unit_combat) → 불·독 → 정리 → periodic_morale → 사기 0 소멸
-  wounded_recovery(순 날), 순 날: 내구 수리(금 100) → garrison_settle
-  ++elapsed, 날짜 증가
-```
-원작 대비: (a) 원작은 월 처리가 1일 덤프 이전(엔진은 1일 시작, 연속 실행에서는 동순서), (b) 원작은 소단계별 시계를 case 단위로 섞어 돈다(엔진은 하루를 한 블록으로, 이동 12틱·불 4회만 소단계 반복) — 같은 날 안에서의 부대 간 처리 순서(부대 목록 순 vs 배열 순)는 APPROX, (c) 원작의 순 시작 결정 블록은 case 1(소단계 0)에서 전략 단계로 일시 진행(세력 차례), 엔진은 동시 결정 → 세력 번호 순 적용(적용 직전 합법성 재검사), (d) `Game::step`/`PySim`의 순 도중 명령은 도구용, (e) 규칙 해시에는 `TU_*` 튜닝 스위치가 포함된다(`sim.h enum Tune`).
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 8. 충돌
 

@@ -247,17 +247,7 @@ e = 재야 e(난이도 0/1/2+ = 60/65/70) | 포로 70(같은 거점 소재 무�
 
 ## 10. 엔진 대응표
 
-| 주제 | 엔진 위치 | 상태 |
-|---|---|---|
-| 등용·탐색·포로·외교 결과·수명·계승·등장 | `engine/rules/people.cpp`(`recruit_chance`, `people_action`, `people_tick`, `people_appear_pass`, `death_year_eff`) | 구현(APPROX 항 위 본문) |
-| 충성 분기·포상·임명·하사 | `people.cpp loyalty_quarterly`, `ActionType::Reward/Appoint/Gift`, `friendship_add` | 원작 식 구현 |
-| 포획·점령 무장 | `battle.cpp capture/disband`, `combat_formulas.h capture_percent`, `l1_effects.h capture_immune_*` | 구현 |
-| 공적·위계·공훈 | `people.cpp` S16 블록(`add_merit`, `rank_effect`, `RK_THR`) | 구현(원천 8종류/27) |
-| 명품 | `treasure_tables.h`, `Data::treasure_owner`, `Game::ability`, `treasures_move`, `Gift` | 구현(퇴각확실·수명연장 미구현; 능력 가산은 L1 2차에서 최댓값 1개로 교정) |
-| 능력 getter | `core/init.cpp Game::ability` | 구현(부상 등급 100/80/50/20 L1 2차, 직위·명품 최댓값·위계; 주의·목록 항 미반영) |
-| 후계 | `people.cpp succession_*` | 후보 규칙 구현, 선택 = 행동 |
-| 관측·행동 슬롯 | `engine/ai/schema.cpp`, `docs/nn/S13.md`(K_REWARD 10, K_APPOINT 11, K_GIFT 12, K_SEARCH 16, K_CAPTIVE 17, K_NOMINATE 18, 계략 14, 순찰 15, 군단 19) | 구현(포로 교환·공훈·교역·학습 일부는 규칙만, N13·CA 14절) |
-| 구현 안 함·원작에 없음 | 순별 충성 변화·불만·이탈, 군단 설정 효과, 정전·속국 | 원작에 없음(CA 10절) |
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 11. 충돌 (둘 다 적음)
 

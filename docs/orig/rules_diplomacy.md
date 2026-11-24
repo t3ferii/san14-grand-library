@@ -229,22 +229,7 @@
 
 ## 8. 엔진 대응표
 
-| 규칙 | 엔진 위치 | 상태 |
-|---|---|---|
-| 외교 종류 4~9 결과 | `engine/rules/people.cpp:216 resolve_diplomacy` | 구현(0x13 미구현) |
-| 우호도 가감 | `people.cpp:208 friendship_add` | 구현 |
-| 동맹 해제 | `people.cpp:212 alliance_break` | 구현 |
-| 동맹 잔여 개월 | `people.cpp:209 alliance_months_left` | 구현 |
-| 가치식 | `people.cpp:198-203 person_value, person_value_ab, diplo_value` | 구현(2항 APPROX) |
-| 항복 이전 | `people.cpp:191 transfer_force` | APPROX |
-| 적대 판정 | `battle.cpp:25 hostile` | 이민족끼리 비적대 APPROX |
-| 계략 합법성·비용·성공률 | `people.cpp:92 strat_cap, 97 strat_defense, 101 strat_rate, 116 strat_check` | 구현 |
-| 계략 실행·효과 | `people.cpp:123 strat_action`(통계 `st_strat[kind][res]`, 이벤트 46) | 구현 10·11·12 |
-| 교역 도착 | `people.cpp:394 resolve_trade`(상태 `tribe_fav`, `tribe_state`) | 구현(일부 APPROX) |
-| 공격 요청 상태 | `d.atkreq_from/base/left` | 구현 |
-| 행동 헤드(NN) | K_DIPLOMACY·K_STRATAGEM, `docs/nn/S13.md:23-26`, `S16.md` | 구현 |
-
-RuleAgent 판단 기준선: "우호도 < 70 이웃에 2,000금 친선"뿐(판단은 복제하지 않는다, command_audit.md:213). 계략은 RuleAgent가 쓰지 않는다.
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 9. 충돌
 

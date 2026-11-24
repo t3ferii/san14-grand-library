@@ -348,17 +348,7 @@ eff_gf = 정책 0x2E ; eff_tr = 정책 0x2D                       ; 정책 효�
 
 ## 10. 엔진 대응표
 
-| 주제 | 엔진 위치 | 상태 |
-|---|---|---|
-| 수입(금·군량)·징병·인구·상한 | `engine/rules/domestic_formulas.h`, `rules.cpp monthly_tick`, `difficulty.h`, `battle.cpp base_size/…cap` | 구현(APPROX 입력: 시설 플래그·세력 합산 항·표본 e) |
-| 개발·치안·훈련·담당 비용 | `domestic_formulas.h development_base/security_base/training_gain/officer_cost`, `rules.cpp day()`(개발·치안·훈련 순 처리), `l1_effects.h` | 구현 |
-| 내구 수리·부상병 풀·군량 소비 | `rules.cpp`, `battle.cpp wounded_recovery/garrison_settle/unit_food_settle` | 구현 |
-| 점령 자원 | `battle.cpp capture`, `worldmap.h capture_paint` | 구현(5000/20000 하한 항 미구현) |
-| 시설 | `facility_tables.h`(생성), `facility.h`, `facility_game.h` | 구현(효과 의미 일부 APPROX, 석병팔진 잠금) |
-| 정책 | `core/init.cpp`(policy_effect 로드), 각 규칙에서 `policy_effect[f*101+id]` | 구현(미구현 효과 8.1) |
-| 명령서 | `rules.cpp`, `tools/s9_orders.py` | 구현(+2~+8 APPROX) |
-| 월 1일 이벤트 단계표(도시 재해 등) | - | 미구현(도적만, rules_tribes) |
-| 지역 칸 확장 | `worldmap.h grow_territory/area_expand` | APPROX(코드 위치 미상) |
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 11. 충돌 (둘 다 적음)
 

@@ -169,17 +169,7 @@
 
 ## 11. 엔진 대응표
 
-| 규칙 | 엔진 위치 | 상태 |
-|---|---|---|
-| 이민족 출진 | `engine/rules/battle.cpp:431 tribal_attack`, 난이도 표 `engine/rules/difficulty.h:29-30 tribal_gate, tribal_probability` | 구현(동시 수 3, 후보 정렬 APPROX) |
-| 이민족 반응·매일 조종 | `battle.cpp:406 tribal_tick` | 구현(반응 5+굴림(6)), 매일 15칸 조종은 APPROX(user) |
-| 이민족 지휘관(부족 소속 무장)·우호도 하락 | `battle.cpp tribal_pool`·`after_hit`(`TU_L2` 비트 1), `disband` 이민족 분기 | 구현(장수 선택 순서 APPROX) |
-| 이민족 점령(복속) | `battle.cpp:65 capture`, 상태 `subjugated_bits`, `subject_of` | 구현(만충 상한·철수 APPROX) |
-| 도적 출현 | `engine/rules/people.cpp:170 bandit_spawn`, `:181 bandit_tick`(`TU_BANDIT`) | 구현 + 빈도 보정 APPROX |
-| 도적 점령 금지 | `battle.cpp:67` | APPROX |
-| 적대 판정 | `battle.cpp:25 hostile` | 이민족끼리 비적대(APPROX) |
-| 이민족 NN 제외 | `engine/ai/schema.cpp`(관측·행동에 이민족 칸 없음) | 구현 |
-| 도적 약탈·이민족 출현 대상 선택(`2AAC40`) | - | 미구현 |
+이 절은 별도 San14Sim 시뮬레이터의 구현 비교였으므로 공개 원작 사양에서 제외했다. 원작 규칙은 이 문서 앞 절의 RVA·데이터 근거를 따른다.
 
 ## 12. 충돌
 
