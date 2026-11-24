@@ -26,6 +26,8 @@ DEFAULT_CACHE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'San14G
 EXE = 'SAN14CE_KO.exe'
 TABLES = ('functions', 'calls', 'datarefs', 'strings', 'symbols', 'vtables', 'imports', 'import_refs', 'failures')
 MAX_CELL = 16 * 1024 * 1024
+# Bump when preparation/index semantics change; query-only fixes must not trigger analysis.
+RECIPE_VERSION = 1
 csv.field_size_limit(MAX_CELL)
 
 
@@ -354,8 +356,8 @@ def prepare(args):
     export = workspace / 'export'
     lock = read_json(ROOT / 'tools/dependencies.lock.json')
     scripts = ROOT / 'tools/ghidra_scripts'
-    recipe = hashlib.sha256((json.dumps(lock, sort_keys=True) + json.dumps(build, sort_keys=True) +
-                            digest(Path(__file__)) + ''.join(digest(x) for x in sorted(scripts.glob('*.java')))).encode()).hexdigest()
+    recipe = hashlib.sha256((str(RECIPE_VERSION) + json.dumps(lock, sort_keys=True) + json.dumps(build, sort_keys=True) +
+                            ''.join(digest(x) for x in sorted(scripts.glob('*.java')))).encode()).hexdigest()
     with job_lock(cache):
         workspace.mkdir(parents=True, exist_ok=True)
         proof = workspace / 'ready.json'
