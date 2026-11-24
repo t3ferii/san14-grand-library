@@ -39,6 +39,14 @@ def synthetic_export(folder, failures=False):
 
 
 class CacheTests(unittest.TestCase):
+    def test_concurrent_preparation_is_rejected_and_lock_released(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cache = Path(tmp)
+            with lib.job_lock(cache):
+                with self.assertRaisesRegex(RuntimeError, 'Another preparation'):
+                    with lib.job_lock(cache): self.fail('Concurrent preparation must not proceed')
+            with lib.job_lock(cache): pass
+
     @unittest.skipUnless(os.name == 'nt', 'Windows preparation pipeline')
     def test_preparation_pipeline_preserves_original_and_reuses_cache(self):
         with tempfile.TemporaryDirectory() as tmp:

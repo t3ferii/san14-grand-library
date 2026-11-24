@@ -130,16 +130,21 @@ def job_lock(cache):
         f.seek(0)
         if os.name == 'nt':
             import msvcrt
-            if f.read(1) == b'':
-                f.write(b'0'); f.flush()
-            f.seek(0)
             try:
                 msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
             except OSError as e:
                 raise RuntimeError('Another preparation job is using this cache.') from e
+            # Reading a byte locked by another process itself raises PermissionError;
+            # initialize the marker only after acquiring the OS lock.
+            if f.read(1) == b'':
+                f.write(b'0'); f.flush()
+            f.seek(0)
         else:
             import fcntl
-            fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError as e:
+                raise RuntimeError('Another preparation job is using this cache.') from e
         try:
             yield
         finally:
