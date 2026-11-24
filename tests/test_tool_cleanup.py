@@ -158,9 +158,13 @@ class CleanupTests(unittest.TestCase):
 
     def test_reparse_tool_is_not_removed(self):
         with tempfile.TemporaryDirectory() as tmp:
-            cache = Path(tmp); path = owned_tool(cache)
+            # Windows CI may supply an 8.3 temp path while cleanup resolves its long alias.
+            # Exercise an unresolved alias on every OS; mock the same physical directory.
+            (Path(tmp)/'alias').mkdir()
+            cache = Path(tmp)/'alias/..'; path = owned_tool(cache)
+            canonical = path.resolve()
             original = life.is_link
-            with mock.patch.object(life, 'is_link', side_effect=lambda p: Path(p)==path or original(p)):
+            with mock.patch.object(life, 'is_link', side_effect=lambda p: Path(p).resolve()==canonical or original(p)):
                 self.assertEqual(len(life.cleanup(cache)['preserved']), 1)
             self.assertTrue(path.exists())
 
