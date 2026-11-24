@@ -139,8 +139,8 @@
 | AI_TacticsMod/tools/ghidra_full.py (현재 빌드 추출본) | 현재 | 조건 함수 본문·호출 관계(이번에 새로 읽음) |
 | 분석용/*.md, graphify-out | 열지 않음 | 참고 모드 분석 문서(제목 확인). 원작 AI 트리 근거 아님 |
 
-원본 문서는 수정·이동·삭제하지 않았다. 이 문서·`ai_behavior.json`·`ai/` 만이 K2 산출물이다. 재생성 스크립트는 저장소에 넣지 않았다(작업 임시 폴더).
+위 목록은 통합 조사 당시의 역사 출처다. 공개본에는 이 문서와 `ai/`의 설명 문서를 이관했다. `ai_behavior.json`, 전수 트리 출력과 대량 추출 표는 포함하지 않는다. [공개 범위](../DISTRIBUTION.md)를 따른다. 로컬 데이터는 `library.ps1 data bt` 또는 `origlib.load_bt().tree(i)`로 조회한다.
 
 ## 12. 읽는 순서
 
-1. 이 문서 0절 -> 2. ai/roles.md(찾는 영역) -> 3. ai/conditions.md(조건 의미) -> 4. ai/rulebase.md(수치) -> 5. ai/pseudo_*.txt(원문 흐름) -> 6. ai/diff_bt_exce.md(옛 문서의 N번호를 읽을 때).
+1. 이 문서 0절 → 2. `ai/roles.md`(찾는 영역) → 3. `ai/conditions.md`(조건 의미) → 4. `ai/rulebase.md`(수치) → 5. 필요한 로컬 캐시·원작 데이터만 조회 → 6. `ai/diff_bt_exce.md`(옛 문서의 N번호를 읽을 때).

@@ -14,7 +14,7 @@
 - `depends`: 필수 패키지 id. 버전 범위는 현 규격에서 자동 해석하지 않으므로 별도 notes로 명시한다. `conflicts`: 함께 쓸 수 없는 패키지 id.
 - `hooks`: 종류(code/call/vtable), **현재 빌드 RVA**, 실제 교체 길이, 원래 바이트·값을 확인하는 guard의 근거, 불일치 시 해당 기능 중단 정책. vtable은 실제 슬롯의 RVA와 길이 8을 적는다. 함수 시작 주소만 적고 패치 자리를 생략하지 않는다.
 - `files`: 게임 설치 폴더 기준 상대 파일 경로. 경로의 대소문자·슬래시 차이는 같은 파일로 본다. EXE·세이브·백업 소유 선언은 금지한다.
-- `settings`: 설정 파일, 섹션, 키. `ui`: `author.mod:entry`처럼 구별되는 화면 소유 id. `resources`: 실제 공유 파일·bank·레코드 id를 합친 표준화된 소유 키.
+- `settings`: 설정 파일, 섹션, 키. `ui`: `author.mod:entry`처럼 구별되는 화면 소유 id. `resources`: 실제 공유 파일·bank·레코드 id를 합친 표준화된 소유 키. 예를 들어 `0002/screenlayout.rdb:bank:24`로 적으며 모더 이름을 붙여 같은 자원의 충돌을 숨기지 않는다. 전체 파일을 독점 교체하면 `files`에도 그 파일을 선언한다.
 - `provides`·`uses`: 제공·사용 API 이름. 버전은 이름에 넣는다(예: `author.mod.api/v1`). 안정성·등록 시점·스레드·콜백 수명은 해당 API 계약에 적는다.
 - `off_behavior`·`uninstall`·`notes`: 기능 OFF, DLL 부재, 제거와 복원, 검증된 조합과 미확인 범위.
 

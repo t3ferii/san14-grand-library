@@ -513,7 +513,11 @@ def data_query(args):
     os.environ['SAN14_GAME'] = str(discover_game(args.game))
     sys.path.insert(0, str(ROOT))
     from origlib.cli import main as orig_main
-    return orig_main(args.arguments)
+    values = list(args.arguments)
+    if (len(values) == 2 and values[0] == 'table') or (len(values) == 3 and values[0] == 'scenario'):
+        values.append('20')
+        print('Showing first 20 rows by default; supply an explicit row count for more.', file=sys.stderr)
+    return orig_main(values)
 
 
 def main(argv=None):

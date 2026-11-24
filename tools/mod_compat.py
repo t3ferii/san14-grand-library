@@ -36,7 +36,7 @@ def validate(m):
     for hook in m.get('hooks', []):
         if not isinstance(hook, dict) or hook.get('kind') not in ('code', 'vtable', 'call'):
             raise ValueError('hook.kind must be code, vtable or call')
-        if number(hook.get('rva', 0)) <= 0 or not isinstance(hook.get('length'), int) or not 1 <= hook['length'] <= 4096:
+        if not 0 < number(hook.get('rva', 0)) <= 0xFFFFFFFF or type(hook.get('length')) is not int or not 1 <= hook['length'] <= 4096:
             raise ValueError('Positive hook RVA and length required')
         if not isinstance(hook.get('guard'), str) or not hook['guard'].strip():
             raise ValueError('Original bytes/value guard evidence required')
