@@ -5,7 +5,7 @@
 1. 저장소를 fork하고 작업 브랜치를 만듭니다.
 2. 자기 Steam 설치본에서 `prepare.ps1`을 실행합니다. 문서 수정만 한다면 캐시 준비 없이도 작업할 수 있지만 조회하지 않은 근거를 확인했다고 적지 않습니다.
 3. 관련 기존 문서의 절을 고칩니다. 새 결론과 추정·미해결을 구분하고, 정정이면 정정 기록을 남깁니다.
-4. `python -m unittest discover -s tests -v`와 `python tools/check_repository.py`를 실행합니다. 준비된 Python은 `%LOCALAPPDATA%/San14GrandLibrary/tools/python-3.12.10/python.exe`입니다.
+4. 문서만 바뀌면 diff와 참조를 검토하고 `python tools/check_repository.py`를 실행합니다. 코드·스키마·실행 예제를 바꾸면 `python -m unittest discover -s tests -v`도 실행합니다. 준비된 Python은 `%LOCALAPPDATA%/San14GrandLibrary/tools/python-3.12.10/python.exe`입니다. 기여 문서를 고치려고 캐시를 다시 만들 필요는 없습니다.
 5. PR 양식에 게임 빌드·해시·RVA/파일 위치·검증 방법·실행한 검사·미확인 범위를 적습니다. 원작 파일·코드 캐시·세이브·개인 로그는 첨부하지 않습니다.
 6. 유지관리자의 수정 요청을 반영하고 승인 후 병합을 기다립니다.
 
@@ -14,3 +14,52 @@ AI로 작성해도 기여자가 주장을 확인해야 합니다. PR에는 테�
 기여자는 제출 자료를 해당 경로의 프로젝트 라이선스로 제공할 권한이 있어야 합니다. 제3자 코드·자산을 몰래 가져오거나 원작 코드 덤프를 라이선스 없이 재배포하지 않습니다. 본인 외 자료는 출처·조건을 명시하고 유지관리자에게 먼저 알립니다.
 
 유지관리자 검토: 대상 빌드 일치, 실제 근거와 결론 범위, 기존 정정과 충돌, Markdown·JSON 일치, 원작 자료 포함 여부, 도구가 원본을 보존하는지 확인합니다. 외부 PR은 main의 필수 CI, 코드 소유자 승인 1개, 대화 해결을 요구합니다. 새 변경이 올라오면 이전 승인은 취소됩니다. 초기 단독 유지관리 단계에는 관리자 계정의 직접 유지보수 예외를 둡니다. 유지관리자 본인 PR을 본인이 승인하는 방식으로 검토를 가장하지 않습니다. 관리자를 포함한 모든 변경을 PR로 제한하려면 별도 코드 소유자·검토자를 먼저 확보합니다.
+
+## 처음 기여하는 사람: 커밋 요청은 PR입니다
+
+커밋은 자기 브랜치에 변경을 기록하는 것이고, **Pull Request(PR)는 그 커밋을 대도서관에 반영해 달라는 요청**입니다. 원본 저장소에 쓰기 권한이 없어도 자기 fork에서 문서를 고쳐 PR을 보낼 수 있습니다. 유지관리자가 근거를 확인하고 수정 요청 또는 승인·병합을 합니다. 제출만 했다고 즉시 공동 문서가 바뀌지는 않습니다.
+
+AI에게 다음처럼 요청하면 됩니다.
+
+```text
+이 대도서관의 AGENTS.md와 CONTRIBUTING.md를 읽어 줘.
+내 모드를 만들면서 새로 확인한 원작 사실이나 기존 문서의 오류가 있으면
+중복 여부를 확인하고 관련 문서·정정 기록·근거를 먼저 보완해 줘.
+실제 수정안을 보여 주고 PR로 공유할지 한 번만 물어봐 줘.
+내가 승인하면 fork·작업 브랜치·커밋·PR 제출까지 처리하고 PR 주소를 알려 줘.
+이미 승인한 기여 범위라면 다시 묻지 말고 진행해 줘.
+```
+
+처음부터 "이 조사 결과를 대도서관에 PR로 기여해 줘"라고 요청한 경우에는 그 결과 범위의 제출 승인이 포함됩니다. 다른 사람의 자료나 별도 모드 전체를 함께 공개하는 승인은 아닙니다.
+
+## AI가 끝까지 처리할 순서
+
+1. **중복 확인**: 해당 문서와 최신 upstream, 관련 Issue·PR을 확인합니다. 기존 설명과 다른 점을 한 문장으로 정리합니다. 같은 내용이면 PR을 만들지 않고 이미 반영된 위치를 알려 줍니다.
+2. **수정안 준비**: 기존 문서의 해당 절을 고칩니다. 기존 문서로 묶을 수 없는 새 분야만 목차에 문서를 추가합니다. 빌드·분석 해시·RVA/데이터 위치·조회 명령·확신도·미확인을 적고, 정정이면 이전 결론과 이유를 남깁니다. 관련 함수·구조체 JSON 색인도 함께 갱신합니다. 추정을 확정으로 올리지 않습니다.
+3. **로컬 검토**: 원작 파일·캐시·대량 덤프·세이브·개인 경로를 제외하고 문서 검사와 diff 검토를 마칩니다. 문서 기여를 위해 전체 원작을 재분석하지 않습니다.
+4. **공유 의사 확인**: 제출 승인이 없으면 실제 수정안과 핵심 근거를 보여 주고 변경을 묶어서 한 번만 묻습니다. 이미 승인한 기여는 재확인하지 않습니다. 승인 전에는 fork에 push하거나 Issue·PR·댓글을 보내지 않습니다.
+5. **fork와 브랜치**: 연결된 GitHub 도구를 우선 사용하고, 기능이 부족하면 Git/GitHub CLI를 사용합니다. 인증 계정과 fork 소유자를 확인합니다. bootstrap의 ZIP 작업본에는 Git 이력이 없으므로 이를 억지로 초기화하지 않고, 별도 Git clone 또는 GitHub API 작업 브랜치에 해당 문서 변경만 옮깁니다. 기존 사용자 변경을 reset·삭제하지 않습니다.
+6. **커밋과 PR**: 자기 fork의 주제별 브랜치에 변경 파일만 커밋·push합니다. upstream `t3ferii/san14-grand-library`의 `main`을 대상으로 PR을 만듭니다. `.github/PULL_REQUEST_TEMPLATE.md`에 따라 한국어 제목·본문, 근거·검사·미확인을 적습니다. upstream main에 직접 쓰지 않습니다.
+7. **검토 대응**: CI 실패 원인을 고치고, 검사나 보호 규칙을 약화하지 않습니다. 유지관리자의 요청은 같은 PR 브랜치의 후속 커밋으로 반영합니다. PR을 중복 생성하지 않고 근거가 바뀌면 설명도 갱신합니다. 댓글과 토론도 승인된 기여 범위에서 진행합니다.
+8. **보고**: PR 링크·변경 요약·검사·미확인을 알려 줍니다. 검토 대기를 "반영 완료"라고 쓰지 않습니다. 승인·병합된 commit이 공동 문서의 새 기준입니다.
+
+### GitHub CLI 예시
+
+Git·GitHub CLI가 있고 로그인된 외부 기여자의 새 작업 폴더 예시입니다. AI가 실제 계정·기존 fork·브랜치·파일에 맞게 조정합니다. 연결 도구/API로 같은 작업을 할 수 있으면 CLI를 설치할 필요가 없습니다.
+
+```powershell
+gh auth status
+gh repo fork t3ferii/san14-grand-library --clone --remote
+Set-Location san14-grand-library
+git switch -c docs/research-topic
+# 관련 문서를 수정하고 실제 변경 파일 목록과 diff를 검토합니다.
+python tools/check_repository.py
+git add docs/orig/rules_people.md
+git commit -m "docs: clarify original recruitment conditions"
+git push -u origin docs/research-topic
+# 검토한 PR 본문을 저장소 밖의 임시 텍스트 파일에 실제 줄바꿈으로 저장합니다.
+# YOUR_LOGIN과 경로는 실제 값으로 바꿉니다. 인증 토큰을 본문에 넣지 않습니다.
+gh pr create --repo t3ferii/san14-grand-library --base main --head 'YOUR_LOGIN:docs/research-topic' --title '등용 조건 원작 조사 보완' --body-file 'C:/work/pr-description.txt'
+```
+
+`git add .`로 다른 모드나 캐시까지 올리지 않습니다. `origin`이 자기 fork인지, PR의 base가 upstream main인지 확인합니다. 로그인·권한이 없으면 수정안과 PR 본문을 보존하고 필요한 로그인만 요청합니다. 토큰을 채팅이나 파일에 복사하도록 요구하지 않습니다. 공식 명령 설명: [gh repo fork](https://cli.github.com/manual/gh_repo_fork), [gh pr create](https://cli.github.com/manual/gh_pr_create).
