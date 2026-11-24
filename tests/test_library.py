@@ -79,11 +79,12 @@ class CacheTests(unittest.TestCase):
             export = Path(tmp) / 'export'; synthetic_export(export)
             lib.make_index(export)
             self.assertEqual(lib.verify(export, HASH, ['1000'])['functions'], 2)
+            self.assertEqual(lib.verify(export, HASH, ['1002'])['functions'], 2, 'Interior RVA must resolve to its containing function')
             before = (export / 'index.sqlite').stat().st_mtime_ns
             lib.make_index(export)
             self.assertEqual((export / 'index.sqlite').stat().st_mtime_ns, before)
             with mock.patch.object(lib, 'select_export', return_value=export):
-                for cmd, value, expected in [('func', '1002', 'void first()'), ('callers', '2000', '00001000'), ('callees', '1000', '00002000'), ('xref', '3000', 'READ'), ('str', 'synthetic', 'unicode'), ('vtable', '4000', 'Synthetic'), ('find', 'first', '00001000'), ('grep', 'second', '00002000')]:
+                for cmd, value, expected in [('func', '1002', 'void first()'), ('callers', '2000', '00001000'), ('callers', '2002', '00001000'), ('callees', '1000', '00002000'), ('callees', '1002', '00002000'), ('xref', '3000', 'READ'), ('str', 'synthetic', 'unicode'), ('vtable', '4000', 'Synthetic'), ('find', 'first', '00001000'), ('grep', 'second', '00002000')]:
                     output = io.StringIO()
                     with contextlib.redirect_stdout(output): self.assertEqual(lib.main([cmd, value]), 0)
                     self.assertIn(expected, output.getvalue())

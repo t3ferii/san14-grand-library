@@ -317,12 +317,13 @@ def verify(export, expected, samples):
             raise ValueError('Function body index is incomplete')
         for address in samples:
             rva = f'{int(address, 16):08X}'
-            row = con.execute('select shard,offset,length from bodies where rva=?', (rva,)).fetchone()
+            function = con.execute('select rva from functions where rva<=? and "end">=? order by rva desc limit 1', (rva, rva)).fetchone()
+            row = con.execute('select shard,offset,length from bodies where rva=?', function).fetchone() if function else None
             if not row:
                 raise ValueError(f'Sample function missing: {rva}')
             with (export / row[0]).open('rb') as f:
                 f.seek(row[1]); body = f.read(row[2])
-            if not body.startswith(b'// ==== FUNC ' + rva.encode() + b' ') or b'DECOMPILE_FAILED' in body:
+            if not body.startswith(b'// ==== FUNC ' + function[0].encode() + b' ') or b'DECOMPILE_FAILED' in body:
                 raise ValueError(f'Sample function failed decompilation: {rva}')
         failures = con.execute('select count(*) from failures').fetchone()[0]
     return {'functions': n, 'decompile_failures': failures, 'sample_rvas': samples,
@@ -388,13 +389,17 @@ def prepare(args):
         if args.reuse_export:
             source = Path(args.reuse_export).resolve()
             validate_export(source, expected)
-            if export.exists():
-                raise ValueError('Export already exists; select a new cache root for --reuse-export.')
-            export.mkdir()
-            for item in export_files(source):
+            if (export / 'manifest.json').is_file() and read_json(export / 'manifest.json').get('sha256') != expected:
+                raise ValueError('Existing export is for another executable; select a new cache root.')
+            export.mkdir(exist_ok=True)
+            # Copy the completion manifest last; retry safely after an interrupted copy.
+            items = export_files(source)
+            items.sort(key=lambda x: x.name == 'manifest.json')
+            for item in items:
                 dest = export / item.relative_to(source)
                 dest.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(item, dest)
+                if item != dest and (not dest.is_file() or digest(dest) != digest(item)):
+                    shutil.copy2(item, dest)
         else:
             java = install_tool('java', lock['java'], cache)
             ghidra = install_tool('ghidra', lock['ghidra'], cache)
@@ -503,6 +508,11 @@ def query(args):
             return
         text_search = args.command in ('str', 'find')
         value = args.value if text_search else f'{rva(args.value):08X}'
+        if args.command in ('callers', 'callees'):
+            function = con.execute('select rva from functions where rva<=? and "end">=? order by rva desc limit 1', (value, value)).fetchone()
+            if function and function[0] != value:
+                print(f'# {value} belongs to function {function[0]}')
+                value = function[0]
         sql = f'select * from "{table}" where "{field}" {"like" if text_search else "="} ? limit ?'
         cursor = con.execute(sql, (f'%{value}%' if text_search else value, args.limit))
         print('\t'.join(x[0] for x in cursor.description))
