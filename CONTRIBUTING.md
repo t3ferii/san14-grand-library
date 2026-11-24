@@ -5,7 +5,7 @@
 1. 저장소를 fork하고 작업 브랜치를 만듭니다.
 2. 자기 Steam 설치본에서 `prepare.ps1`을 실행합니다. 문서 수정만 한다면 캐시 준비 없이도 작업할 수 있지만 조회하지 않은 근거를 확인했다고 적지 않습니다.
 3. 관련 기존 문서의 절을 고칩니다. 새 결론과 추정·미해결을 구분하고, 정정이면 정정 기록을 남깁니다.
-4. 문서만 바뀌면 diff와 참조를 검토하고 `python tools/check_repository.py`를 실행합니다. 코드·스키마·실행 예제를 바꾸면 `python -m unittest discover -s tests -v`도 실행합니다. 준비된 Python은 `%LOCALAPPDATA%/San14GrandLibrary/tools/python-3.12.10/python.exe`입니다. 기여 문서를 고치려고 캐시를 다시 만들 필요는 없습니다.
+4. 문서만 바뀌면 diff와 참조를 검토하고 `python tools/check_repository.py`를 실행합니다. 코드·스키마·실행 예제를 바꾸면 `python -m unittest discover -s tests -v`도 실행합니다. 검사 명령의 Python은 기존 Python 또는 `ready.json`의 `query_python` 경로를 사용합니다. 기존 Python이 없었던 경우에는 `%LOCALAPPDATA%/San14GrandLibrary/tools/python-3.12.10/python.exe`가 유지됩니다. 기여 문서를 고치려고 캐시를 다시 만들 필요는 없습니다.
 5. PR 양식에 게임 빌드·해시·RVA/파일 위치·검증 방법·실행한 검사·미확인 범위를 적습니다. 원작 파일·코드 캐시·세이브·개인 로그는 첨부하지 않습니다.
 6. 유지관리자의 수정 요청을 반영하고 승인 후 병합을 기다립니다.
 
