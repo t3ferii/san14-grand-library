@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "default": "25953386",
+  "builds": {
+    "25953386": {
+      "appid": "872410",
+      "executable": "SAN14CE_KO.exe",
+      "packed_sha256": "782cf229a56cdde2b95399e0e7536740b3f5e96bea702679365e4dad061abdce",
+      "unpacked_sha256": "1a4a447d14e68c40ad2a5107c29c7341c10eee8fc297a7b35032900c341dbcaa",
+      "steamless_args": ["--keepbind", "--keepstub", "--recalcchecksum"],
+      "image_base": "140000000",
+      "smoke_rvas": ["862030", "9309C0"]
+    }
+  }
+}

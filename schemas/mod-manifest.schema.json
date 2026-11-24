@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/t3ferii/san14-grand-library/schemas/mod-manifest.schema.json",
+  "title": "San14 external mod package manifest v1",
+  "type": "object",
+  "required": ["schema", "id", "version", "game"],
+  "properties": {
+    "schema": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "version": {"type": "string", "minLength": 1},
+    "game": {
+      "type": "object",
+      "required": ["exe", "unpacked_sha256"],
+      "properties": {
+        "exe": {"const": "SAN14CE_KO.exe"},
+        "unpacked_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "depends": {"$ref": "#/$defs/names"},
+    "conflicts": {"$ref": "#/$defs/names"},
+    "provides": {"$ref": "#/$defs/names"},
+    "uses": {"$ref": "#/$defs/names"},
+    "files": {"$ref": "#/$defs/names"},
+    "ui": {"$ref": "#/$defs/names"},
+    "resources": {"$ref": "#/$defs/names"},
+    "settings": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["file", "section", "key"],
+        "properties": {"file": {"type": "string", "minLength": 1}, "section": {"type": "string", "minLength": 1}, "key": {"type": "string", "minLength": 1}}
+      }
+    },
+    "hooks": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["kind", "rva", "length", "guard", "on_mismatch"],
+        "properties": {
+          "kind": {"enum": ["code", "call", "vtable"]},
+          "rva": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "string", "pattern": "^(0x)?[0-9a-fA-F]+$"}]},
+          "length": {"type": "integer", "minimum": 1, "maximum": 4096},
+          "guard": {"type": "string", "minLength": 1},
+          "on_mismatch": {"const": "disable_feature"}
+        }
+      }
+    },
+    "off_behavior": {"type": "string"},
+    "uninstall": {"type": "string"},
+    "notes": {"type": "string"}
+  },
+  "$defs": {"names": {"type": "array", "items": {"type": "string", "minLength": 1}}}
+}

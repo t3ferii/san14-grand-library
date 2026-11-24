@@ -1,0 +1,14 @@
+.local/
+cache/
+downloads/
+research/
+__pycache__/
+*.pyc
+*.sqlite*
+*.log
+*.exe
+*.dll
+*.zip
+*.gpr
+*.rep/
+*.unpacked*

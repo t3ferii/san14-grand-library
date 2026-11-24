@@ -1,0 +1,3311 @@
+{
+ "meta": {
+  "generated": "2026-11-17",
+  "scope": "STRUCT",
+  "baseline_build": "1a4a447d14e68c40 (Steam buildid 25953386)",
+  "note": "오프셋은 두 빌드 동일(build_remap.md §1). 필드 conf: 확정/추정/충돌/미해결",
+  "counts": {
+   "structs": 24,
+   "fields": 318,
+   "by_conf": {
+    "확정": 288,
+    "추정": 21,
+    "미해결": 8,
+    "충돌": 1
+   },
+   "conflicts": 18
+  }
+ },
+ "structs": [
+  {
+   "id": "WORLD",
+   "ko": "세계 루트(CWorldData)",
+   "rtti": "CWorldData",
+   "world_table": "image+0x2780F60 (옛 빌드 image+0x277DF18; 포인터 전역)",
+   "stride": "-",
+   "anchor": "-",
+   "src": "DM '주소 기준점', build_remap.md §1",
+   "notes": "세계 루트에서 각 객체 표로 가는 오프셋 모음. 두 빌드의 오프셋이 같다(build_remap.md §1: 22종 사용 횟수·값 일치; 객체 크기는 간접 확인). 게임 진행 단일 객체는 +0x871E8의 포인터.",
+   "fields": [
+    {
+     "off": "+0xDD38",
+     "width": "ptr table",
+     "name": "city_table",
+     "meaning": "도시 객체 표(stride 0x168, 객체 앵커 +0x34). 도시 id 0~0x33",
+     "src": "DM 주소 기준점",
+     "conf": "확정",
+     "engine": "Data::gold/food/troops[NB] 등 병렬 배열"
+    },
+    {
+     "off": "+0xDED8",
+     "width": "ptr table",
+     "name": "gate_table",
+     "meaning": "관문 객체 표(stride 0xC0). 관문 id 0x34~0x3D",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data[NB=62] 중 관문 슬롯"
+    },
+    {
+     "off": "+0xDF30",
+     "width": "ptr table",
+     "name": "force_table",
+     "meaning": "세력 객체 표(stride 0x268)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::ruler/alive/... [NF=52]"
+    },
+    {
+     "off": "+0xE0D0",
+     "width": "ptr table",
+     "name": "corps_table",
+     "meaning": "군단 객체 표(stride 0x30, 앵커 +0x10)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::corps_*[NF]"
+    },
+    {
+     "off": "+0xE270",
+     "width": "u64 ptr table[48400]",
+     "name": "hex_table",
+     "meaning": "칸(HEX) 포인터 표 220x220. 칸 번호=(객체-표[0])>>5 (`22F830`)",
+     "src": "W §0.2; DM",
+     "conf": "확정",
+     "engine": "Data::hex_owner[48400], Map::tile"
+    },
+    {
+     "off": "+0x6CAF0",
+     "width": "ptr table",
+     "name": "area_table",
+     "meaning": "지역 객체 표(stride 0x98, 앵커 +0x52). 지역 1..343, 덤프 area 표는 501칸",
+     "src": "DM; W §1.1",
+     "conf": "확정",
+     "engine": "Map::region_* / Data::region_*[NR=344]"
+    },
+    {
+     "off": "+0x6DA98",
+     "width": "ptr table",
+     "name": "building_table",
+     "meaning": "지도 건축물(시설) 표(stride 0x20). 덤프 3,063개",
+     "src": "DM; WB §6.1",
+     "conf": "확정",
+     "engine": "Game::Facility (fac_*)"
+    },
+    {
+     "off": "+0x73860",
+     "width": "ptr table[31]",
+     "name": "terrain_objects",
+     "meaning": "지형 객체 표(객체 0x48 B; 덤프 정의표에서는 0x80B로도 기재)",
+     "src": "W §0.4; CA §15; WB §6.2",
+     "conf": "확정",
+     "engine": "Map::terrain_cost/flag/attr42/drain/fire"
+    },
+    {
+     "off": "+0x73958",
+     "width": "ptr table[31]",
+     "name": "facility_defs",
+     "meaning": "시설 정의 표(런타임 104B). `27A8D0`의 3번째 인자",
+     "src": "W §3.1; WB §6.2",
+     "conf": "확정",
+     "engine": "engine/rules/facility_tables.h FAC_DEF"
+    },
+    {
+     "off": "+0x73A50",
+     "width": "contiguous/slot table",
+     "name": "person_table",
+     "meaning": "무장 객체 표(stride 0x1F0, 앵커 +0xEC). 물리 길이 1851, 참고 스캔 상한 3000",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::person_*[]"
+    },
+    {
+     "off": "+0x774D0",
+     "width": "table",
+     "name": "tactic_table",
+     "meaning": "전법 표(201칸) — 무장 +0x130[10]이 이 표의 id를 가진다",
+     "src": "CA #23",
+     "conf": "추정(주소만 인용됨)",
+     "engine": "Map::tactic_*"
+    },
+    {
+     "off": "+0x77428",
+     "width": "ptr table[21]",
+     "name": "formation_table",
+     "meaning": "진형 객체 표(stride 0xC8). 길 찾기가 부대 [+0x1B]/[+0x1C]로 인덱스",
+     "src": "DM; W §4.5",
+     "conf": "확정",
+     "engine": "Map::formation_*[21]"
+    },
+    {
+     "off": "+0x77B18",
+     "width": "table",
+     "name": "treasure_table",
+     "meaning": "명품 객체 표(stride 0x80)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "engine/rules/treasure_tables.h"
+    },
+    {
+     "off": "+0x78490",
+     "width": "table",
+     "name": "rank_post_table",
+     "meaning": "관직 순위 표 — 엔진 미추출 항목(approx_inventory S8/D3)",
+     "src": "approx_inventory.md S8",
+     "conf": "추정",
+     "engine": "미반영(office_rank 근사)"
+    },
+    {
+     "off": "+0x784F8",
+     "width": "table",
+     "name": "post_table",
+     "meaning": "관직 객체 표(stride 0x58)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Map::office_stats/office_rank"
+    },
+    {
+     "off": "+0x78D50",
+     "width": "table",
+     "name": "policy_table",
+     "meaning": "정책 객체 표(stride 0xA8)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Map::policy_*"
+    },
+    {
+     "off": "+0x79118",
+     "width": "table[31]",
+     "name": "tactic_book_table",
+     "meaning": "전법서 31칸(21B 레코드). 세력 +0x120[idx]가 재고",
+     "src": "CA #23",
+     "conf": "확정",
+     "engine": "Data::force_book[NF*31]"
+    },
+    {
+     "off": "+0x7DD18",
+     "width": "ptr table[356]",
+     "name": "trait_objects",
+     "meaning": "개성 객체 표(232B). 한 무장은 개성 9칸(traits9 이전 5칸)",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": "Map::trait_*; Game::trait_effect*"
+    },
+    {
+     "off": "+0x7E838",
+     "width": "ptr table[501]",
+     "name": "army_table",
+     "meaning": "부대 객체 표(stride 0x200)",
+     "src": "DM; BUILD_25953386_COMBAT §1",
+     "conf": "확정",
+     "engine": "Data::units (Unit)"
+    },
+    {
+     "off": "+0x7F8D8",
+     "width": "u64 ptr table",
+     "name": "troops_by_id",
+     "meaning": "군세 id 조회 표",
+     "src": "DM(추가 관측)",
+     "conf": "확정",
+     "engine": "-"
+    },
+    {
+     "off": "+0x80880",
+     "width": "table",
+     "name": "policy_effect_index",
+     "meaning": "세력 정책 효과 index 표(`41E570`/`22DFD0`이 사용)",
+     "src": "WB §5.3; formation_mapping.md",
+     "conf": "확정",
+     "engine": "Data::policy_effect[NF*101]"
+    },
+    {
+     "off": "+0x85A90",
+     "width": "list",
+     "name": "hidden_object_list",
+     "meaning": "숨은 물건(명품·전법서) 목록 — 정적 데이터에 없음",
+     "src": "approx_inventory.md P6",
+     "conf": "미해결",
+     "engine": "region_book 등 APPROX 배치"
+    },
+    {
+     "off": "+0x85DF0",
+     "width": "table(7x4B)",
+     "name": "rank_reward_table",
+     "meaning": "fixdata 표 ID 39 `공적 보상`(7 x 4B)",
+     "src": "CA §15 항목 5",
+     "conf": "확정",
+     "engine": "Game::rank_bonus (능력 영향 없음으로 정정)"
+    },
+    {
+     "off": "+0x85F20",
+     "width": "table",
+     "name": "doctrine_table",
+     "meaning": "주의(신념) 표 (+0x44 항). BUILD_..._COMBAT는 '기술 0x85F20'",
+     "src": "BUILD_25953386_COMBAT §1; DMs",
+     "conf": "확정(주소)/의미 추정",
+     "engine": "Data::force_ideology_exp"
+    },
+    {
+     "off": "+0x871E8",
+     "width": "ptr",
+     "name": "game_state",
+     "meaning": "게임 진행 단일 객체(GAME) 포인터. 플레이어 세력 `2337B0`(새 235150)이 여기를 읽음",
+     "src": "DM; DF §1",
+     "conf": "확정",
+     "engine": "Game::d (year/month/day/player_forces)"
+    },
+    {
+     "off": "+0x158",
+     "width": "u64 table",
+     "name": "person_gameid_lookup",
+     "meaning": "무장 게임ID 조회표(+0x73A50 슬롯표와 구분)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Game::pindex"
+    },
+    {
+     "off": "+0x872C0",
+     "width": "table",
+     "name": "mod_expansion",
+     "meaning": "모드 확장 표 — 원래 배열 범위로 일반화 금지",
+     "src": "DM",
+     "conf": "확정(주의)",
+     "engine": "-"
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "+0x85F20 표 이름: BUILD_25953386_COMBAT는 '기술 0x85F20', dump_measurements는 '표 0x85F20 +0x44 = 주의 항'. 같은 주소를 달리 부름(내용은 주의/기술 계열 표로 추정).",
+     "BUILD_25953386_COMBAT.md §1; dump_measurements.md:191"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "HEX",
+   "ko": "칸(HEX) 런타임 객체",
+   "rtti": "CHexData",
+   "world_table": "+0xE270[48400]",
+   "stride": 32,
+   "anchor": "+0",
+   "src": "W §0.2 (0장 확정, 덤프 48,400/48,400 일치)",
+   "notes": "지도 220x220(id=y*220+x, 유효 0..48399, 무효값 48400=0xBD10). 이웃 규칙은 열 오프셋 평탑(W §0.3). 칸 번호=(객체-표[0])>>5.",
+   "fields": [
+    {
+     "off": "+0x00",
+     "width": "vptr",
+     "name": "vtable",
+     "meaning": "vtable",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x10",
+     "width": "u8",
+     "name": "terrain_id",
+     "meaning": "지형 id (<0x1F, 지형 객체 표 인덱스)",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": "Map::tile / Map::terrain"
+    },
+    {
+     "off": "+0x12",
+     "width": "u16",
+     "name": "area_id",
+     "meaning": "지역 번호(0=지역 없음=통행불가 지형 19~23)",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": "Map::tile(region)"
+    },
+    {
+     "off": "+0x14",
+     "width": "u8",
+     "name": "owner",
+     "meaning": "소유 세력: 0 무주, 1..51, 0x33 중립, 0x2E~0x32 이민족. 쓰기 입구 `186E60`",
+     "src": "W §0.2, §1.2",
+     "conf": "확정",
+     "engine": "Data::hex_owner"
+    },
+    {
+     "off": "+0x16",
+     "width": "u16",
+     "name": "fire",
+     "meaning": "화염값(0..720). `2A3CF0` 이 칸마다 매 틱 `DAT_141A4C070` 만큼 줄이고(0이 아니면), `43E660`·`2A3510`·`2E5DA0`(점화 `2E8160`)이 읽는다. 1권의 \"경로 예약 표지, 덤프 항상 0\"은 화염이 없던 덤프의 값(해소)",
+     "src": "L3b(`2A3CF0` 코드); CA §15; rules_combat_effects.md",
+     "conf": "확정",
+     "engine": "Data::hex_fire"
+    },
+    {
+     "off": "+0x19",
+     "width": "u8",
+     "name": "supply_cut_pct",
+     "meaning": "보급 소비 감면 %(시설 효과 18이 범위 칸에 씀, 겹치면 큰 값, 상한 100). `300970`이 매 갱신 지우고 다시 씀",
+     "src": "W §0.2, §2.5",
+     "conf": "확정(코드+덤프 30건)",
+     "engine": "engine/rules/facility_game.h"
+    },
+    {
+     "off": "+0x1A",
+     "width": "u16",
+     "name": "facility_id",
+     "meaning": "시설·거점 건물 id(0 없음). 도시·관문은 7칸(중심+6)에 같은 id(<=61), 시설(id>=62)은 정확히 1칸",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": "Game::fac_at / Map::foot"
+    },
+    {
+     "off": "+0x1E",
+     "width": "u16",
+     "name": "base_mark",
+     "meaning": "거점 표식(약 100칸만 0이 아님)",
+     "src": "W §0.2",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x2C",
+     "width": "bit1",
+     "name": "terrain_layer",
+     "meaning": "지형층 비트(함정 효과 판정에서 같은 지형층 비교, `hex+0x2C` bit1)",
+     "src": "L3 함정",
+     "conf": "추정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "hex+0x16: 1권(worldmap_spec §0.2)은 '경로 예약 표지, 덤프에서 항상 0', command_audit §15는 같은 +0x16을 타일 화염값(u16 0..720)으로 사용(엔진 hex_fire). 화염 계열 함수(43E660 등) 추적이 있어 화염 용도일 가능성이 높으나 덤프 대조로 확정되지 않음.",
+     "worldmap_spec.md §0.2 vs command_audit.md §15 / sim.h 주석"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "HEX_FILE",
+   "ko": "지도 파일 칸 (MapExCe.bin)",
+   "rtti": "-",
+   "world_table": "파일 `0000/MapExCe.bin` (data/map_cells.bin 동일 바이트)",
+   "stride": 16,
+   "anchor": "머리 4B(u32=48400)+칸x16B",
+   "src": "W §0.1~0.2",
+   "notes": "774,404바이트. 엔진 init.cpp는 칸 +4(지형)을 읽고 extract.py는 +6(지역)만 map.json.tiles로 뽑는다.",
+   "fields": [
+    {
+     "off": "+0",
+     "width": "u16",
+     "name": "cell_id",
+     "meaning": "칸 번호(0..48399)",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+4",
+     "width": "u8",
+     "name": "terrain_id",
+     "meaning": "지형 id(1~24), 런타임 hex+0x10과 100% 일치",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": "Map::terrain"
+    },
+    {
+     "off": "+6",
+     "width": "u16",
+     "name": "area_id",
+     "meaning": "지역 번호, 런타임 hex+0x12와 100% 일치",
+     "src": "W §0.2",
+     "conf": "확정",
+     "engine": "Map::tile"
+    },
+    {
+     "off": "+8",
+     "width": "u8(0/1/2)",
+     "name": "unk8",
+     "meaning": "시나리오 시작 소유·표식 후보(22칸만 0이 아님)",
+     "src": "W §0.2",
+     "conf": "미해결",
+     "engine": ""
+    },
+    {
+     "off": "+9",
+     "width": "u8(0..6)",
+     "name": "unk9",
+     "meaning": "시각 속성 후보",
+     "src": "W §0.2",
+     "conf": "미해결",
+     "engine": ""
+    },
+    {
+     "off": "+10..13",
+     "width": "u8 x4",
+     "name": "flags",
+     "meaning": "플래그 4개",
+     "src": "W §0.2",
+     "conf": "미해결",
+     "engine": ""
+    },
+    {
+     "off": "+14",
+     "width": "u8",
+     "name": "unk14",
+     "meaning": "지형 변형·그림 후보",
+     "src": "W §0.2",
+     "conf": "미해결",
+     "engine": ""
+    },
+    {
+     "off": "+15",
+     "width": "u8",
+     "name": "unk15",
+     "meaning": "38칸만 0이 아님",
+     "src": "W §0.2",
+     "conf": "미해결",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "TERRAIN",
+   "ko": "지형 객체",
+   "rtti": "CTerrainData",
+   "world_table": "+0x73860[31]",
+   "stride": "0x48 (런타임)",
+   "anchor": "fixdata 표 8 레코드 51B(포장)",
+   "src": "W §0.4; CA §15 '지형 객체 레이아웃 정정'",
+   "notes": "런타임 오프셋 = fixdata 레코드 오프셋 + 0x10 (+0x1C까지), 이후(u16 배열 짝수 정렬 뒤)는 + 0x11. `BF1B0`(옛 `BE120`)이 비용을 반환.",
+   "fields": [
+    {
+     "off": "레코드 +0x1A / 런타임 +0x2A",
+     "width": "u16",
+     "name": "move_cost",
+     "meaning": "이동 비용(평지 225, 가도 150, 모래 300, 습지 375, 밀림 525, 독늪 750, 고산 600, 마을·도시·관문·항 150, 여울 375, 강 450, 대하 300)",
+     "src": "W §0.4,§4.1",
+     "conf": "확정",
+     "engine": "Map::terrain_cost"
+    },
+    {
+     "off": "레코드 +0x1C / 런타임 +0x2C",
+     "width": "u8",
+     "name": "flags",
+     "meaning": "플래그(5 육상, 1 육상 일부, 2 수상(비트1), 0 통행 불가)",
+     "src": "W §0.4; CA §15",
+     "conf": "확정(수상 비트)/추정(나머지)",
+     "engine": "Map::terrain_flag"
+    },
+    {
+     "off": "레코드 +0x1F,+0x21..+0x2D",
+     "width": "u16 x8",
+     "name": "formation_family_pct",
+     "meaning": "진형 계열별 지형 보정 %(8번째=수군). 대하14·격류24는 앞 7개 0·마지막 100",
+     "src": "W §0.4",
+     "conf": "확정(값)/추정(용도)",
+     "engine": ""
+    },
+    {
+     "off": "레코드 +0x2F / 런타임 +0x40",
+     "width": "u8",
+     "name": "drain_base",
+     "meaning": "정기 사기 감소 기본값(거침 등급 0/1/2). `2B2330`(옛 `2B0070`)이 읽음. 평지·가도 1, 모래·습지·고산·산길 3, 숲·밀림 2, 독늪·강·여울·대하 0, 마을·도시·관문·항 1",
+     "src": "CA §15 (정정본); W §0.4",
+     "conf": "확정(덤프)",
+     "engine": "Map::terrain_drain"
+    },
+    {
+     "off": "레코드 +0x30 / 런타임 +0x41",
+     "width": "u8",
+     "name": "fire_class",
+     "meaning": "화염 계열(0 불가, 1 평지, 2 숲·밀림·산, 3 모래·습지·고산·산길)",
+     "src": "CA §15",
+     "conf": "확정(덤프)",
+     "engine": "Map::terrain_fire"
+    },
+    {
+     "off": "레코드 +0x31 / 런타임 +0x42",
+     "width": "u8",
+     "name": "category",
+     "meaning": "지형 분류(1 평지, 2 산, 3 숲, 4 대하, 5 습지·여울·강). 개성 조건 14~19, 정책 효과 0x30 항(분류 2·4)이 읽음",
+     "src": "CA §15",
+     "conf": "확정(조건 함수와 이름 일치)",
+     "engine": "Map::terrain_attr42"
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "정기 사기 감소 위치: worldmap_spec §0.4는 `+0x30 u8(런타임 +0x40)`을 사기 감소 기본값, `+0x2F`를 거침 등급으로 적었다. command_audit §15는 `+0x2F`가 곧 사기 감소 기본값(런타임 +0x40)이고 `+0x30`은 화염 계열이라고 정정(덤프 근거). 정정본을 본문에 채택, 옛 해석은 정정 기록.",
+     "worldmap_spec.md §0.4 vs command_audit.md §15"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "FACILITY_DEF",
+   "ko": "시설 정의",
+   "rtti": "-",
+   "world_table": "+0x73958[31] (런타임 104B)",
+   "stride": "53 B (fixdata 표 9, 본문 0x2CD9E x31; 직렬화 `23C6F0`)",
+   "anchor": "파일 오프셋",
+   "src": "W §3.1 (확정)",
+   "notes": "id 1 도시, 2 관문, 3 진, 4 요새, 5 망루, 6 투석대, 7 군악대, 8 석병팔진, 9 토성, 10 석벽, 11 불함정, 12 맹화함정, 13 화선, 14 구덩이, 15 망대, 16 철쇄, 17 낙석, 18~30 건물(미사용). 표 원문은 San14Sim/docs/fidelity/worldmap/facility_table.json.",
+   "fields": [
+    {
+     "off": "+0x1C",
+     "width": "u8",
+     "name": "class",
+     "meaning": "1 거점, 2 군사시설, 3 방벽, 4 함정",
+     "src": "W §3.1",
+     "conf": "확정",
+     "engine": "engine/rules/facility_tables.h FacDef"
+    },
+    {
+     "off": "+0x1D",
+     "width": "u16",
+     "name": "durability",
+     "meaning": "내구 최대(진 400, 요새 600, 망루 300, 투석대 400, 군악대 300, 석병팔진 300, 토성 500, 석벽 800, 함정 15~30, 화선 20, 철쇄 350, 망대 200, 낙석 20)",
+     "src": "W §3.1",
+     "conf": "확정(관측 최대 일치)",
+     "engine": ""
+    },
+    {
+     "off": "+0x1F",
+     "width": "u16",
+     "name": "cost_gold",
+     "meaning": "비용(금). 착공 때 부대 출발 거점 금에서 차감(`2AD6C0`)",
+     "src": "W §3.1; worldmap_s4s6.md",
+     "conf": "확정(s4s6에서 코드 확인)",
+     "engine": ""
+    },
+    {
+     "off": "+0x21",
+     "width": "u16 (런타임 def+0x32)",
+     "name": "required_list_no",
+     "meaning": "건설 담당 목록 번호(석병팔진 49). `27A8D0`이 목록 검사",
+     "src": "W §3.2 항 9",
+     "conf": "확정(위치)/미해결(의미)",
+     "engine": ""
+    },
+    {
+     "off": "+0x23",
+     "width": "u8",
+     "name": "need_effect_id",
+     "meaning": "필요 정책 효과 id(13 지원시설해방, 19 화계전법강화, 24 산천시설해방, 0 없음)",
+     "src": "W §3.2 항 8",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x24",
+     "width": "u8",
+     "name": "spacing",
+     "meaning": "간격값(`27DAF0`): 도시·관문 3, 군사시설 2, 방벽·함정 0",
+     "src": "W §3.1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x2B",
+     "width": "u8",
+     "name": "min_range",
+     "meaning": "효과 최소 거리(투석대 2, 나머지 1)",
+     "src": "L3 `180870`",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x2C",
+     "width": "u8",
+     "name": "range",
+     "meaning": "효과 범위(진 2, 요새 2, 망루 2, 투석대 3, 군악대 2, 석병팔진 1, 불함정 1, 맹화 2, 화선 1, 구덩이 2, 망대 2, 낙석 2)",
+     "src": "W §3.1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x2E",
+     "width": "u32",
+     "name": "terrain_mask",
+     "meaning": "건설 허용 지형 비트마스크(0xE 평지·가도·모래, 0x300 저산·중산, 0x4000 대하, 0x10000 도시, 0x20000 관문). `43720`이 판정",
+     "src": "W §3.1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x32",
+     "width": "u8",
+     "name": "trap_subkind",
+     "meaning": "함정 하위 종류(1/2). 의미 미상",
+     "src": "W §3.1",
+     "conf": "미해결",
+     "engine": ""
+    },
+    {
+     "off": "+0x33",
+     "width": "u8",
+     "name": "need_threshold",
+     "meaning": "필요 효과 합 임계(요새 7, 투석대 10, 군악대 4, 석벽 2, 화선 5, 맹화 10, 망대 10, 철쇄 2, 낙석 5)",
+     "src": "W §3.1",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "미해결",
+     "효과1/효과2(종류·값·값2)의 레코드 내 정확한 오프셋과 효과 종류 1/2/3/8/15/16/17의 의미는 추정(1 원거리 피해, 8 부대 회복, 15 군악대 사기 회복; 18 군량 소비 감면=확정).",
+     "worldmap_spec.md §3.1"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "BUILDING",
+   "ko": "지도 건축물(시설 인스턴스)",
+   "rtti": "CObjectData",
+   "world_table": "+0x6DA98 (stride 0x20)",
+   "stride": 32,
+   "anchor": "+0",
+   "src": "W §3.2; DM 건축물 표",
+   "notes": "덤프 3,063개. 도시·관문·시설 모두 이 표. 시설 내구는 `1F42B0(건물,값)`(새 `1F5680`)이 설정(증감이 아니라 새 값).",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u16",
+     "name": "tile",
+     "meaning": "위치(칸 번호)",
+     "src": "W §3.2; DM",
+     "conf": "확정",
+     "engine": "Facility.tile"
+    },
+    {
+     "off": "+0x12",
+     "width": "u8",
+     "name": "type",
+     "meaning": "종류(시설 정의 id)",
+     "src": "W §3.2",
+     "conf": "확정",
+     "engine": "Facility.type"
+    },
+    {
+     "off": "+0x13",
+     "width": "u8",
+     "name": "owner",
+     "meaning": "세력(마스터 세력 ID)",
+     "src": "W §3.2",
+     "conf": "확정",
+     "engine": "Facility.force"
+    },
+    {
+     "off": "+0x14",
+     "width": "u16",
+     "name": "durability",
+     "meaning": "현재 내구(`1F42B0`이 씀)",
+     "src": "W §3.2; pre6_tactics §4",
+     "conf": "확정",
+     "engine": "Facility.hp"
+    },
+    {
+     "off": "+0x16",
+     "width": "u8 bit0",
+     "name": "complete",
+     "meaning": "완성 표지(내구가 최대에 도달하는 날 켜짐)",
+     "src": "W §3.2",
+     "conf": "확정",
+     "engine": "complete = hp >= FAC_DEF[type].hp"
+    },
+    {
+     "off": "+0x5F (정의/인스턴스)",
+     "width": "bit0",
+     "name": "blocking_done",
+     "meaning": "완성된 막는 시설 표지(건설 가능 판정 1항)",
+     "src": "W §3.2 항1",
+     "conf": "확정(코드)",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "AREA",
+   "ko": "지역(AREA / REGION)",
+   "rtti": "CAreaData",
+   "world_table": "+0x6CAF0",
+   "stride": 152,
+   "anchor": "+0x52 (에디터 기준점)",
+   "src": "DM 지역 표; W §1.1; DMs 수입식; L2",
+   "notes": "지역 소유 = 지역 중심 칸 `+0x3A`의 소유 세력(`22E260`/`22CC00` 계열). 지역 343개(0=무). 에디터 표의 '미확정' 구간 일부가 후속 조사로 확정됨.",
+   "fields": [
+    {
+     "off": "+0x34",
+     "width": "u8",
+     "name": "city_circle",
+     "meaning": "도시권(에디터)",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x35",
+     "width": "u8",
+     "name": "home_base",
+     "meaning": "소속거점",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x36",
+     "width": "u16",
+     "name": "officer",
+     "meaning": "지역 담당관 무장",
+     "src": "DM; command_audit #4",
+     "conf": "확정",
+     "engine": "Data::region_officer"
+    },
+    {
+     "off": "+0x38",
+     "width": "bit 0x10",
+     "name": "facility_flag",
+     "meaning": "시설 플래그(연 4~5개 지역; 군량 수입 추가 150%)",
+     "src": "DMs 수입식",
+     "conf": "확정(코드)/엔진 미반영",
+     "engine": ""
+    },
+    {
+     "off": "+0x3A",
+     "width": "u16",
+     "name": "center_tile",
+     "meaning": "중심칸 — 지역 소유 판정 기준",
+     "src": "DM; W §1.1",
+     "conf": "확정",
+     "engine": "Map::center"
+    },
+    {
+     "off": "+0x3C",
+     "width": "u16",
+     "name": "commerce_progress",
+     "meaning": "상업 개발 진행값(단계1~5 조회)",
+     "src": "능력치.md; L2",
+     "conf": "확정",
+     "engine": "Data::region_commerce"
+    },
+    {
+     "off": "+0x3E",
+     "width": "u16",
+     "name": "agriculture_progress",
+     "meaning": "농업 개발 진행값",
+     "src": "능력치.md",
+     "conf": "확정",
+     "engine": "Data::region_agriculture"
+    },
+    {
+     "off": "+0x40",
+     "width": "u16",
+     "name": "barracks_progress",
+     "meaning": "병영 개발 진행값(징병 풀)",
+     "src": "능력치.md; L4 case 0x13",
+     "conf": "확정",
+     "engine": "Data::region_barracks"
+    },
+    {
+     "off": "+0x42",
+     "width": "u16",
+     "name": "security_base",
+     "meaning": "치안 기준값",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x44",
+     "width": "u16",
+     "name": "commerce_base",
+     "meaning": "상업 기준값(금 수입식 입력)",
+     "src": "DM; DMs 수입식",
+     "conf": "확정",
+     "engine": "Map::commerce_base"
+    },
+    {
+     "off": "+0x46",
+     "width": "u16",
+     "name": "agriculture_base",
+     "meaning": "농업 기준값(군량 수입식 입력)",
+     "src": "DM; DMs",
+     "conf": "확정",
+     "engine": "Map::agriculture_base"
+    },
+    {
+     "off": "+0x48",
+     "width": "u16",
+     "name": "barracks_base",
+     "meaning": "병영 기준값(징병식 입력)",
+     "src": "DM; RULES.md 징병",
+     "conf": "확정",
+     "engine": "Map::barracks_base"
+    },
+    {
+     "off": "+0x4A",
+     "width": "u16",
+     "name": "gold_income",
+     "meaning": "지역 금 수입 저장칸(`2BBCB0` 호출자가 저장)",
+     "src": "DMs 4차",
+     "conf": "확정",
+     "engine": "(파생)"
+    },
+    {
+     "off": "+0x4C",
+     "width": "u16",
+     "name": "food_income",
+     "meaning": "지역 군량 수입 저장칸",
+     "src": "DMs 4차",
+     "conf": "확정",
+     "engine": "(파생)"
+    },
+    {
+     "off": "+0x4E",
+     "width": "u16",
+     "name": "recruit_count",
+     "meaning": "모병 수",
+     "src": "DMs 4차",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x52",
+     "width": "u16",
+     "name": "population",
+     "meaning": "인구",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::population"
+    },
+    {
+     "off": "+0x54",
+     "width": "u8",
+     "name": "security",
+     "meaning": "치안(수입식 하한 50). `175DE0`(공격 후 효과)가 쓴다",
+     "src": "DM; DMs; L2 2차",
+     "conf": "확정",
+     "engine": "Data::security"
+    },
+    {
+     "off": "+0x56",
+     "width": "u16[8]",
+     "name": "adjacent_areas",
+     "meaning": "인접 지역 8칸",
+     "src": "DM; DF 인접효과",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x66",
+     "width": "u8",
+     "name": "adjacency_mask",
+     "meaning": "인접 효과 집계 마스크(통행금지 마스크 아님)",
+     "src": "DM; DF 항 2B07C0",
+     "conf": "확정(집계 사용)/추정(비트 의미)",
+     "engine": "(미모형)"
+    },
+    {
+     "off": "+0x68",
+     "width": "u16",
+     "name": "owned_tiles",
+     "meaning": "지역 소유 세력이 가진 칸 수(중심 소유자와 같은 소유 칸). 343개 중 337 일치, 6개는 이민족·중립 지역 0",
+     "src": "W §1.1",
+     "conf": "확정",
+     "engine": "Data::area_owned"
+    },
+    {
+     "off": "+0x6D",
+     "width": "u8",
+     "name": "reserved_6d",
+     "meaning": "지역 점령 확정 때 초기화(`1FD930`)",
+     "src": "W §1.2",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x6E",
+     "width": "u8",
+     "name": "facility_cap",
+     "meaning": "지역 시설(클래스 2·3·4) 수 상한(0~27)",
+     "src": "W §3.2 항5",
+     "conf": "확정",
+     "engine": "area_fac_cap.json"
+    },
+    {
+     "off": "+0x72",
+     "width": "u8",
+     "name": "dev_direction",
+     "meaning": "개발 방향",
+     "src": "L2; sim.h",
+     "conf": "확정",
+     "engine": "Data::region_direction"
+    },
+    {
+     "off": "+0x76",
+     "width": "u16",
+     "name": "total_tiles",
+     "meaning": "지역 총 칸 수(343/343 일치)",
+     "src": "W §1.1",
+     "conf": "확정",
+     "engine": "Map::tile_count"
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "지역 개발값 위치: 에디터(DM)는 +0x2A/+0x2C/+0x2E를 상업/농업/병영 값으로 선언, 능력치.md는 개발 진행값이 +0x3C/+0x3E/+0x40이고 에디터 수치와 다른 저장칸이라고 명시. 본문은 코드 근거(+0x3C/+0x3E/+0x40)를 따름.",
+     "REA_Analysis/data_model.md 지역 표 vs mechanisms_20261017/능력치.md"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "CITY",
+   "ko": "도시(거점) 객체",
+   "rtti": "CCityData",
+   "world_table": "+0xDD38",
+   "stride": 360,
+   "anchor": "+0x34",
+   "src": "DM 도시 표; pre6_occupation §0; L2 S1",
+   "notes": "관문(GATE)은 같은 표 형식의 변형(stride 0xC0). 덤프의 거점 블록과 같은 필드.",
+   "fields": [
+    {
+     "off": "+0x2E",
+     "width": "u16",
+     "name": "governor",
+     "meaning": "태수",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::governor"
+    },
+    {
+     "off": "+0x30",
+     "width": "u8",
+     "name": "corps_slot",
+     "meaning": "군단 객체 슬롯(마스터 세력 ID 아님)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::base_corps"
+    },
+    {
+     "off": "+0x34",
+     "width": "u32",
+     "name": "gold",
+     "meaning": "금",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::gold"
+    },
+    {
+     "off": "+0x38",
+     "width": "u32",
+     "name": "food",
+     "meaning": "군량",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::food"
+    },
+    {
+     "off": "+0x3C",
+     "width": "u32",
+     "name": "troops",
+     "meaning": "병사(수비병)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::troops"
+    },
+    {
+     "off": "+0x40",
+     "width": "u32",
+     "name": "wounded_pool",
+     "meaning": "부상병 풀(거점) — 덤프 파서의 wounded_base",
+     "src": "pre6_occupation §용어; dump_measurements.md:69",
+     "conf": "확정(덤프)",
+     "engine": "Data::wounded_base"
+    },
+    {
+     "off": "+0x44",
+     "width": "u8",
+     "name": "morale",
+     "meaning": "사기. `2BDCD0` 이 byte 로 읽는다(도시도 u8; 에디터의 u16 은 폭 선언 차이로 해소)",
+     "src": "DM; L3b(`2BDCD0` 코드)",
+     "conf": "확정",
+     "engine": "Data::morale"
+    },
+    {
+     "off": "+0x46",
+     "width": "u16",
+     "name": "durability_cap",
+     "meaning": "내구 상한",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::maxhp"
+    },
+    {
+     "off": "+0x4E",
+     "width": "u16",
+     "name": "base_no",
+     "meaning": "거점번호",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x50",
+     "width": "u16",
+     "name": "officer_alloc_50",
+     "meaning": "부상병이 아니다. 부상병 풀은 `+0x40`(`2BDCD0`: 풀을 병력 `+0x3C` 로 전환·사기 `+0x44` 혼합). 에디터의 '부상병' 선언은 오류로 해소",
+     "src": "DM; dump_measurements.md:69; L3b",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x58",
+     "width": "u8[10]",
+     "name": "adjacent_bases",
+     "meaning": "인접거점 슬롯(u16[10] 아님)",
+     "src": "DM 정정; city_attack_routes",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xB8",
+     "width": "u8",
+     "name": "size",
+     "meaning": "규모 1..4(시나리오 이벤트 `3AB400`/`3B3B60`로 성장). 병력·금·군량 상한 기준(`269760`)",
+     "src": "L2 S1",
+     "conf": "확정",
+     "engine": "base_size()"
+    },
+    {
+     "off": "+0xCA",
+     "width": "u16",
+     "name": "recruit_officer",
+     "meaning": "모병담당",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::recruitment_officer"
+    },
+    {
+     "off": "+0xCC",
+     "width": "u16",
+     "name": "training_officer",
+     "meaning": "훈련담당",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::training_officer"
+    },
+    {
+     "off": "+0xCE",
+     "width": "bytes",
+     "name": "tribe_type",
+     "meaning": "이민족 부족 유형",
+     "src": "CA #f 도적",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0xCF",
+     "width": "u8",
+     "name": "recruit_turns",
+     "meaning": "모병 순수(1일 0, 11일 1, 21일 2)",
+     "src": "RULES.md 징병",
+     "conf": "확정",
+     "engine": "Data::recruitment_turns"
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "도시 +0x50: 에디터(DM)는 부상병 u16, pre6_occupation·dump_parse는 부상병 풀=+0x40이고 +0x50은 officer_alloc_50. 덤프 근거로 +0x40 채택.",
+     "REA_Analysis/data_model.md vs pre6_occupation.md; dump_measurements.md:69"
+    ],
+    [
+     "충돌",
+     "도시 사기 +0x44 폭: 에디터 도시 스키마 u16, 관문 스키마/코드 후보 u8. 값이 같아 보이는 검증만으로 상위 바이트 의미 미확정.",
+     "REA_Analysis/data_model.md 정정·충돌"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "GATE",
+   "ko": "관문 객체",
+   "rtti": "CGateData",
+   "world_table": "+0xDED8",
+   "stride": 192,
+   "anchor": "+0x0",
+   "src": "DM 관문 표",
+   "notes": "도시와 유사. 관문 id 0x34~0x3D, 거점번호 +0x10.",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u8",
+     "name": "base_no",
+     "meaning": "거점번호",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x12",
+     "width": "utf16[16]",
+     "name": "name",
+     "meaning": "이름",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x2E",
+     "width": "u16",
+     "name": "governor",
+     "meaning": "태수",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x30",
+     "width": "u8",
+     "name": "corps_slot",
+     "meaning": "군단 객체 슬롯",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x3C",
+     "width": "u32",
+     "name": "troops",
+     "meaning": "병사",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x44",
+     "width": "u8",
+     "name": "morale",
+     "meaning": "사기",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x46",
+     "width": "u16",
+     "name": "durability_cap",
+     "meaning": "내구상한",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x50",
+     "width": "u16",
+     "name": "officer_alloc_50",
+     "meaning": "도시와 같음: 부상병 아님(관문도 부상병 풀은 `+0x40`)",
+     "src": "DM; L3b",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "FORCE",
+   "ko": "세력 객체",
+   "rtti": "CForceData",
+   "world_table": "+0xDF30",
+   "stride": 616,
+   "anchor": "+0x0",
+   "src": "DM 세력 표; difficulty.md; command_audit; worldmap_spec §2",
+   "notes": "세력 id 1..51(0x33 중립, 0x2E~0x32 이민족). 동맹 바이트는 `+0xEA+상대`(코드) / 에디터 `+0xEB`.",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u16",
+     "name": "ruler",
+     "meaning": "군주",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::ruler"
+    },
+    {
+     "off": "+0x12",
+     "width": "bit8",
+     "name": "flag_divination",
+     "meaning": "세력 플래그(비트8: 점술 개성 분기)",
+     "src": "L1 개성 67",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x14",
+     "width": "u8[51]",
+     "name": "friendship",
+     "meaning": "우호도 0..200(변경 함수 `2719C0`→`25A080` 한 곳)",
+     "src": "DM; CA #13~14",
+     "conf": "확정",
+     "engine": "Data::friendship[NF*NF]"
+    },
+    {
+     "off": "+0x47",
+     "width": "u8",
+     "name": "rank_title",
+     "meaning": "작위(계급 표 +0xAD+idx로 직위 항)",
+     "src": "DMs; DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x48",
+     "width": "u8",
+     "name": "kingdom_name",
+     "meaning": "국호",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x49",
+     "width": "u8",
+     "name": "color",
+     "meaning": "세력색",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::color"
+    },
+    {
+     "off": "+0x4A",
+     "width": "s8",
+     "name": "force_purpose",
+     "meaning": "세력 행동방침(-128..127; 판단표 노드 CForceSetPurposeNode `56A40` 이 쓴다. 세력 판단표 N146~N154 가 0~3 을 정함, 군단 판단표 N673~N680 이 0/1/2/3 으로 군단 방침 기준값 62/15/5/목록길이를 고름. 조건 25)",
+     "src": "L3b(`56A40`·`AED60` 코드)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x4B",
+     "width": "s8",
+     "name": "force_aux",
+     "meaning": "세력정보 항목 1 이 읽는 부호 있는 바이트(`232F50`). 군단 판단표 N667 이 읽음. 쓰는 곳·의미 미확인",
+     "src": "L3b(`8CAE0` case 1)",
+     "conf": "확정(위치)/미해결(의미)",
+     "engine": ""
+    },
+    {
+     "off": "+0x4C",
+     "width": "u32?",
+     "name": "rerequest_date",
+     "meaning": "공격 요청 60일 재요청 제한 날짜(사람 플레이어만, `235150`)",
+     "src": "CA #15",
+     "conf": "확정",
+     "engine": "(시뮬 해당 없음)"
+    },
+    {
+     "off": "+0x52",
+     "width": "u16",
+     "name": "advisor",
+     "meaning": "군사",
+     "src": "DM; sim.h",
+     "conf": "확정",
+     "engine": "Data::advisor"
+    },
+    {
+     "off": "+0x54",
+     "width": "5 x 0x1E B rows",
+     "name": "government_rows",
+     "meaning": "시정 5줄(시정 대기·활성)",
+     "src": "sim.h; DMs H",
+     "conf": "확정",
+     "engine": "Data::government_officers/wait"
+    },
+    {
+     "off": "+0xEA",
+     "width": "u8[51]",
+     "name": "alliance_bytes",
+     "meaning": "동맹·정전·속국 관계 바이트: 하위 7비트=개월(0이면 비동맹). `+0xEA+상대`",
+     "src": "W §2.1; CA 시간 경과",
+     "conf": "확정(코드)",
+     "engine": "Data::alliance_until"
+    },
+    {
+     "off": "+0xEB",
+     "width": "u8[51]",
+     "name": "alliance_editor",
+     "meaning": "에디터가 적은 동맹 위치 = 같은 배열의 세력 번호 1 원소(배열 기준 `+0xEA`, 원소 = `+0xEA + 상대 세력 번호`, 번호 0 은 미사용). 조건 16(AA930)이 `+0xEA + 번호` 를 읽는다. 어긋남 해소",
+     "src": "DM; L3b(조건 16 코드)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x120",
+     "width": "u16[31]",
+     "name": "tactic_book_stock",
+     "meaning": "전법서 재고(idx 1..30; 에디터는 +0x122 u16[30])",
+     "src": "CA #23; DM",
+     "conf": "확정(+0x120 idx1=+0x122)",
+     "engine": "Data::force_book"
+    },
+    {
+     "off": "+0x15E",
+     "width": "u8",
+     "name": "water_ship_tier",
+     "meaning": "세력 기본 수상 진형/수군 단계. `2C8AB0`(격류 통과)이 12·13·17·18만 허용하고 14는 거부. **덤프 상관(2026-11-08)**: 대부분 세력은 11(주가)이고, 세력 8이 1960111에 11→12가 되자 이후 부대 수상 진형 `+0x1C`가 11(주가)에서 12(몽충)로 바뀌고, 세력 1·3·8·23·35는 13(누선)까지 오른다",
+     "src": "W §1.2; 덤프",
+     "conf": "추정(강한 상관)",
+     "engine": ""
+    },
+    {
+     "off": "+0x15F",
+     "width": "u8",
+     "name": "atkreq_from",
+     "meaning": "공격 요청 보낸 세력(요청받은 세력 쪽에 기록)",
+     "src": "sim.h S11",
+     "conf": "확정",
+     "engine": "Data::atkreq_from"
+    },
+    {
+     "off": "+0x160",
+     "width": "u8",
+     "name": "atkreq_base",
+     "meaning": "공격 요청 대상 거점",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "Data::atkreq_base"
+    },
+    {
+     "off": "+0x164",
+     "width": "u32",
+     "name": "ideology_exp",
+     "meaning": "사상경험치(에디터)",
+     "src": "DM",
+     "conf": "추정",
+     "engine": "Data::force_ideology_exp"
+    },
+    {
+     "off": "+0x184",
+     "width": "u16[5]",
+     "name": "tribe_intimacy",
+     "meaning": "이민족 5부족 친밀(0..1000)",
+     "src": "CA #b 교역; sim.h S16",
+     "conf": "확정",
+     "engine": "Data::tribe_fav"
+    },
+    {
+     "off": "+0x18E",
+     "width": "u8[5]",
+     "name": "tribe_state",
+     "meaning": "이민족 5부족 상태",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "Data::tribe_state"
+    },
+    {
+     "off": "+0x17A",
+     "width": "u8[5]",
+     "name": "target_forces",
+     "meaning": "공략 대상 세력 5칸(세력 번호, 0 이면 없음). 판단표 노드 CSetTargetForceListNode(`58C90`)가 쓰고 CClearTargetForceListNode(`52950`)가 비운다. 세력정보 항목 6 = 첫 칸, 항목 27 = 목록",
+     "src": "L3b(`58C90` 코드)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x17F",
+     "width": "u8[5]",
+     "name": "friend_forces",
+     "meaning": "친선 대상 세력 5칸. CSetFriendForceListNode(`58B90`)가 쓰고 `52910` 이 비운다. 세력정보 항목 7 = 첫 칸",
+     "src": "L3b(`58B90` 코드)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x218/+0x228/+0x238",
+     "width": "list ptr",
+     "name": "foothold_lists",
+     "meaning": "세력이 보관하는 거점 목록 3종(세력정보 항목 19/21/33). 이름 추정",
+     "src": "L3b(`8CAE0`)",
+     "conf": "확정(위치)/추정(이름)",
+     "engine": ""
+    },
+    {
+     "off": "+0x193",
+     "width": "bits",
+     "name": "force_flags",
+     "meaning": "비트1: 진형 5 기동 +2, 비트2: 진형 5 +5, 비트3: 수상 기동 항 등",
+     "src": "DMs 175~; DF",
+     "conf": "확정(비트 사용)/추정(의미)",
+     "engine": "Data::force_flags"
+    },
+    {
+     "off": "+0x194",
+     "width": "holder",
+     "name": "subject_of",
+     "meaning": "속국 관계 보유(이민족 복속)",
+     "src": "W §2.1; sim.h",
+     "conf": "확정",
+     "engine": "Data::subject_of"
+    },
+    {
+     "off": "+0x1BE",
+     "width": "s16",
+     "name": "force_pexp",
+     "meaning": "(±1000) `2255F0` 호출 22곳, 단계표 `1413A9DDC` — 의미 미정",
+     "src": "CA 15절",
+     "conf": "미해결",
+     "engine": "Data::force_pexp"
+    },
+    {
+     "off": "+0x1CB",
+     "width": "u8[10]",
+     "name": "policy_got",
+     "meaning": "\"획득한 항목\" 비트열(비트 = 효과 id-1). 일반 세력은 다수 비트, 이민족은 비트 0만(L2 4차 덤프). 쓰는 곳 `2EF700` 하나, 읽는 곳 `22DB30`(비정책 효과 값 = `world+0x85F20[id]+0x44`)",
+     "src": "L1 2·3차; L3b",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1D5",
+     "width": "u8[10]",
+     "name": "policy_mask",
+     "meaning": "효과 마스크(`+0x1CB` 와 짝)",
+     "src": "L1 2차",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1DF",
+     "width": "u8[10]",
+     "name": "policy_unlock",
+     "meaning": "해금 비트열(`2EF700` 이 씀)",
+     "src": "L1 3차",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1C5",
+     "width": "u8 x6",
+     "name": "doctrine_gain",
+     "meaning": "주의 경험 슬롯 6칸(+0x1C5+종류-1, 상한 99, `1DF490`이 가산)",
+     "src": "CA 15절; L1 4차",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "동맹 위치 +0xEA(코드, W §2.1·CA) vs +0xEB(에디터 DM). 코드 근거를 채택.",
+     "worldmap_spec.md §2.1 vs REA_Analysis/data_model.md"
+    ],
+    [
+     "충돌",
+     "전법서 재고 +0x120(CA) vs +0x122(DM): 31칸 idx1이 +0x122이면 동일 표.",
+     "command_audit.md vs data_model.md"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "CORPS",
+   "ko": "군단(District)",
+   "rtti": "CDistrictData",
+   "world_table": "+0xE0D0",
+   "stride": 48,
+   "anchor": "+0x10",
+   "src": "DM 군단 표; RULES.md S9; L4",
+   "notes": "세력 id는 +0x10. 명령서 +0x14는 군단 객체에 있다(DESIGN.md:75).",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u8",
+     "name": "force",
+     "meaning": "세력",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::corps_force"
+    },
+    {
+     "off": "+0x11",
+     "width": "u8",
+     "name": "order",
+     "meaning": "순서",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x12",
+     "width": "u16",
+     "name": "leader",
+     "meaning": "군단장",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::corps_governor"
+    },
+    {
+     "off": "+0x14",
+     "width": "u8",
+     "name": "order_count",
+     "meaning": "명령서(1장 소비해 출진 등)",
+     "src": "DM; DESIGN.md:75",
+     "conf": "확정",
+     "engine": "Data::corps_orders"
+    },
+    {
+     "off": "+0x15",
+     "width": "s8",
+     "name": "action_setting",
+     "meaning": "군단 행동방침 0/1/2: 판단표 노드 CDistrictSetPurposeNode(`36D00`)가 쓴다(군단 판단표 N705~N720). UI 설정 아님. 규칙 효과 없음",
+     "src": "CA #25; L3b",
+     "conf": "확정",
+     "engine": "Data::corps_action_setting"
+    },
+    {
+     "off": "+0x17",
+     "width": "u8",
+     "name": "delegation",
+     "meaning": "위임방침: 1 전체위임, 2 세력공략, 3 거점공략, 4 내정, 5 지원(msggame_exce 41241 순서; 1·5 는 조건 160 코드 확인, 2~4 순서 추정). 조건 110 의 n = 값 - 1",
+     "src": "CA #25; L3b",
+     "conf": "확정(1·5)/추정(2~4)",
+     "engine": "Data::corps_delegation"
+    },
+    {
+     "off": "+0x1B",
+     "width": "u8",
+     "name": "permissions",
+     "meaning": "권한 설정(실행허가행동 일부; 조건 108 이 bit2~6 = 항목 0~4). 군단 초기화 `2F02E0` 이 0xFF",
+     "src": "CA #25; L3b",
+     "conf": "확정",
+     "engine": "Data::corps_permissions"
+    },
+    {
+     "off": "+0x1C",
+     "width": "u32 bits",
+     "name": "permissions2",
+     "meaning": "권한 비트 하위 31비트(조건 108 의 항목 5~). `2F02E0` 이 31비트를 모두 1 로",
+     "src": "L3b(`2F02E0`)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x20/+0x21/+0x22",
+     "width": "u8 x3",
+     "name": "priority_levels",
+     "meaning": "물자 확보 수준 3종(0 보통, 1 많이, 2 적게; 군단설정 항목 0 = +0x20 금(필요 금 6/8/4), 항목 1 = +0x22 (병사로 추정), 항목 2 = +0x21 군량(군량 인수 6/8/4)). 초기화 `2F02E0` 이 0. 화면 \"중시항목\"/물자에 대응",
+     "src": "L3b(조건 111, rulebase N11~N24)",
+     "conf": "확정(위치·값)/추정(항목 이름)",
+     "engine": ""
+    },
+    {
+     "off": "+0x18",
+     "width": "u8",
+     "name": "goal",
+     "meaning": "위임 목표 번호(위임방침 5 지원이면 목표 군단 번호). 에디터 \"목표\"",
+     "src": "DM; L3b(조건 160 `A4960`)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x19",
+     "width": "u8",
+     "name": "goal_kind",
+     "meaning": "위임 목표 종류(8 = 군단)",
+     "src": "L3b(조건 160)",
+     "conf": "확정(값 8)/추정(다른 종류)",
+     "engine": ""
+    },
+    {
+     "off": "+0x16",
+     "width": "s8",
+     "name": "corps_aux",
+     "meaning": "군단정보 항목 1 이 읽는 부호 있는 바이트(`2327F0`). 쓰는 곳·의미 미확인",
+     "src": "L3b(`88780` case 1)",
+     "conf": "확정(위치)/미해결(의미)",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "ARMY",
+   "ko": "부대(Unit)",
+   "rtti": "CArmyUnitData",
+   "world_table": "+0x7E838[501]",
+   "stride": 512,
+   "anchor": "+0x0",
+   "src": "DM; W §0~4; dump_measurements; lane_L4; command_audit; approx_inventory",
+   "notes": "덤프 종류 `+0x10`: 1 전투 부대(진형 1~10·14), 2 수송(진형 19). 엔진 Unit.kind==1이 수송(`g1_replay.doc_from_turn`이 2→1). 목록 `+0xF0`(소멸 부대 정리), `+0x70`(부대 목록).",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u8",
+     "name": "kind",
+     "meaning": "1 전투 / 2 수송(11도 유효 부대)",
+     "src": "W 용어; L4",
+     "conf": "확정",
+     "engine": "Unit.kind (2→1)"
+    },
+    {
+     "off": "+0x12",
+     "width": "u16",
+     "name": "commander",
+     "meaning": "대장(무장 id)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Unit.officer"
+    },
+    {
+     "off": "+0x14",
+     "width": "u16",
+     "name": "move_accum",
+     "meaning": "이동 누산기(상한 1000). `2DB9A0`이 `269150`(새 26AB00) 점수를 더함",
+     "src": "W §4.2; DMs",
+     "conf": "확정",
+     "engine": "Unit.mp"
+    },
+    {
+     "off": "+0x16",
+     "width": "u16",
+     "name": "troops",
+     "meaning": "병사",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Unit.troops"
+    },
+    {
+     "off": "+0x18",
+     "width": "u16",
+     "name": "wounded",
+     "meaning": "부상병",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Unit.wounded"
+    },
+    {
+     "off": "+0x1A",
+     "width": "u8",
+     "name": "morale",
+     "meaning": "사기(0이면 즉시 격파 `25A880`)",
+     "src": "DM; L4 U8",
+     "conf": "확정",
+     "engine": "Unit.morale"
+    },
+    {
+     "off": "+0x1B",
+     "width": "u8",
+     "name": "land_formation",
+     "meaning": "육상 진형(+0x1C 수상 진형과 둘 다 보유)",
+     "src": "DM; W §4.5",
+     "conf": "확정",
+     "engine": "Unit.formation"
+    },
+    {
+     "off": "+0x1C",
+     "width": "u8",
+     "name": "water_formation",
+     "meaning": "수상 진형(11 주가, 12 몽충, 13 누선, 17·18·20 수송 수선)",
+     "src": "W §4.5",
+     "conf": "확정",
+     "engine": "Unit.wform"
+    },
+    {
+     "off": "+0x1D",
+     "width": "u8[3]",
+     "name": "tactics",
+     "meaning": "보유 전법",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x20..+0x22",
+     "width": "bytes",
+     "name": "state_bytes",
+     "meaning": "전법 관련 상태 바이트 3종. **쓰기 지점 확정(2026-11-08)**: `173DD0`(AI 전법 선택)·`174F40`(전법 실행)이 대상 부대마다 `부대 + 0x20 + i`(i=0..2)에 값을 쓴다(디컴파일 표기는 `lVar9 + 0x20 + lVar11`). 값은 `clamp(...)`: **i=0** = `clamp(진형 보정 − 세력 보정 + 참가 부대 전법 객체 +0x42(wait 추정) 평균, 0, 100)`(2026-11-17 정정: 평균 피해 아님). 출진 `2D4C80` 초기값은 40 + 진형 보정 − 세력 보정 / 150 / 200이고 진형 보정은 진형 1 → +8, 진형 2/14 → −8, 그 밖 0(`141A4C004/00C/014`, 판정 `22CB80`), 세력 보정은 대상 세력 `+0x193 & 0x40`이면 4(`141A4BC6C`). **i=1/2**는 상한 상수 `141A4B0D4`=150·`141A4B0E0`=200. 읽기: `170150` 5번째 검사 `+0x20==0`, `17E810` 동일, `16E820`은 `+0x21≠0 → 1.0`, `+0x22≠0 → 1.4`, 둘 다 0 → 1.8. **덤프 확인**: 2090211 턴 30부대 중 23부대가 `+0x21=150`·`+0x22=200`, `+0x20`은 0(26부대)·8·18·34. 다음 턴(2090221)에는 `+0x20`만 전부 0으로 돌아오고 `+0x21`/`+0x22`는 같은 23부대가 150/200을 유지한다 → `+0x20`이 먼저 낮아진 표본이다. `3045F0 → 225710`이 낮춘다: `+0x20`은 병참 연결 때 하루 −4, `+0x21/+0x22`는 지휘무장만(rules_combat_effects.md E1 \"전법 게이지 일생\"·전법 게이지 감쇠)",
+     "src": "L3 C4; `173DD0`·`174F40`; 덤프 2턴",
+     "conf": "확정(쓰기·값·지속)",
+     "engine": ""
+    },
+    {
+     "off": "+0x23",
+     "width": "u8",
+     "name": "st_confusion",
+     "meaning": "혼란 게이지(0..120, 단절 시 일 -4)",
+     "src": "W §2.2; DM",
+     "conf": "확정",
+     "engine": "Unit.st_conf"
+    },
+    {
+     "off": "+0x24",
+     "width": "u8",
+     "name": "st_halt",
+     "meaning": "저지(에디터 '정지') 게이지",
+     "src": "W §2.2",
+     "conf": "확정",
+     "engine": "Unit.st_halt"
+    },
+    {
+     "off": "+0x25",
+     "width": "u8",
+     "name": "st_taunt",
+     "meaning": "도발 게이지(대상 필드 별도)",
+     "src": "CA 3·15",
+     "conf": "확정",
+     "engine": "Unit.st_taunt"
+    },
+    {
+     "off": "+0x26",
+     "width": "bits",
+     "name": "flags",
+     "meaning": "bit1 병참 연결(1=연결), bit2 자주퇴각, bit3 추격 옵션",
+     "src": "W §2.1; L4",
+     "conf": "확정",
+     "engine": "Unit.supply"
+    },
+    {
+     "off": "+0x2A",
+     "width": "u16",
+     "name": "tile",
+     "meaning": "위치(칸 번호 y*220+x)",
+     "src": "W §0.1",
+     "conf": "확정",
+     "engine": "Unit.tile"
+    },
+    {
+     "off": "+0x2C..+0x34",
+     "width": "u16[5]",
+     "name": "relay_tiles",
+     "meaning": "경유지 칸 5개(2F05A0이 채움). 군세 +0x18 목록과 다른 자료",
+     "src": "DM; sim.h",
+     "conf": "확정",
+     "engine": "Unit.relay[5]"
+    },
+    {
+     "off": "+0x36",
+     "width": "u8",
+     "name": "facing",
+     "meaning": "방향 1..6(2A9910 번호), 몸 모양 칠하기 `18A190`",
+     "src": "sim.h S1",
+     "conf": "확정",
+     "engine": "Unit.facing"
+    },
+    {
+     "off": "+0x37",
+     "width": "u8",
+     "name": "act",
+     "meaning": "행동(8 건설, 9 이동 후 건설, 10 지역 점령형, 0xB/0xC 퇴각 등)",
+     "src": "W §3.2; L4",
+     "conf": "확정",
+     "engine": "Unit.act"
+    },
+    {
+     "off": "+0x38",
+     "width": "u8",
+     "name": "target_kind",
+     "meaning": "목표 종류(5 도시, 6 관문, 9 칸, 0xB 지역, 0x1B 부대)",
+     "src": "L4",
+     "conf": "확정",
+     "engine": "Unit.pkind"
+    },
+    {
+     "off": "+0x3A",
+     "width": "u16",
+     "name": "target",
+     "meaning": "목표 id(<501이면 부대)",
+     "src": "L4",
+     "conf": "확정",
+     "engine": "Unit.pid"
+    },
+    {
+     "off": "+0x3C/+0x3E",
+     "width": "u8+u16",
+     "name": "post_target",
+     "meaning": "사후 목표(L4) / 도발 시전자(종류·id)(L2 2·3차 덤프 대조). 부대정보 항목 9/10 이 `+0x3C` byte, `+0x3E` u16 으로 읽는다. 두 해석이 같은 칸이며 충돌 S17 로 기록",
+     "src": "L4; L2 2·3차; L3b",
+     "conf": "확정(위치)/충돌(의미)",
+     "engine": ""
+    },
+    {
+     "off": "+0x40",
+     "width": "u8",
+     "name": "option",
+     "meaning": "접근 시 반응 옵션 0·1·2. 2일 때만 `273AC0`이 3칸 안 적을 모아 교전(`2B76B0`→`2903E0`). 컴퓨터 출진 기본값은 1(`43A50`). 1·2는 전법 피해식 `177B30`의 정책 0x20/0x21 보정 선택에도 쓰임",
+     "src": "L4; ai/roles.md 6-4 (디컴파일 2026-11-12)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x41",
+     "width": "u8",
+     "name": "post_order",
+     "meaning": "사후 명령(1 퇴각 `2EC570`, 2 주둔)",
+     "src": "L4",
+     "conf": "확정(판단 영역)",
+     "engine": ""
+    },
+    {
+     "off": "+0x42",
+     "width": "u16",
+     "name": "build_tile",
+     "meaning": "건설 칸",
+     "src": "W §3.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x46",
+     "width": "u8",
+     "name": "build_kind",
+     "meaning": "건설 시설 종류",
+     "src": "W §3.2",
+     "conf": "확정",
+     "engine": "Unit.build"
+    },
+    {
+     "off": "+0x48",
+     "width": "u16",
+     "name": "next_tile",
+     "meaning": "다음 칸(막히면 0xBD10). 출진 때는 `1EDC30`이 성 → 목적 칸 경로의 성 밖 첫 칸을 쓴다(출진 명령 `[24]`도 같은 칸)",
+     "src": "W §4.1; DM; ai/roles.md 6-3",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x152",
+     "width": "u16",
+     "name": "origin_tile",
+     "meaning": "출진 때 `+0x2A`와 함께 출발 성 칸으로 초기화(`2D4C80`). 이후 용도 미확인",
+     "src": "ai/roles.md 6-3 (디컴파일 2026-11-12)",
+     "conf": "확정(쓰기)/미확인(용도)",
+     "engine": ""
+    },
+    {
+     "off": "+0x4A+i",
+     "width": "s8[5]",
+     "name": "ability_level",
+     "meaning": "전법 능력 변경 단계 -10..10 (i=0 이동, 1..4 공격·공성·방어·파성)",
+     "src": "CA §12",
+     "conf": "확정",
+     "engine": "Unit.lv[5]"
+    },
+    {
+     "off": "+0x4B..+0x4E",
+     "width": "s8",
+     "name": "temp_modifiers",
+     "meaning": "공군/공성/방어 입력 일시보정 후보(+0x4B 공군 2B21A0, +0x4C 공성 2B2440, +0x4D 방어 2A9E50)",
+     "src": "DM 추가 관측",
+     "conf": "확정(읽기)/추정(의미)",
+     "engine": ""
+    },
+    {
+     "off": "+0x50+i",
+     "width": "u8[5]",
+     "name": "ability_duration",
+     "meaning": "능력 변경 남은 기간 0..240(0xF0)",
+     "src": "CA §12",
+     "conf": "확정",
+     "engine": "Unit.ld[5]"
+    },
+    {
+     "off": "+0x54",
+     "width": "u8",
+     "name": "(오표기 정정)",
+     "meaning": "difficulty.md·RULES.md는 '소속 부대 +0x54 최저치'로 적었으나 command_audit §4는 같은 입력을 '지역 치안 +0x54(지역 +0x52 인구·+0x54 치안)의 최저값'으로 정정. 부대 +0x54의 독립 의미는 확인되지 않음",
+     "src": "DF 항 44; CA §4",
+     "conf": "충돌(정정본: 지역 치안)",
+     "engine": ""
+    },
+    {
+     "off": "+0x58",
+     "width": "u16",
+     "name": "troops_id",
+     "meaning": "소속 군세 ID(에디터의 출발도시 u8 주장은 폐기)",
+     "src": "DM 정정",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x64",
+     "width": "36 slots",
+     "name": "trait_slots",
+     "meaning": "부대 개성 슬롯 36칸(무장 개성과 합산해 127칸)",
+     "src": "L1 `26BBE0`",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x13C",
+     "width": "index",
+     "name": "retreat_index",
+     "meaning": "퇴각 재지정 색인(표 0x84BC8)",
+     "src": "L4 A5",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x140..0x142",
+     "width": "bytes",
+     "name": "pending_cmd",
+     "meaning": "보류 명령(`2E3BC0`이 행동·목표로 확정)",
+     "src": "L4 case 4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1F0",
+     "width": "u32",
+     "name": "ai_flags",
+     "meaning": "개별 AI 플래그, bit3=병참 단절 후보",
+     "src": "DM 추가 관측",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1F4",
+     "width": "i32",
+     "name": "cut_target",
+     "meaning": "병참 절단 대상 부대 번호 후보",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1F8",
+     "width": "u16",
+     "name": "goal_tile_cache",
+     "meaning": "경로 재구성 `303EA0` 이 경로 끝 칸(없으면 0xBD10)을 쓰고 읽는 목적칸 캐시. 에디터의 \"목적칸\"과 같은 용도(해소)",
+     "src": "DM; approx_inventory A2; L3b(`303EA0` 코드)",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "army +0x58: 에디터 u8 '출발도시' vs 코드 u16 소속 군세 ID. 후자 채택(정정 기록).",
+     "REA_Analysis/data_model.md 정정·충돌"
+    ],
+    [
+     "충돌",
+     "army +0x1F8: 에디터 '목적칸', approx_inventory A2는 '경로 캐시 +0x1F8'. 같은 용도(목적지 기반 경로 캐시)일 가능성이 있으나 미확정.",
+     "data_model.md vs approx_inventory.md A2"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "TROOPS",
+   "ko": "군세(Troops)",
+   "rtti": "CTroopsData",
+   "world_table": "+0x7F8D8 (id 조회표)",
+   "stride": "-",
+   "anchor": "+0x0",
+   "src": "DM 추가 관측 (siege_logistics/분석근거.md)",
+   "notes": "행동트리 컨텍스트와 방식을 가진 군세 객체.",
+   "fields": [
+    {
+     "off": "+0x14",
+     "width": "u16",
+     "name": "mode",
+     "meaning": "군세 행동 방식(5 건설 군세, 8/9/10/11/22 편성 방식)",
+     "src": "DM; worldmap_spec §3.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x16",
+     "width": "u16",
+     "name": "target_id",
+     "meaning": "군세 목표 ID(방식에 따라 거점/토지)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x18",
+     "width": "u16[10]",
+     "name": "area_list",
+     "meaning": "동적 지역처리 목록: 중심 HEX(고정 도시쌍 경유 표 아님)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x30",
+     "width": "u64 ptr",
+     "name": "bt_context",
+     "meaning": "행동트리 실행 컨텍스트 후보",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "PERSON",
+   "ko": "무장(Person)",
+   "rtti": "CPersonData",
+   "world_table": "+0x73A50",
+   "stride": 496,
+   "anchor": "+0xEC",
+   "src": "DM 무장 표(memschema 선언), command_audit, lane_L1/L2, sim.h",
+   "notes": "에디터 레코드 stride 496, 앵커 +0xEC(능력 5개 u8). 파일 저장 스키마(402B)와 메모리 객체(0x1F0)는 다른 배치.",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "u16",
+     "name": "game_id",
+     "meaning": "게임ID",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::person_id"
+    },
+    {
+     "off": "+0x12",
+     "width": "utf16[14]",
+     "name": "surname",
+     "meaning": "성(+0x20 명, +0x2E 자, +0x34 이름[24])",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_name"
+    },
+    {
+     "off": "+0xA6",
+     "width": "u16",
+     "name": "portrait",
+     "meaning": "모습",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xA8",
+     "width": "u16",
+     "name": "join_year",
+     "meaning": "임관",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xA9",
+     "width": "u8",
+     "name": "gender",
+     "meaning": "성별(0 남 1 여; 개성 조건 21/22)",
+     "src": "sim.h S18",
+     "conf": "확정",
+     "engine": "person_gender"
+    },
+    {
+     "off": "+0xAA",
+     "width": "u16",
+     "name": "appear",
+     "meaning": "등장 연도(덤프 1,400명 대조: 시나리오 +0xD9 와 같은 값)",
+     "src": "DM; L1 3차",
+     "conf": "확정",
+     "engine": "person_appear"
+    },
+    {
+     "off": "+0xAC",
+     "width": "u16",
+     "name": "birth",
+     "meaning": "생년",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_birth"
+    },
+    {
+     "off": "+0xAE",
+     "width": "u16",
+     "name": "death",
+     "meaning": "졸년",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_death"
+    },
+    {
+     "off": "+0xB0",
+     "width": "u8",
+     "name": "death_kind",
+     "meaning": "사인 구분(0 / 1). 1이면 졸년 + 10~13년 사망, 질병 발병 임계 +10(`26B920`). 기존 표는 u16 death_cause 로 선언했으나 런타임 값은 0/1뿐이고 시나리오 `+0xDF` 와 1,400/1,400 일치",
+     "src": "L1 3차(덤프 + `26B920`)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xB2",
+     "width": "u16",
+     "name": "clan",
+     "meaning": "씨족",
+     "src": "sim.h R7",
+     "conf": "확정",
+     "engine": "person_clan"
+    },
+    {
+     "off": "+0xB4",
+     "width": "u16",
+     "name": "father",
+     "meaning": "부",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "person_father"
+    },
+    {
+     "off": "+0xB6",
+     "width": "u16",
+     "name": "mother",
+     "meaning": "모",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "person_mother"
+    },
+    {
+     "off": "+0xBA",
+     "width": "u16",
+     "name": "spouse",
+     "meaning": "배우자",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "person_spouse"
+    },
+    {
+     "off": "+0xBC",
+     "width": "u16",
+     "name": "sworn",
+     "meaning": "의형제 그룹",
+     "src": "sim.h",
+     "conf": "확정",
+     "engine": "person_sworn"
+    },
+    {
+     "off": "+0xBE",
+     "width": "u8",
+     "name": "affinity",
+     "meaning": "상성(0~149). 무장정보 항목 4 가 byte 로 읽는다. `2A8010` 상성 격차(원형 거리 최대 75), `2A8C90` 등급 경계 11/30/47",
+     "src": "DM; L3b; L2 3차",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xC0",
+     "width": "u16[8]",
+     "name": "favorites",
+     "meaning": "친애(애호 목록)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_fav"
+    },
+    {
+     "off": "+0xD0",
+     "width": "u16[8]",
+     "name": "hate",
+     "meaning": "혐오",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_hate"
+    },
+    {
+     "off": "+0xE0",
+     "width": "u8",
+     "name": "corps_slot",
+     "meaning": "군단 객체 슬롯(마스터 세력 ID 아님)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_force"
+    },
+    {
+     "off": "+0xE2",
+     "width": "u16",
+     "name": "home_base",
+     "meaning": "소속 거점/등장도시. 병참 연결 판정의 출발 거점(`2AB620`)",
+     "src": "W §2.1; DM",
+     "conf": "확정",
+     "engine": "Unit.source"
+    },
+    {
+     "off": "+0xE4",
+     "width": "u16",
+     "name": "location",
+     "meaning": "현재 위치",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_location"
+    },
+    {
+     "off": "+0xE6",
+     "width": "u8",
+     "name": "status",
+     "meaning": "신분(1 군주, 4/2/3/6 등)",
+     "src": "CA 충성; DMs",
+     "conf": "확정",
+     "engine": "person_status"
+    },
+    {
+     "off": "+0xE7",
+     "width": "u8",
+     "name": "post",
+     "meaning": "관직(관직 표 인덱스)",
+     "src": "DM; DMs",
+     "conf": "확정",
+     "engine": "person_office"
+    },
+    {
+     "off": "+0xE8",
+     "width": "u8",
+     "name": "loyalty",
+     "meaning": "충성",
+     "src": "DM; CA",
+     "conf": "확정",
+     "engine": "person_loyalty"
+    },
+    {
+     "off": "+0xEC..+0xF0",
+     "width": "u8 x5",
+     "name": "abilities",
+     "meaning": "통솔·무력·지력·정치·매력(실효값은 `231770`/옛 22FCE0 경유)",
+     "src": "DM; 능력치.md",
+     "conf": "확정",
+     "engine": "person_leadership/strength/intelligence/politics/charm"
+    },
+    {
+     "off": "+0xF2",
+     "width": "u8[5]",
+     "name": "growth_room",
+     "meaning": "성장여유",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xF8",
+     "width": "u16[5]",
+     "name": "ability_cap",
+     "meaning": "능력상한",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x104",
+     "width": "u32[5]",
+     "name": "exp",
+     "meaning": "경험누계",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x118",
+     "width": "u16[9] (traits9 이전 5)",
+     "name": "traits",
+     "meaning": "개성",
+     "src": "DM; WB §5.2",
+     "conf": "확정",
+     "engine": "person_traits"
+    },
+    {
+     "off": "+0x12C",
+     "width": "u32",
+     "name": "formation_mask",
+     "meaning": "진형",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_formation_mask"
+    },
+    {
+     "off": "+0x130",
+     "width": "u8[10]",
+     "name": "tactics",
+     "meaning": "전법 id 바이트(표 +0x774D0)",
+     "src": "DM; CA #23",
+     "conf": "확정",
+     "engine": "person_tactics"
+    },
+    {
+     "off": "+0x14C",
+     "width": "u8",
+     "name": "principle",
+     "meaning": "주의(신념)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_principle"
+    },
+    {
+     "off": "+0x14D",
+     "width": "u8",
+     "name": "policy",
+     "meaning": "정책",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_policy"
+    },
+    {
+     "off": "+0x15E",
+     "width": "u16 bits",
+     "name": "flags",
+     "meaning": "시나리오 속성 플래그: 비트 5(0x20) 위임 중 전법 사용 불가(`170216`에서 검사, 사유 `0xC964`), 비트 13 충성 255 고정(`1FEF60`), 비트 14 연계 불참(조건 159), 0x8000 acted(포상 실행 `1ED620`·`1ED8F0` 이 set), 0x4000 이탈 등급(`335C20` set), 0x6000, 비트 0 = 무장정보 항목 12. **L3 5차 추가 비트**: 비트 10(0x400) = 건강 틱 면제(발병 `26B920`·빈사 사망 `26B500`·`345D00`·`3566E0` 이 `&0x400==0` 을 요구; `2E46F0` 이 비트 13 이 켜진 무장(ID 3001~3150 밖)에 set, `229820` 이 ID 5101~5200 에 0x600 을 set), 비트 9(0x200) = 가공·특수 무장 표식(`229820` 이 ID 5101~5200 에 비트 9·10 동시 set; `2FAFD0` 등용 가능 판정·`2FA7C0` 이 읽음, 등용·인발 대상 제외 계열 추정), 비트 7(0x80) = 신규 합류·생성 직후 표식(`29FB50` 무장 생성/편입·`273100` 임관 처리가 set; 목록 정렬 `3BAC00`·`3C0A90`·`3DFDD0` UI 가 읽음, 추정), 비트 4(0x10) = 이번 등용 실패 표식(`2FC080` 이 `279DE0`==0 일 때 set; UI `66B850`·`672450` 이 읽음, 추정), 비트 3(0x8) = 건강 계열(`26B3F0`·`27E480`·`2CB210` 이 발병·행동 계산에서 읽음, 의미 추정), 비트 11(0x800)(`20B640` 이 set, `36BF30` 이 읽음, 의미 미확인)",
+     "src": "L3 C3; CA 15절; DMs; L2 2차",
+     "conf": "확정(일부 비트)/추정",
+     "engine": "person_pflag"
+    },
+    {
+     "off": "+0x161",
+     "width": "u8",
+     "name": "injury_grade",
+     "meaning": "건강·부상 등급 0~3 -> 능력 계수 100/80/50/20 %. 질병 틱 `27E480` 이 1/2 를 쓰고 읽으며 월 경계에서만 바뀐다",
+     "src": "DMs; L2 C12; L1 3차",
+     "conf": "확정(코드)/엔진 일부",
+     "engine": ""
+    },
+    {
+     "off": "+0x162",
+     "width": "u16",
+     "name": "prev_lord",
+     "meaning": "옛 군주(무장 id). 등용 평가 `279DE0` 이 `+0x162 == 등용하는 군주 id` 이면 등용 불가로 처리하므로 \"옛 군주\"(L1 2차)가 맞다. 에디터의 \"사관금지\" 명칭은 해소",
+     "src": "DM; L1 2차; L3b 3차(`279DE0`)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x164",
+     "width": "u16",
+     "name": "ban_period",
+     "meaning": "금지기간(월 1일에만 -1)",
+     "src": "DM; DMs",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x166",
+     "width": "u16",
+     "name": "join_year_lord",
+     "meaning": "현재 군주 임관 연도",
+     "src": "sim.h S11",
+     "conf": "확정",
+     "engine": "person_rel_year"
+    },
+    {
+     "off": "+0x168",
+     "width": "u8",
+     "name": "captive_months",
+     "meaning": "포로 보유 개월(포획 0, 월 1일마다 +1, 1 초과부터 탈출 판정 `2A1530`/`2694A0`)",
+     "src": "L1 2차(덤프 추적 + `2694A0`)",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x16A..+0x180",
+     "width": "s16[12]",
+     "name": "aptitude",
+     "meaning": "적성·내면 값 12칸(-20..20; 시나리오 무장 표 +0x114 `aptitude i16x12` 와 같은 값). 판단표 무장정보 항목 13~20·31·32·34·35 가 읽는다(순서: +0x16A=13, +0x16C=14, +0x16E=15, +0x170=16 ... +0x178=20, +0x17A=31, +0x17C=32, +0x17E=34, +0x180=35). **이름 대응(L3b 3차)**: 정책 선택 비교자 `6B5980` 이 정책 분류 3/4/5/6 에 칸 {max(0, 9)} / 10 / 2 / 11 을 쓴다(분류 3 = 군사 정책 -> 칸 0 호전·칸 9 야망, 4 = 책략 정책 -> 칸 10 책략, 5 = 내정 정책 -> 칸 2 내정, 6 = 정령철저·태학 계열 -> 칸 11). 칸 1 의리, 칸 8 한조(`2FA7C0` 이탈 판정), 칸 7 외교(포로 처분 생존 확률 칸 7+80), 칸 3·4·5 물자(금·군량·병사 = 지역 개발 가중 상업·농업·병영), 칸 6(+0x176)은 **건설이 아님**(L3 5차: +0x176 읽는 코드는 `AD4E0`(군주 칸6+칸2 > 29 이면 이탈 임계 +1)·`2FA7C0`(대상 칸6+칸2 < 11 이면 50% 분기)·`2FAFD0`(칸 6 단독 비교)·판단표 등용 평가 수식뿐이고 건설·개발 경로는 읽지 않는다) -> 이름은 \"등용·충성 계열 성향\" 후보(낮음). 칸 3~5 만 개발성향(판단표 항목 16~18). 이름은 추정(칸 0·1·7·8·9·3~5 높음/중간, 2·10·11 중간, 6 낮음). `+0x16C/+0x17C` 는 충성 하락 몫(-20/-10/0/+10) 판정에도 쓰이는 공감값 2종",
+     "src": "sim.h S11; DM; L3b",
+     "conf": "확정(위치)/추정(이름)",
+     "engine": "person_rel16/17"
+    },
+    {
+     "off": "+0x182",
+     "width": "u16",
+     "name": "policy_level",
+     "meaning": "정책 Lv",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "person_policy_level"
+    },
+    {
+     "off": "+0x184",
+     "width": "bits",
+     "name": "trait_flags",
+     "meaning": "개성 비트 마스크(`26C070`이 사용)",
+     "src": "L1",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1C6/+0x1C7/+0x1C8",
+     "width": "u8 x3",
+     "name": "poach_mark",
+     "meaning": "인발 표식(시전 세력, 30, 60). `1FEF60`(계략 0x18)이 쓴다. **2026-11-08 보강**: `+0x1C7`은 **남은 일수**로 날짜 상태기계 case 2 `458520`이 매일 `141A4BDE0`(=1)씩 빼고, 0이 되면 `+0x1C6`을 0으로 지운 뒤 msggame_exce `0x34C5`/`0x34C6`(\"…비어가 해소되어 출진가능\")를 띄운다. 즉 이 표식의 게임 용어는 **비어(유언비어)**이며 효과는 출진 불가다(기간 상수 `141A4B6E4`=30)",
+     "src": "L2 2차; `458520`·메시지 표",
+     "conf": "확정(타이머)",
+     "engine": ""
+    },
+    {
+     "off": "+0x1E8",
+     "width": "u32",
+     "name": "duty_limit",
+     "meaning": "담당 직무 한도(무장정보 항목 37). 현재 직무 수(`2ABF60(무장,2)`) + 1 <= 한도이면 직무 추가 가능(`43800`, 항목 38). 조건 32 와 같은 묶음",
+     "src": "L3b(`8F810` case 36~38; `43800`)",
+     "conf": "확정(위치)/추정(의미)",
+     "engine": ""
+    },
+    {
+     "off": "+0x1BC",
+     "width": "u8",
+     "name": "rank",
+     "meaning": "공적 등급(위계 0..6)",
+     "src": "DM; sim.h S16",
+     "conf": "확정",
+     "engine": "person_rank"
+    },
+    {
+     "off": "+0x1BE",
+     "width": "s16/u16",
+     "name": "merit",
+     "meaning": "공적(-1000..12000). 에디터 u16 vs 헤더 i16: 부호 미검증",
+     "src": "DM 정정·충돌; sim.h",
+     "conf": "확정(범위)/미해결(부호)",
+     "engine": "person_merit"
+    },
+    {
+     "off": "+0x1C0",
+     "width": "s16",
+     "name": "pending_score",
+     "meaning": "대기 점수(AddMerit `16A4E0`이 더함, /10 환산)",
+     "src": "CA 15절",
+     "conf": "확정",
+     "engine": "person_pend"
+    },
+    {
+     "off": "+0x1C2/+0x1C3",
+     "width": "u8 x2",
+     "name": "rank_bonus",
+     "meaning": "위계 배분(지휘병사 500/500/1000; 담당 지역 +1/+1)",
+     "src": "CA 15절",
+     "conf": "확정",
+     "engine": "person_bonus"
+    },
+    {
+     "off": "+0x1EC/+0x1ED",
+     "width": "...",
+     "name": "ability_cap_fields",
+     "meaning": "능력 상한 필드(+0x1ED 매력, +0x1EC 그 외; 가상 getter +0x48로 평가)",
+     "src": "능력치.md",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xF1",
+     "width": "u8",
+     "name": "duel_hp",
+     "meaning": "단기접전 체력(0..100)",
+     "src": "L2 4차",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "공적 +0x1BE 부호: 에디터 u16, 헤더 설명 i16, 엔진은 -1000..12000 사용. 명령어 기반 부호 검증 미완료.",
+     "REA_Analysis/data_model.md 정정·충돌"
+    ],
+    [
+     "충돌",
+     "무장 개성 칸 수: 에디터 `+0x118 u16[9]`(traits9) vs 옛 `+0x118[5]`(CA #23). 새 빌드 모드는 traits9 사용.",
+     "command_audit.md vs worldmap_spec_b.md §5.2"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "FORMATION",
+   "ko": "진형",
+   "rtti": "CFormationData",
+   "world_table": "+0x77428[21]",
+   "stride": 200,
+   "anchor": "+0x0 (fixdata 레코드 = 객체 -0x10, 152B, 본문 0x2D419+id*152)",
+   "src": "formation_mapping.md; W §4.5; DMs 175~; formation.json",
+   "notes": "진형 id 1~21. 길 찾기가 부대 +0x1B/+0x1C로 인덱스. 객체 오프셋 = fixdata 레코드 오프셋 + 0x10.",
+   "fields": [
+    {
+     "off": "+0x7E (레코드 +0x6E)",
+     "width": "u8",
+     "name": "water",
+     "meaning": "1 육상, 2 수상 진형",
+     "src": "W §4.5; DM",
+     "conf": "확정",
+     "engine": "Map::formation_*"
+    },
+    {
+     "off": "+0x7F (레코드 +0x6F)",
+     "width": "u8",
+     "name": "mobility",
+     "meaning": "기동(어린 14, 학익 20, 봉시 26 ...; 수상 주가 10, 몽충 20, 누선 30)",
+     "src": "DMs 176",
+     "conf": "확정",
+     "engine": "Map::formation_mobility"
+    },
+    {
+     "off": "+0x80/+0x81 (레코드 +0x70/+0x71)",
+     "width": "u8 x2",
+     "name": "footprint_thresholds",
+     "meaning": "점령폭 3/5 병력 임계(x100). `2AF740`",
+     "src": "sim.h S1",
+     "conf": "확정",
+     "engine": "Map::formation_n0/n1"
+    },
+    {
+     "off": "+0x83 (레코드 +0x73)",
+     "width": "u8",
+     "name": "attack_unit",
+     "meaning": "공군(대부대 공격). getter `2B2720`(새 2B4AA0), 동적 1..45",
+     "src": "formation_mapping.md",
+     "conf": "확정",
+     "engine": "Map::formation_attack"
+    },
+    {
+     "off": "+0x84 (레코드 +0x74)",
+     "width": "u8",
+     "name": "attack_siege",
+     "meaning": "공성. getter `2B2690`(새 2B4A10), 1..70",
+     "src": "formation_mapping.md",
+     "conf": "확정",
+     "engine": "Map::formation_siege"
+    },
+    {
+     "off": "+0x85 (레코드 +0x75)",
+     "width": "u8",
+     "name": "attack_demolish",
+     "meaning": "파성. getter `2B27B0`(새 2B4B30), 1..60",
+     "src": "formation_mapping.md; DMs 80",
+     "conf": "확정(getter)/추정(옛 REA 후보)",
+     "engine": "Map::formation_demolition"
+    },
+    {
+     "off": "+0x86 (레코드 +0x76)",
+     "width": "u8",
+     "name": "defense",
+     "meaning": "방어. getter `2A9DC0`(새 2AC010), 1..40",
+     "src": "formation_mapping.md",
+     "conf": "확정",
+     "engine": "Map::formation_defense"
+    },
+    {
+     "off": "+0x9A",
+     "width": "u16",
+     "name": "cost",
+     "meaning": "비용",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Map::formation_cost"
+    },
+    {
+     "off": "+0xA6",
+     "width": "u8",
+     "name": "ranged",
+     "meaning": "원거리(누선만 1)",
+     "src": "DM; W §4.5",
+     "conf": "확정",
+     "engine": "Map::formation_ranged"
+    }
+   ],
+   "conflicts": [
+    [
+     "정정",
+     "과거 `formation_defense=2B2690`, `defense_stat_formula=2B2440`, `siege=2A9E50` 라벨은 폐기. 방어 입력 생산자는 `2A9E50`과 부대 +0x4D, 공성 입력 생산자는 `2B2440`.",
+     "formation_mapping.md; data_model.md 말미"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "TACTIC",
+   "ko": "전법(fixdata 표 12)",
+   "rtti": "CTacticsData",
+   "world_table": "+0x774D0 (201칸)",
+   "stride": "94 B",
+   "anchor": "본문 0x2E099 (0010_KO/fixdataexce.s14)",
+   "src": "WB §5.1; appendix_tactics.md",
+   "notes": "id 1..200(201칸, 0 무효). 이름 있는 것 196. `tools/extract/fidelity_tables.py`가 data/tables/tactic.json으로 추출.",
+   "fields": [
+    {
+     "off": "(이름)",
+     "width": "utf16",
+     "name": "name",
+     "meaning": "이름",
+     "src": "WB §5.1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "family",
+     "width": "u8",
+     "name": "family",
+     "meaning": "분류 1~8",
+     "src": "WB §5.1",
+     "conf": "확정",
+     "engine": "Map::tactic_family"
+    },
+    {
+     "off": "+0x31",
+     "width": "u8",
+     "name": "wait",
+     "meaning": "대기(72→131종, 48→24, 90→23, 0→22). 전투는 런타임 전법 객체 `+0x42`(u16)로 읽어 발동 뒤 게이지 재충전값으로 쓴다(`174F40`, 하루 −4; rules_combat_effects.md E1)",
+     "src": "WB §5.1",
+     "conf": "확정(값)/추정(런타임 위치·단위)",
+     "engine": "Map::tactic_wait"
+    },
+    {
+     "off": "flags",
+     "width": "u8",
+     "name": "flags",
+     "meaning": "플래그",
+     "src": "WB §5.1",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "effects[8]",
+     "width": "u8/s16",
+     "name": "effects",
+     "meaning": "[0..1] 효과 종류 2칸, [2..3] 범위, [4..5] 치1(위력, `16E5E0`=+0x66+칸), [6..7] 치2(`16E670`=+0x68+칸)",
+     "src": "WB §5.1; CA §12",
+     "conf": "확정",
+     "engine": "Map::tactic_effect[201*8]"
+    },
+    {
+     "off": "+0x58",
+     "width": "u8",
+     "name": "ability",
+     "meaning": "기준 능력(분류1=무력1, 그 외 지력2)",
+     "src": "WB §5.1; 능력치.md",
+     "conf": "확정",
+     "engine": "Map::tactic_ability"
+    },
+    {
+     "off": "+0x59",
+     "width": "u8(bits)",
+     "name": "formation_mask",
+     "meaning": "사용 가능 진형 비트(기본 0x7E = 진형 1~6)",
+     "src": "WB §5.1",
+     "conf": "확정",
+     "engine": "Map::tactic_formation_mask"
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "TRAIT",
+   "ko": "개성(fixdata 표 22)",
+   "rtti": "CPersonalityData",
+   "world_table": "+0x7DD18[356] (런타임 232B)",
+   "stride": "170 B (파일)",
+   "anchor": "본문 0x405CD + id*170",
+   "src": "WB §5.2; lane_L1; appendix_traits.md",
+   "notes": "개성 id 1~355, 효과 있는 것 206. 효과 이름 132종은 reference_mod trait_effects.json.",
+   "fields": [
+    {
+     "off": "런타임 +0xA4/+0xA5",
+     "width": "u8 x2",
+     "name": "conditions",
+     "meaning": "조건 2칸",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": "Map::trait_conditions"
+    },
+    {
+     "off": "런타임 +0xA8/+0xAC",
+     "width": "u32 x2",
+     "name": "condition_values",
+     "meaning": "조건값 2칸",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": "Map::trait_condval"
+    },
+    {
+     "off": "런타임 +0xB4",
+     "width": "s16",
+     "name": "lpb0",
+     "meaning": "-1 자기 부대 포함 / 0 제외 / 12 (조건 없음 판정 `+0xB4==-1`)",
+     "src": "WB §5.2; CA §12b",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0xB6/+0xB8",
+     "width": "s16 x2",
+     "name": "effect1",
+     "meaning": "효과1(id, 값)",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": "Map::trait_effect_ids/values"
+    },
+    {
+     "off": "런타임 +0xBA/+0xBC",
+     "width": "s16 x2",
+     "name": "effect2",
+     "meaning": "효과2(id, 값)",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0xBF",
+     "width": "u8 bits",
+     "name": "flags",
+     "meaning": "bit1 전투 발동, bit4 활성. '곱연산' 비트는 게임이 읽지 않음",
+     "src": "WB §5.2",
+     "conf": "확정",
+     "engine": "Map::trait_flags"
+    },
+    {
+     "off": "파일 +98/+9B, +99/+9C",
+     "width": "...",
+     "name": "effect_ids_values",
+     "meaning": "효과 id(+98/+9B), signed 효과치(+99/+9C) (옛 REA 설치 레코드 판독)",
+     "src": "formation_mapping.md",
+     "conf": "확정(옛 REA)",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "POLICY",
+   "ko": "정책(fixdata 표 18)",
+   "rtti": "CPolicyData",
+   "world_table": "+0x78D50",
+   "stride": 168,
+   "anchor": "본문 0x3A8DE (121행 x 148B)",
+   "src": "WB §5.3; appendix_policy_effects.md",
+   "notes": "정책 121종. 방책(계략·전략 정책)은 같은 표에서 `category`로 구분.",
+   "fields": [
+    {
+     "off": "(파일) 이름",
+     "width": "utf16",
+     "name": "name",
+     "meaning": "이름",
+     "src": "WB §5.3",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "category",
+     "width": "u8",
+     "name": "category",
+     "meaning": "분류",
+     "src": "WB §5.3",
+     "conf": "확정",
+     "engine": "Map::policy_category"
+    },
+    {
+     "off": "base_cost",
+     "width": "u16",
+     "name": "base_cost",
+     "meaning": "기본 비용",
+     "src": "WB §5.3",
+     "conf": "확정",
+     "engine": "Map::policy_base_cost"
+    },
+    {
+     "off": "효과 id 8칸",
+     "width": "u8 x8",
+     "name": "effect_ids",
+     "meaning": "발동 효과(런타임 +0x98 u8[8])",
+     "src": "WB §5.3; DM",
+     "conf": "확정",
+     "engine": "Map::policy_effect_ids"
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "POLICY_EFFECT",
+   "ko": "정책 효과(fixdata 표 26)",
+   "rtti": "-",
+   "world_table": "표 +0x80880 index",
+   "stride": "134 B",
+   "anchor": "본문 0x4F255 (101행)",
+   "src": "WB §5.3; appendix_policy_effects.md",
+   "notes": "레벨 1~10 값(대부분 [1,3,5,7,10,14,18,22,25,30]; 진형강화 [2,4,...,20]; 수군진형 [3,5,7,10,15,20,25,30,40,50]; 수송 [2,4,9,14,...,44]). 세력 효과 = 활성 군사·시정 무장 정책 레벨 합(`41E570`/`26C340`, `22DFD0` 레벨→값).",
+   "fields": [
+    {
+     "off": "레벨값[10]",
+     "width": "...",
+     "name": "level_values",
+     "meaning": "레벨 1~10 값",
+     "src": "WB §5.3",
+     "conf": "확정",
+     "engine": "Map::policy_values[101*10]"
+    },
+    {
+     "off": "(effect id)",
+     "width": "-",
+     "name": "ids",
+     "meaning": "엔진이 읽는 id: 1~9 진형 강화, 10 사기상한, 12 수송, 23 외교조건, 28 모병, 38 담당관비, 0x27 내구상한/동맹, 0x2D·0x2E 점령 병력·금, 0x30 지형 항(새 빌드), 0x34·0x35 수입, 0x46 인접효과 가산, 0x47 사기상한",
+     "src": "WB §5.3",
+     "conf": "확정",
+     "engine": "Game::policy_effect"
+    }
+   ],
+   "conflicts": [
+    [
+     "미해결",
+     "효과 id 46~100은 이름 없음(0 자리표시)이나 코드가 0x47까지 읽는다. 의미 대부분 미상.",
+     "worldmap_spec_b.md §5.3"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "TREASURE",
+   "ko": "명품(fixdata)",
+   "rtti": "CGemData",
+   "world_table": "+0x77B18 (런타임 0x80)",
+   "stride": "22 B x202 (유효 1~151)",
+   "anchor": "본문 0x32A6F",
+   "src": "WB §5.4; appendix_treasures.md",
+   "notes": "152~201은 '아이템' 예비. 수여·몰수 불가는 옥새·동작(+5).",
+   "fields": [
+    {
+     "off": "파일 +0x0E",
+     "width": "u8",
+     "name": "kind",
+     "meaning": "종류",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "파일 +0x0F",
+     "width": "u8",
+     "name": "ability",
+     "meaning": "능력(1 통솔..5 매력)",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "파일 +0x10",
+     "width": "u8",
+     "name": "value",
+     "meaning": "능력값(1~10)",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "파일 +0x11",
+     "width": "u8",
+     "name": "special",
+     "meaning": "특수효과(1 퇴각확실: 명마 10, 2 수명연장: 의서3+마누 법전)",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "파일 +0x13",
+     "width": "u8",
+     "name": "price",
+     "meaning": "가치",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "파일 +0x15",
+     "width": "u8",
+     "name": "picture",
+     "meaning": "그림",
+     "src": "WB §5.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x44",
+     "width": "u8",
+     "name": "kind",
+     "meaning": "명품 종류(12 옥새, 13 동작, 그 밖 기타). 탐색 `281480`이 이 값으로 목록을 나눈다",
+     "src": "2026-11-08",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x48",
+     "width": "u8",
+     "name": "effect_value",
+     "meaning": "효과값",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x49",
+     "width": "u8",
+     "name": "value",
+     "meaning": "가치",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x4A",
+     "width": "u16",
+     "name": "owner_person",
+     "meaning": "보유무장",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x4C",
+     "width": "u16",
+     "name": "location",
+     "meaning": "소재",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x50",
+     "width": "u8",
+     "name": "state",
+     "meaning": "상태",
+     "src": "DM",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "런타임 +0x51",
+     "width": "u8",
+     "name": "cg",
+     "meaning": "CG",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "POST",
+   "ko": "관직(Post)",
+   "rtti": "CPostData",
+   "world_table": "+0x784F8",
+   "stride": 88,
+   "anchor": "+0x0",
+   "src": "DM; DMs 190",
+   "notes": "관직별 통무지정매 보정은 레코드 +0x28~2C(office.json stats).",
+   "fields": [
+    {
+     "off": "+0x34",
+     "width": "u16",
+     "name": "command_troops",
+     "meaning": "지휘병사",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x36",
+     "width": "u8",
+     "name": "salary",
+     "meaning": "봉록",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x37",
+     "width": "u8",
+     "name": "title",
+     "meaning": "관작",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x38..+0x3C",
+     "width": "u8 x5",
+     "name": "ability_bonus",
+     "meaning": "통솔·무력·지력·정치·매력 가산",
+     "src": "DM; 능력치.md",
+     "conf": "확정",
+     "engine": "Map::office_stats"
+    },
+    {
+     "off": "+0x3D",
+     "width": "u8",
+     "name": "system",
+     "meaning": "체계",
+     "src": "DM",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "GAME",
+   "ko": "게임 진행 상태",
+   "rtti": "(+0x871E8)",
+   "world_table": "world+0x871E8 포인터 (5744B)",
+   "stride": "0x1670",
+   "anchor": "+0x0",
+   "src": "DM 게임 진행 상태; lane_L3 C2; difficulty.md",
+   "notes": "에디터 stride 5744, 직접 지휘 무장 설정(COMMAND)과 같은 객체 후반부.",
+   "fields": [
+    {
+     "off": "+0x34",
+     "width": "u16",
+     "name": "year",
+     "meaning": "년",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::year"
+    },
+    {
+     "off": "+0x36",
+     "width": "u8",
+     "name": "month",
+     "meaning": "월",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::month"
+    },
+    {
+     "off": "+0x37",
+     "width": "u8",
+     "name": "day",
+     "meaning": "일(1..30)",
+     "src": "DM",
+     "conf": "확정",
+     "engine": "Data::day"
+    },
+    {
+     "off": "+0x3A",
+     "width": "u8",
+     "name": "player_force",
+     "meaning": "플레이어 세력(`2337B0`이 비교)",
+     "src": "DM; DF",
+     "conf": "확정",
+     "engine": "player_forces"
+    },
+    {
+     "off": "+0x450",
+     "width": "u32",
+     "name": "day_counter",
+     "meaning": "일(경과 일 카운터)",
+     "src": "DM; L3 C2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x454",
+     "width": "u8/u32",
+     "name": "turn_counter",
+     "meaning": "순(旬) 카운터(순 첫날 +1). 충성 분기(>36), 도적(>18) 문턱",
+     "src": "L3 C2; CA #f",
+     "conf": "확정",
+     "engine": "Data::elapsed"
+    },
+    {
+     "off": "+0x484",
+     "width": "state",
+     "name": "state_code",
+     "meaning": "진행 상태(8이면 청크 대기), +0x4B8 청크 수",
+     "src": "L4 주",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x165E..",
+     "width": "u16[5]",
+     "name": "command_list",
+     "meaning": "직접 지휘 무장 목록 5칸(전법 3순 무장 간격)",
+     "src": "L3",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x169C",
+     "width": "bitmask",
+     "name": "ethnic_mask",
+     "meaning": "이민족 복속 비트마스크",
+     "src": "sim.h R6",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x165D",
+     "width": "u8",
+     "name": "gap_list_len",
+     "meaning": "전법 3순 간격 목록 길이(최대 5; `2F0500` 이 관직 순위 레코드 +0xB3 으로 설정, 플레이어 세력일 때만)",
+     "src": "L2 2·3차",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x1668",
+     "width": "u8[5]/u16[5]",
+     "name": "gap_stamp",
+     "meaning": "직접 지휘 무장 5명의 순 스탬프(`170150`·`2C7340` 이 순 카운터 `+0x454` 와 비교해 간격 3 충족 판정). 쓰는 곳 `174F40` 계열",
+     "src": "L2 2·3차",
+     "conf": "확정(읽기)/추정(쓰기처)",
+     "engine": ""
+    },
+    {
+     "off": "+0x454",
+     "width": "u32",
+     "name": "ten_day_counter",
+     "meaning": "열흘(순) 카운터",
+     "src": "L1 4차",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  },
+  {
+   "id": "SETTINGS",
+   "ko": "게임 설정 객체",
+   "rtti": "-",
+   "world_table": "RVA 0x1A49C90 (옛 0x1A46CA0), 0xF00B",
+   "stride": "0xF00",
+   "anchor": "+0x0",
+   "src": "difficulty.md §1; WB §6.2",
+   "notes": "설정 객체가 게임 모드·난이도·60개 설정을 가진다. 표준 모드는 난이도만 선택, 숙련 모드(+0xE58==0)는 항목별 값 배열.",
+   "fields": [
+    {
+     "off": "+0x28",
+     "width": "u32",
+     "name": "difficulty",
+     "meaning": "난이도 값 0 초급..4 궁극",
+     "src": "DF §1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x134",
+     "width": "u32",
+     "name": "difficulty_std",
+     "meaning": "표준 모드 난이도(`3E9E60`(새 3EC370)이 `+0xE58`에 따라 둘 중 하나 반환)",
+     "src": "DF §1",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xD8",
+     "width": "u32",
+     "name": "combo_const",
+     "meaning": "연계 상수 10 기본 분기",
+     "src": "DF",
+     "conf": "추정",
+     "engine": ""
+    },
+    {
+     "off": "+0xE0",
+     "width": "u32",
+     "name": "supply_cut_level",
+     "meaning": "병참단절 효과 단계 0/1/2(표준 1)",
+     "src": "W §2.2",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xEC",
+     "width": "u32",
+     "name": "morale_const",
+     "meaning": "사기 상수 200/300 기본 분기(`3E9F70`)",
+     "src": "DF",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x14C+24*n",
+     "width": "60 entries",
+     "name": "settings",
+     "meaning": "설정 60개(#20 병참단절효과 %, #26 지형 비용 %, #27 사기 감소 %, #41 군량 소비 % 등)",
+     "src": "WB §6.2; W §0.4",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0xE58",
+     "width": "u32",
+     "name": "mode",
+     "meaning": "게임 모드: 1 표준(일반 진행), 0 숙련. `3EB2A0` 읽기, `3EF660` 쓰기, `607000`이 1을 씀",
+     "src": "DF §1",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [
+    [
+     "충돌",
+     "설정 객체 주소: BUILD_25953386_COMBAT는 `설정 객체 3E9C90 (+0x8 = 1A46CA8) → 1A49C98`, worldmap_spec_b는 `settings(새 RVA 0x1A49C90, 옛 0x1A46CA0)`. 8바이트 차(객체 시작 vs +0x8 필드)이며 같은 객체로 해석.",
+     "BUILD_25953386_COMBAT.md §1 vs worldmap_spec_b.md §6.2"
+    ]
+   ],
+   "status": "현재"
+  },
+  {
+   "id": "PATH_NODE",
+   "ko": "경로 탐색 노드",
+   "rtti": "-",
+   "world_table": "-",
+   "stride": "-",
+   "anchor": "-",
+   "src": "mechanisms_20261017/이동경로.md (옛 빌드 주소)",
+   "notes": "`183A30`(새 184D60)은 목표→시작 역방향 확장; 경유지는 구간별로 호출 후 결합(`1843E0`, 새 185710).",
+   "fields": [
+    {
+     "off": "+0x10",
+     "width": "ptr",
+     "name": "link",
+     "meaning": "연결(경로 표시 비트를 붙이며 따라감)",
+     "src": "이동경로.md",
+     "conf": "확정(옛 REA)",
+     "engine": ""
+    },
+    {
+     "off": "+0x0C (경로 구조체)",
+     "width": "u32",
+     "name": "cumulative_cost",
+     "meaning": "누적 비용 필드(capacity 아님)",
+     "src": "mechanisms README 바로잡은 점",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x20",
+     "width": "u32",
+     "name": "cost",
+     "meaning": "구간 노드 누적 비용(+0x20)",
+     "src": "이동경로.md",
+     "conf": "확정",
+     "engine": ""
+    },
+    {
+     "off": "+0x24",
+     "width": "u32",
+     "name": "priority",
+     "meaning": "우선값 — 가장 작은 것을 꺼냄",
+     "src": "이동경로.md",
+     "conf": "확정",
+     "engine": ""
+    }
+   ],
+   "conflicts": [],
+   "status": "현재"
+  }
+ ]
+}

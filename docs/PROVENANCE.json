@@ -1,0 +1,294 @@
+{
+  "snapshot_date": "2026-11-24",
+  "meaning": "Original source hashes; public files may have documented portability transformations. Not renewed proof of game behavior.",
+  "files": [
+    {
+      "path": "docs/orig/ai_behavior.md",
+      "source": "San14Sim/docs/orig/ai_behavior.md",
+      "source_sha256": "1a0f7d55522216597ebcd38a3bef92cc8485474e9593d141ebaba19afb970726",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/build_addresses.md",
+      "source": "San14Sim/docs/orig/build_addresses.md",
+      "source_sha256": "3a0fe5e2791ba5b4bb5d1d89b9e39e7bd611b12f601934c151848ac648233c22",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/data_formats_archives.md",
+      "source": "San14Sim/docs/orig/data_formats_archives.md",
+      "source_sha256": "1fef2f9550995afbae2853624db6147c1267e487134fb0cbc88ef930f50cd4e9",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/data_formats_game.md",
+      "source": "San14Sim/docs/orig/data_formats_game.md",
+      "source_sha256": "185eeac1862e885b880bc02f8968847bb9f8f5d833722c2543d60792ffbca2d2",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/functions.md",
+      "source": "San14Sim/docs/orig/functions.md",
+      "source_sha256": "5ba3fa43244a4ccd226c862ed6d1e7fca3b3b961f2683aa0b082ce3349e115df",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_combat.md",
+      "source": "San14Sim/docs/orig/rules_combat.md",
+      "source_sha256": "84404d8557f0d0e23e720046111c76381d05d37a2f267d8a81c1214d292d2178",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_combat_effects.md",
+      "source": "San14Sim/docs/orig/rules_combat_effects.md",
+      "source_sha256": "294505cf705eb4775c1cd54eb3ddea9573f0a0272715c3a937b4a6afdfcd9678",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_diplomacy.md",
+      "source": "San14Sim/docs/orig/rules_diplomacy.md",
+      "source_sha256": "21b4d310efbf59734700244281a164335753b61cc18ca71e9031943ff8bd477b",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_domestic.md",
+      "source": "San14Sim/docs/orig/rules_domestic.md",
+      "source_sha256": "51173820b78fab07fe15871bfef7c4a5b066a8b3f087d8cfbd2c6795e8a6bea7",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_movement.md",
+      "source": "San14Sim/docs/orig/rules_movement.md",
+      "source_sha256": "a36d6ba442f00f719c82735e5e40732f1f7c7e8c10f2919cecdaeb1ce0d7a305",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_movement_supply.md",
+      "source": "San14Sim/docs/orig/rules_movement_supply.md",
+      "source_sha256": "0d8fb504defce3eb4d0f2478800ee80472cd18b5a4294f8ec8564e3f5f00a864",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_people.md",
+      "source": "San14Sim/docs/orig/rules_people.md",
+      "source_sha256": "8c410071d6693f2340466a4ab817ebfe037ecb37275ec5ba8cee11760fc7e22c",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_time.md",
+      "source": "San14Sim/docs/orig/rules_time.md",
+      "source_sha256": "537495bfc2c9b0a6e07f85f7ae1c1c586df42a6c8dd03dafa168b23a2a0d6bc8",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/rules_tribes.md",
+      "source": "San14Sim/docs/orig/rules_tribes.md",
+      "source_sha256": "004ac530a9b5a1469d7576cee8228bc389d528283020f1fa79c06be516edd3aa",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/structs.md",
+      "source": "San14Sim/docs/orig/structs.md",
+      "source_sha256": "2b297e206581fa056bc291acb61d1d79562a7c3393f0d0df034b7072ac4eca34",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ui_native.md",
+      "source": "San14Sim/docs/orig/ui_native.md",
+      "source_sha256": "64d13f0626009919f0aaff2f80ae8cd1b46e5f33d73151d7ab83d301ebb501eb",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/conditions.md",
+      "source": "San14Sim/docs/orig/ai/conditions.md",
+      "source_sha256": "41fda891dd63fe9c0dd698efad9b7fefeacb4f6a6b05222d243dc53372368c67",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/data_locations.md",
+      "source": "San14Sim/docs/orig/ai/data_locations.md",
+      "source_sha256": "e9e23812ae47f9eec5dc7a1d8903b480cedf2c4ae8e8152d6a0c4f5351887000",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/diff_bt_exce.md",
+      "source": "San14Sim/docs/orig/ai/diff_bt_exce.md",
+      "source_sha256": "988acd6ae285fc42b4b95459694762b6fe20fe0efe62164e3d8c29093e7564a8",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/formulas.md",
+      "source": "San14Sim/docs/orig/ai/formulas.md",
+      "source_sha256": "e306f73b416704fcf67cdd5e3aa1b18984fe030eee23ec6c7eaaf433f2baa713",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/node_kinds.md",
+      "source": "San14Sim/docs/orig/ai/node_kinds.md",
+      "source_sha256": "76e8a474fa1741de7cf70b09e726fe9efef956abedd07b8a1705f52e717b9762",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/roles.md",
+      "source": "San14Sim/docs/orig/ai/roles.md",
+      "source_sha256": "c6fd8ab2b7361e97d29eff41f6f86a4468daaf62378d58ed681a08bf91e7752a",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/rulebase.md",
+      "source": "San14Sim/docs/orig/ai/rulebase.md",
+      "source_sha256": "3d575f355b9a2e84b366e565885abc162463ce5c01a09a8998fef49f8344c343",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/schedule.md",
+      "source": "San14Sim/docs/orig/ai/schedule.md",
+      "source_sha256": "ad5e6a4561bc95d947ab2ceab9a9e1033ab75a77c3570ca602eaa32d5ac255e9",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/ai/unresolved.md",
+      "source": "San14Sim/docs/orig/ai/unresolved.md",
+      "source_sha256": "e23b9c6e805989c677a1b934107c6268fb44973d8d2e65952ad304a1bcfcd196",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+    },
+    {
+      "path": "docs/orig/functions.json",
+      "source": "San14Sim/docs/orig/functions.json",
+      "source_sha256": "181fdbd0f480e05e212de4e54c0b28119ca55c90181496ab7eac1e033cb16a22",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+    },
+    {
+      "path": "docs/orig/structs.json",
+      "source": "San14Sim/docs/orig/structs.json",
+      "source_sha256": "9889ebb2b78866880e76390e827395f8e22eb7b3b98b419cbb99140f66924b84",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+    },
+    {
+      "path": "docs/orig/event_opcodes.json",
+      "source": "San14Sim/docs/orig/event_opcodes.json",
+      "source_sha256": "8e3140410fdb87c103adadb4b77019d95ce7f86cfc4c4360e0450ee1ab6e22b0",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+    },
+    {
+      "path": "docs/orig/ui_layouts.json",
+      "source": "San14Sim/docs/orig/ui_layouts.json",
+      "source_sha256": "41069b633806f1a26243a48efe6049ac671c1e8849a6e1c403ef90a54210d31d",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+    },
+    {
+      "path": "origlib/bin0005.py",
+      "source": "San14Sim/origlib/bin0005.py",
+      "source_sha256": "61baf464bf8a5194d3dc8796c60223cb39baa476f47dcff3f52fd94909e95fcf",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/cli.py",
+      "source": "San14Sim/origlib/cli.py",
+      "source_sha256": "e5ffb044f9d0f25d90eed6a47eae19b607d43e26582926cfaa45c293a76ada1f",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/dlc.py",
+      "source": "San14Sim/origlib/dlc.py",
+      "source_sha256": "b05f44625dd3f5cb4a75a9346298f890e9f6224d336c8a5e220dd0e186a8760d",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/event.py",
+      "source": "San14Sim/origlib/event.py",
+      "source_sha256": "11681dcee07ef4b560e813fecb04f10c97cdde7f698bdbfc230aff9dca5c2a0e",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/fixdata.py",
+      "source": "San14Sim/origlib/fixdata.py",
+      "source_sha256": "b64ea47648903c94ca9941a8dccb5bed94d4fcfdbfdb50f94b1ab6c4c4443474",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/gen_doc.py",
+      "source": "San14Sim/origlib/gen_doc.py",
+      "source_sha256": "d0628566397d33ae184d8d8f1287c38ebad641e689524e661ed9134aa4accabf",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/lwc.py",
+      "source": "San14Sim/origlib/lwc.py",
+      "source_sha256": "bfd52ca59f21d99ed6539731f2734c1d9d499de24877772a670462010fc897bf",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/mapbin.py",
+      "source": "San14Sim/origlib/mapbin.py",
+      "source_sha256": "a92d3dcb55f51d86d8a23bb5a7763f940ed7e03c0af9caac87e431af212f7240",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/misc0000.py",
+      "source": "San14Sim/origlib/misc0000.py",
+      "source_sha256": "0d173930a3b623a38e1cd59c0bf3d7ca9492843039ccc933c3ca4a9c82d38496",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/msg.py",
+      "source": "San14Sim/origlib/msg.py",
+      "source_sha256": "aa5d6588765708b43138d0adbf35ed4de46ebfb471f92ba7ce354bba5aaa9eb6",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/rdb.py",
+      "source": "San14Sim/origlib/rdb.py",
+      "source_sha256": "56c5c531e0cd8a6f5992ae14f5821890b723c7c53a2a27f57448f77997d6e484",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/README.md",
+      "source": "San14Sim/origlib/README.md",
+      "source_sha256": "c8667636ba427ccfa8ede66b1253d31893f5af34b8cb2fb9efb057afe33b0a1b",
+      "transform": "verbatim initial copy; trailing whitespace removed"
+    },
+    {
+      "path": "origlib/s14.py",
+      "source": "San14Sim/origlib/s14.py",
+      "source_sha256": "168fc3f6f8f977c2163ab3fe18d7ae6b7098fd141b14680e4a0e35343e01c44a",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/scenario.py",
+      "source": "San14Sim/origlib/scenario.py",
+      "source_sha256": "c0d6c8006fc1d342c61f6be4debabcf001f9896b18f3ce21abfcc480c31b7133",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/spec.py",
+      "source": "San14Sim/origlib/spec.py",
+      "source_sha256": "a748f410ef7e304af3e1c7e2ac524f6e0bc5beaeea3724a3841ca6bb6b1dae26",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/__init__.py",
+      "source": "San14Sim/origlib/__init__.py",
+      "source_sha256": "2bb5f5589fbcc73463dc73827f9aaacdf8d8f9ddd3cf6eced4b6e456a5694421",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "origlib/__main__.py",
+      "source": "San14Sim/origlib/__main__.py",
+      "source_sha256": "6ce05b79ee1666025af142adc913f1d468781e77af67ae431fe163472a52fb3a",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "tools/ghidra_scripts/San14AnalysisReport.java",
+      "source": "AI_TacticsMod/tools/ghidra_scripts/San14AnalysisReport.java",
+      "source_sha256": "8f442c870c4246f1c7d150ebb3e73030ed3176e523dde3d7bbf762effffeb2a4",
+      "transform": "verbatim initial copy"
+    },
+    {
+      "path": "tools/ghidra_scripts/San14FullExport.java",
+      "source": "AI_TacticsMod/tools/ghidra_scripts/San14FullExport.java",
+      "source_sha256": "068a4553045ea6a28fcc33a74ce8c25dad736b00331ac6b8e7d126ec55a8d14b",
+      "transform": "verbatim initial copy"
+    }
+  ]
+}

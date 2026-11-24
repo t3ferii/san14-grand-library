@@ -1,0 +1,21 @@
+name: 원작 조사 또는 정정
+description: 중복 조사를 피하고 근거가 있는 정정을 제안합니다.
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: 조사할 질문과 기존 문서의 위치
+      description: 이미 찾아본 주제·문서·관련 Issue를 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 빌드·해시·RVA·조회 방법·확신도
+      description: 원작 파일이나 전체 코드 덤프를 올리지 마세요. 아직 모르는 항목은 미확인으로 적으세요.
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: 미확인 범위와 다음에 필요한 근거

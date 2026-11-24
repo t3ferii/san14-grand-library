@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "id": "example.second-mod",
+  "version": "0.1.0",
+  "game": {
+    "exe": "SAN14CE_KO.exe",
+    "unpacked_sha256": "1a4a447d14e68c40ad2a5107c29c7341c10eee8fc297a7b35032900c341dbcaa"
+  },
+  "depends": [],
+  "conflicts": [],
+  "hooks": [],
+  "files": ["ExampleSecondMod.dll"],
+  "settings": [],
+  "ui": ["example.second-mod:main-button"],
+  "resources": [],
+  "provides": [],
+  "uses": [],
+  "off_behavior": "OFF restores preceding behavior.",
+  "uninstall": "Remove only tracked owned files.",
+  "notes": "Synthetic manifest, not a working game modification."
+}

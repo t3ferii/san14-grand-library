@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "id": "example.first-mod",
+  "version": "0.1.0",
+  "game": {
+    "exe": "SAN14CE_KO.exe",
+    "unpacked_sha256": "1a4a447d14e68c40ad2a5107c29c7341c10eee8fc297a7b35032900c341dbcaa"
+  },
+  "depends": [],
+  "conflicts": [],
+  "hooks": [],
+  "files": ["ExampleFirstMod.dll", "ExampleFirstMod/settings.ini"],
+  "settings": [{"file": "ExampleFirstMod/settings.ini", "section": "features", "key": "enabled"}],
+  "ui": ["example.first-mod:main-button"],
+  "resources": [],
+  "provides": [],
+  "uses": [],
+  "off_behavior": "OFF or module absence restores the preceding behavior and removes owned UI.",
+  "uninstall": "Remove only tracked owned files after checking their hashes; preserve user settings/backups.",
+  "notes": "Declaration example only. Not a working mod. No real hook or ABI is claimed."
+}

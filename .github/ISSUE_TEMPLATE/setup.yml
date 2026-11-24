@@ -1,0 +1,15 @@
+name: 자동 준비 오류
+description: 설치 경로 탐색·다운로드·언패킹·캐시 생성 오류를 보고합니다.
+body:
+  - type: textarea
+    id: stage
+    attributes:
+      label: 실패한 단계와 오류 문구
+      description: 전체 로그 대신 오류 주변의 최소 문구만 적고 개인 경로·계정 정보를 지워 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Windows 버전·Steam buildid·EXE SHA256
+      description: 모르는 항목은 미확인으로 적으세요. 게임 파일을 첨부하지 마세요.
