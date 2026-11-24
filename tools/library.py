@@ -169,7 +169,13 @@ def download(url, path, expected):
     for attempt in range(3):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'San14GrandLibrary/1'}), timeout=60) as response, tmp.open('wb') as out:
-                shutil.copyfileobj(response, out, 1024 * 1024)
+                last_progress = time.monotonic()
+                received = 0
+                for block in iter(lambda: response.read(1024 * 1024), b''):
+                    out.write(block); received += len(block)
+                    if time.monotonic() - last_progress >= 30:
+                        log(f'{path.name}: downloaded {received // (1024 * 1024)} MiB')
+                        last_progress = time.monotonic()
             require_hash(tmp, expected)
             tmp.replace(path)
             return
@@ -194,7 +200,9 @@ def install_tool(name, spec, cache):
         raise ValueError(f'Tool files changed: {dest}. Select a new cache root or inspect this tool directory.')
     archive = cache / 'downloads' / f'{name}.zip'
     download(spec['url'], archive, spec['sha256'])
+    log(f'Extracting {name} {spec["version"]}')
     safe_extract(archive, dest)
+    log(f'Verifying extracted {name} files')
     write_json(proof, {'archive_sha256': spec['sha256'], 'files': inventory(dest)})
     return dest
 

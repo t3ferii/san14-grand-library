@@ -12,7 +12,7 @@ Steam에 설치한 삼국지14 CE 한국어판으로 로컬 캐시를 만들고 
 준비되면 내가 만들 모드에 필요한 기존 조사부터 찾아 줘.
 ```
 
-AI는 아래 **두 줄을 실행하고 완료 상태를 확인**하면 됩니다. Git, Python, Java, Ghidra, Steamless를 미리 설치하거나 사용자가 경로를 알아낼 필요가 없습니다. Windows 10/11 x64와 PowerShell 5.1+, 인터넷, Steam 게임 설치본, 여유 공간 8 GiB 이상이 필요합니다. 준비 프로그램은 관리자 권한을 요구하지 않습니다.
+내 PC에서 PowerShell 명령을 실행할 수 있는 AI 에이전트를 전제로 합니다. AI는 아래 **두 줄을 실행하고 완료 상태를 확인**하면 됩니다. Git, Python, Java, Ghidra, Steamless를 미리 설치하거나 사용자가 경로를 알아낼 필요가 없습니다. Windows 10/11 x64와 PowerShell 5.1+, 인터넷, Steam 게임 설치본, 여유 공간 8 GiB 이상이 필요합니다. 준비 프로그램은 관리자 권한을 요구하지 않습니다.
 
 ```powershell
 Invoke-WebRequest 'https://raw.githubusercontent.com/t3ferii/san14-grand-library/main/bootstrap.ps1' -OutFile "$env:TEMP\san14-library-bootstrap.ps1" -UseBasicParsing

@@ -124,6 +124,25 @@ class CacheTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Unsafe'): lib.safe_extract(archive, Path(tmp) / 'safe')
             self.assertFalse((Path(tmp) / 'outside.txt').exists())
 
+    def test_download_checksum_and_cached_archive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / 'tool.zip'
+            payload = b'synthetic download'
+            expected = __import__('hashlib').sha256(payload).hexdigest()
+            with mock.patch.object(lib.urllib.request, 'urlopen', return_value=io.BytesIO(payload)) as fetch:
+                lib.download('https://invalid.example/tool.zip', target, expected)
+                self.assertEqual(target.read_bytes(), payload)
+                lib.download('https://invalid.example/tool.zip', target, expected)
+                self.assertEqual(fetch.call_count, 1)
+
+    def test_bad_download_is_never_promoted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / 'tool.zip'
+            with mock.patch.object(lib.urllib.request, 'urlopen', side_effect=lambda *a, **k: io.BytesIO(b'wrong fixture')):
+                with self.assertRaisesRegex(ValueError, 'SHA256 mismatch'):
+                    lib.download('https://invalid.example/tool.zip', target, HASH)
+            self.assertFalse(target.exists())
+
     def test_tools_are_verified_before_reuse(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp); dest = base / 'tools/test-1'; dest.mkdir(parents=True)
