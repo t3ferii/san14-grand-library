@@ -6,9 +6,9 @@
   "old_build": "1fbe6be7466a6646",
   "note": "키는 새 RVA(hex). old=옛 RVA. conf: 확정/코드/추정/미해결. curated=false 항목은 자동 색인(ctx만)",
   "counts": {
-   "curated": 281,
+   "curated": 285,
    "auto": 671,
-   "total": 952,
+   "total": 955,
    "by_class": {
     "AI 판단": 29,
     "시설·건설": 18,
@@ -10213,16 +10213,35 @@
    "engine_loc": []
   },
   {
+   "new": "2350F0",
+   "old": null,
+   "status": "new",
+   "curated": true,
+   "name": "객체 소속이 플레이어 세력인가",
+   "cls": "데이터 접근",
+   "role": "p=330B90(ctx); 331780(p) && object[0x10]==p->vt+0x60() (object +0x10 = 소속 세력 번호 u8)",
+   "io": "-",
+   "src": [
+    "2026-11-24 디컴파일"
+   ],
+   "conf": "확정",
+   "note": "",
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": []
+  },
+  {
    "new": "235150",
    "old": "2337B0",
    "status": "same",
    "curated": true,
    "name": "현재 플레이어 세력 판정",
    "cls": "외교",
-   "role": "세계+0x871E8의 플레이어 세력과 같은 세력인가(난이도 분기·60일 재요청 제한) — 옛 2337B0",
+   "role": "세계+0x871E8의 플레이어 세력과 같은 세력인가(난이도 분기·60일 재요청 제한) — 옛 2337B0; 구현: p=330B90(ctx); id=p->vt+0x60(); id!=0 && id==force->vt+0x60(). 호출 93곳(2026-11-24 디컴파일)",
    "io": "-",
    "src": [
-    "difficulty.md"
+    "difficulty.md",
+    "2026-11-24 디컴파일"
    ],
    "conf": "확정",
    "note": "옛 2337B0",
@@ -16757,14 +16776,16 @@
    "new": "330B90",
    "old": "32E910",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
-   "note": null,
+   "curated": true,
+   "name": "플레이어 세력 객체 getter",
+   "cls": "데이터 접근",
+   "role": "ctx+0x3a(u8, ctx = 세계 +0x871E8 게임 문맥) < 0x34 ? root+0xDF30[번호] : root+0xDF30[0]. 정적 호출 179곳. +0x3a를 getter 없이 직접 읽는 곳은 33C890 하나",
+   "io": "입력: 게임 문맥. 출력: 세력 객체",
+   "src": [
+    "2026-11-24 디컴파일·전체 샤드 grep"
+   ],
+   "conf": "확정",
+   "note": "",
    "docs_n": 5,
    "ctx": null,
    "engine_loc": []
@@ -16807,6 +16828,24 @@
    "engine_loc": [
     "San14Sim/engine/rules/rules.cpp:36"
    ]
+  },
+  {
+   "new": "334C30",
+   "old": null,
+   "status": "new",
+   "curated": true,
+   "name": "관전(데모) 플래그",
+   "cls": "데이터 접근",
+   "role": "세계(+0x871E8 객체)+0x16A8 bit 8. 33C890(on)이 켜고 끈다(켤 때 +0x17CD bit 1도; 끌 때 +0x3a 플레이어 세력 수도로 카메라 890D30). 참이면 플레이어 세력도 COtherStrategyState",
+   "io": "-",
+   "src": [
+    "2026-11-24 디컴파일"
+   ],
+   "conf": "확정(코드)/의미 추정(관전)",
+   "note": "",
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": []
   },
   {
    "new": "335180",
@@ -18081,10 +18120,11 @@
    "curated": true,
    "name": "세력 행동 순서 결정",
    "cls": "시간·상태기계",
-   "role": "플레이어가 있고 난이도 3 이상이면 플레이어 선두, 그 밖에는 자연 순서 — 엔진: apply() 순서(플레이어 전용)",
+   "role": "플레이어가 있고 난이도 3 이상이면 플레이어 선두, 그 밖에는 자연 순서 — 엔진: apply() 순서(플레이어 전용); 구현: 살아 있는 세력마다 18C30(목록, 칸, flag): 235150 참이고 3EC370(3EC1A0())>=3이면 flag 0(앞), 아니면 flag 1(뒤). 세력 번호→세력 객체는 root+0xDF30[번호](번호>=0x34면 [0]). 2026-11-24 디컴파일",
    "io": "-",
    "src": [
-    "difficulty.md 항 37"
+    "difficulty.md 항 37",
+    "2026-11-24 디컴파일"
    ],
    "conf": "확정",
    "note": "엔진: apply() 순서(플레이어 전용)",
@@ -18181,6 +18221,24 @@
    "engine_loc": [
     "rules/battle.cpp:13, rules/battle.cpp:16, rules/battle.cpp:162"
    ]
+  },
+  {
+   "new": "44E8B0",
+   "old": null,
+   "status": "new",
+   "curated": true,
+   "name": "CStrategyState 슬롯 5 (세력 턴 배정)",
+   "cls": "AI 판단",
+   "role": "순서 목록 노드 +0x470(int 세력 번호 +0, 다음 +8; 끝 +0x478)을 돌며 살아 있는(331780) 세력마다 235150 거짓이거나 관전 플래그 334C30 참이면 434AF0(mgr,\"COtherStrategyState\",&세력), 아니면 438620(mgr,\"CUserStrategyState\",0)을 만들고 같은 호출 안에서 노드를 전진시킨다(죽은 세력은 상태 없이 건너뜀). 목록이 끝나면 124A0 pop. 상단 조건: 572670(this)가 맨 위일 때만. vtable 13DA3B8+0x28",
+   "io": "입력: 상태 +0x470/+0x478/+0x480/+0x48C/+0x498. 출력: 자식 상태",
+   "src": [
+    "2026-11-24 디컴파일(AI_TacticsMod multiplay)"
+   ],
+   "conf": "확정(코드)/실게임 미확인",
+   "note": "",
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": []
   },
   {
    "new": "4512A0",
