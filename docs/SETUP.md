@@ -16,7 +16,7 @@ Python 프로그램은 환경 변수와 PATH에서 버전이 확인되는 기존
 
 ## 기존 도구 재사용과 완료 후 정리
 
-- Python은 `SAN14_PYTHON`, PATH의 Python/py launcher, 이미 준비된 최소 런타임에서 사용 가능한 Python 3.12 이상과 SQLite·zlib 지원을 확인한다. Windows Store 설치 유도 alias는 실행하지 않는다. 기존 Python은 수정·제거하지 않는다. 없을 때만 `tools/python-3.12.10`을 준비하고, **조회용 런타임으로 보존**한다. 그 안의 `python312.zip`은 표준 라이브러리이므로 설치 ZIP으로 취급하지 않는다.
+- Python은 `SAN14_PYTHON`, PATH의 Python/py launcher, 이미 준비된 최소 런타임에서 사용 가능한 Python 3.12 이상과 SQLite·zlib 지원을 확인한다. launcher는 `py -0p`로 기존 런타임만 나열하고, 탐색 중 설치 관리자의 자동 설치를 끈 뒤 원래 환경 값을 복원한다. Windows Store 설치 유도 alias는 실행하지 않는다. 기존 Python은 수정·제거하지 않는다. 없을 때만 `tools/python-3.12.10`을 준비하고, **조회용 런타임으로 보존**한다. 그 안의 `python312.zip`은 표준 라이브러리이므로 설치 ZIP으로 취급하지 않는다.
 - Java는 `SAN14_JAVA_HOME`/`JAVA_HOME`/PATH, Ghidra는 `SAN14_GHIDRA_HOME`/`GHIDRA_HOME`/PATH, Steamless는 `SAN14_STEAMLESS_HOME`/PATH에서 찾는다. PC 전체를 검색하지 않는다. Java·Ghidra는 고정 버전과 일치해야 하고, Steamless는 고정 배포본의 실행 파일·플러그인 해시가 일치해야 한다. 버전·구성이 확인되지 않으면 기존 도구를 건드리지 않고 별도 사본을 준비한다.
 - 프로그램이 새로 만드는 도구와 다운로드 ZIP만 `.owned/`의 개별 소유 기록으로 추적한다. 이전부터 있던 폴더·ZIP을 위치만 보고 프로그램 소유로 간주하지 않는다. 이전 버전에서 소유 기록 없이 남긴 도구도 보수적으로 보존한다.
 - 캐시·표본 검증과 원작 EXE 보존 확인 후, 새로 받은 Java·Ghidra·Steamless와 다운로드 설치 ZIP·bootstrap 소스 ZIP을 자동 정리한다. 재실행에서도 캐시를 재검증한 다음 남은 소유 항목을 정리한다. `-Doctor`나 실패·중단 시에는 정리하지 않는다.

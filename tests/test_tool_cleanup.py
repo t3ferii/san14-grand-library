@@ -213,7 +213,9 @@ class CleanupTests(unittest.TestCase):
     def test_powershell_uses_existing_python_without_installing(self):
         with tempfile.TemporaryDirectory() as tmp:
             cache = Path(tmp)/'cache'
-            command = ". '"+str(ROOT/'tools/python_runtime.ps1')+"'; Resolve-San14Python -CacheRoot '"+str(cache)+"' -RepoRoot '"+str(ROOT)+"'"
+            command = ". '"+str(ROOT/'tools/python_runtime.ps1')+"'; $env:PYTHON_MANAGER_AUTOMATIC_INSTALL='sentinel'; $env:PYLAUNCHER_ALLOW_INSTALL='sentinel'; "
+            command += "$selected=Resolve-San14Python -CacheRoot '"+str(cache)+"' -RepoRoot '"+str(ROOT)+"'; "
+            command += "if($env:PYTHON_MANAGER_AUTOMATIC_INSTALL -ne 'sentinel' -or $env:PYLAUNCHER_ALLOW_INSTALL -ne 'sentinel'){throw 'Launcher environment was not restored'}; Write-Output $selected"
             result = subprocess.run(['powershell','-NoProfile','-ExecutionPolicy','Bypass','-Command',command], env=dict(os.environ,SAN14_PYTHON=sys.executable), capture_output=True,text=True,timeout=30)
             self.assertEqual(result.returncode,0,result.stderr)
             self.assertEqual(Path(result.stdout.strip()).resolve(),Path(sys.executable).resolve())

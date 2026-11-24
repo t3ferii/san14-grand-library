@@ -11,21 +11,8 @@ function Resolve-San14Python {
         if ($command) { $candidates += $command.Source }
     }
     $candidates += $managedExe
-    $probe = 'import sys,json,sqlite3,zlib,hashlib;sys.exit(2) if sys.version_info < (3,12) else print(json.dumps(dict(executable=sys.executable,version=chr(46).join(map(str,sys.version_info[:3])))))'
-    foreach ($candidate in ($candidates | Select-Object -Unique)) {
-        if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
-        if ($candidate -match '[\\/]Microsoft[\\/]WindowsApps[\\/]') { continue }
-        $probeArgs = @('-X', 'utf8', '-I', '-c', $probe)
-        if ([IO.Path]::GetFileName($candidate) -eq 'py.exe') { $probeArgs = @('-3') + $probeArgs }
-        try {
-            $probeText = & $candidate @probeArgs 2>$null
-            if ($LASTEXITCODE -ne 0) { continue }
-            $runtime = ($probeText -join "`n") | ConvertFrom-Json
-            if ($runtime.executable -and (Test-Path -LiteralPath $runtime.executable -PathType Leaf)) {
-                return [string]$runtime.executable
-            }
-        } catch { continue }
-    }
+    $existing = Find-San14InstalledPython -Candidates $candidates
+    if ($existing) { return $existing }
     if (-not $AllowInstall) { throw 'Python 3.12+ unavailable. Run .\prepare.ps1 first.' }
     if (Test-Path -LiteralPath $managedRoot) { throw 'Existing Python directory is unusable; preserved. Select another cache root.' }
     [void][IO.Directory]::CreateDirectory($CacheRoot)
@@ -54,6 +41,46 @@ function Resolve-San14Python {
         # Python is the query runtime and is intentionally outside the tool cleanup allowlist.
         return $managedExe
     } finally { $bootstrapLock.Dispose() }
+}
+
+function Find-San14InstalledPython {
+    param([string[]]$Candidates)
+    $oldAutomatic = [Environment]::GetEnvironmentVariable('PYTHON_MANAGER_AUTOMATIC_INSTALL', 'Process')
+    $oldLegacy = [Environment]::GetEnvironmentVariable('PYLAUNCHER_ALLOW_INSTALL', 'Process')
+    try {
+        # New Python managers can install runtimes on first launch. Discovery is read-only.
+        [Environment]::SetEnvironmentVariable('PYTHON_MANAGER_AUTOMATIC_INSTALL', 'false', 'Process')
+        [Environment]::SetEnvironmentVariable('PYLAUNCHER_ALLOW_INSTALL', $null, 'Process')
+        $probe = 'import sys,json,sqlite3,zlib,hashlib;sys.exit(2) if sys.version_info < (3,12) else print(json.dumps(dict(executable=sys.executable,version=chr(46).join(map(str,sys.version_info[:3])))))'
+        foreach ($candidate in ($Candidates | Select-Object -Unique)) {
+            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
+            if ($candidate -match '[\\/]Microsoft[\\/]WindowsApps[\\/]') { continue }
+            $runtimes = @($candidate)
+            if ([IO.Path]::GetFileName($candidate) -eq 'py.exe') {
+                $runtimes = @()
+                try {
+                    $listing = & $candidate -0p 2>$null
+                    if ($LASTEXITCODE -eq 0) {
+                        foreach ($line in $listing) {
+                            if ($line -match '([A-Za-z]:[\\/].*[\\/]python\.exe)\s*$') { $runtimes += $Matches[1] }
+                        }
+                    }
+                } catch { continue }
+            }
+            foreach ($executable in $runtimes) {
+                try {
+                    if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) { continue }
+                    $probeText = & $executable -X utf8 -I -c $probe 2>$null
+                    if ($LASTEXITCODE -ne 0) { continue }
+                    $runtime = ($probeText -join "`n") | ConvertFrom-Json
+                    if ($runtime.executable -and (Test-Path -LiteralPath $runtime.executable -PathType Leaf)) { return [string]$runtime.executable }
+                } catch { continue }
+            }
+        }
+    } finally {
+        [Environment]::SetEnvironmentVariable('PYTHON_MANAGER_AUTOMATIC_INSTALL', $oldAutomatic, 'Process')
+        [Environment]::SetEnvironmentVariable('PYLAUNCHER_ALLOW_INSTALL', $oldLegacy, 'Process')
+    }
 }
 
 function Register-San14Archive {
