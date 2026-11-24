@@ -2,9 +2,9 @@
 
 ## 자동으로 하는 일
 
-`bootstrap.ps1`은 Git 없이 저장소 소스를 내려받고 `prepare.ps1`을 실행한다. `prepare.ps1`은 고정한 embedded Python을 검증해 실행한다. Python 프로그램이 Steam registry → `libraryfolders.vdf` → appmanifest 872410 순서로 설치 경로를 찾고 지원 EXE 해시를 확인한다. 여러 설치본이 있으면 임의 선택하지 않고 경로 지정을 요청한다.
+`bootstrap.ps1`은 Git 없이 저장소 소스를 내려받고 `prepare.ps1`을 실행한다. `prepare.ps1`은 기존 Python 3.12 이상을 먼저 확인하고, 없으면 고정 embedded Python을 다운로드·검증해 사용한다. Python 프로그램이 Steam registry → `libraryfolders.vdf` → appmanifest 872410 순서로 설치 경로를 찾고 지원 EXE 해시를 확인한다. 여러 설치본이 있으면 임의 선택하지 않고 경로 지정을 요청한다.
 
-Python 프로그램은 고정 Java JDK, Ghidra, Steamless ZIP을 공식 출처에서 내려받아 SHA256을 확인한다. 이미 설치한 도구의 파일 목록과 해시가 일치하면 재사용한다. 관리자 설치·PATH·레지스트리·시스템 Python·Steam 파일은 바꾸지 않는다. Windows 10/11에 포함된 .NET Framework 4.7.2 이상을 확인한다. 없다면 Windows Update 완료가 필요하며, 시스템 구성요소 설치를 몰래 수행하지 않는다.
+Python 프로그램은 환경 변수와 PATH에서 버전이 확인되는 기존 Java JDK·Ghidra·Steamless를 먼저 찾는다. 없으면 고정 공식 ZIP을 내려받아 SHA256을 확인하고 별도 폴더에 준비한다. 관리자 설치·PATH·레지스트리·시스템 Python·Steam 파일은 바꾸지 않는다. Windows 10/11에 포함된 .NET Framework 4.7.2 이상을 확인한다. 없다면 Windows Update 완료가 필요하며, 시스템 구성요소 설치를 몰래 수행하지 않는다.
 
 원작 EXE는 `%LOCALAPPDATA%/San14GrandLibrary/builds/<분석해시16>/input/game.exe`에 복사한다. Steamless 옵션은 `--keepbind --keepstub --recalcchecksum`으로 고정한다. 현재 기준 빌드에서 이 조합이 기존 대도서관 분석 EXE와 **전체 SHA256까지 일치**하는 것을 확인했다. 설치본 EXE는 읽기만 하며 언패킹 전후 해시를 확인한다. 해제본을 게임 폴더로 옮기거나 실행하지 않는다.
 
@@ -13,6 +13,15 @@ Python 프로그램은 고정 Java JDK, Ghidra, Steamless ZIP을 공식 출처�
 ## 시간과 공간
 
 의존성 다운로드는 약 800 MB다. 압축 해제·영구 DB·분석 캐시를 위해 여유 공간 8 GiB 이상을 요구한다. 실제 검증 환경에서는 최초 분석 약 22분, 전체 함수 추출 약 44분으로 최초 준비에 1시간 이상 걸렸다. 저장장치·CPU·네트워크에 따라 달라진다. 메모리 heap 기본값은 4 GiB, CPU는 최대 4개다. 게임 실행 중 관찰을 필요로 하지 않는다.
+
+## 기존 도구 재사용과 완료 후 정리
+
+- Python은 `SAN14_PYTHON`, PATH의 Python/py launcher, 이미 준비된 최소 런타임에서 사용 가능한 Python 3.12 이상과 SQLite·zlib 지원을 확인한다. Windows Store 설치 유도 alias는 실행하지 않는다. 기존 Python은 수정·제거하지 않는다. 없을 때만 `tools/python-3.12.10`을 준비하고, **조회용 런타임으로 보존**한다. 그 안의 `python312.zip`은 표준 라이브러리이므로 설치 ZIP으로 취급하지 않는다.
+- Java는 `SAN14_JAVA_HOME`/`JAVA_HOME`/PATH, Ghidra는 `SAN14_GHIDRA_HOME`/`GHIDRA_HOME`/PATH, Steamless는 `SAN14_STEAMLESS_HOME`/PATH에서 찾는다. PC 전체를 검색하지 않는다. Java·Ghidra는 고정 버전과 일치해야 하고, Steamless는 고정 배포본의 실행 파일·플러그인 해시가 일치해야 한다. 버전·구성이 확인되지 않으면 기존 도구를 건드리지 않고 별도 사본을 준비한다.
+- 프로그램이 새로 만드는 도구와 다운로드 ZIP만 `.owned/`의 개별 소유 기록으로 추적한다. 이전부터 있던 폴더·ZIP을 위치만 보고 프로그램 소유로 간주하지 않는다. 이전 버전에서 소유 기록 없이 남긴 도구도 보수적으로 보존한다.
+- 캐시·표본 검증과 원작 EXE 보존 확인 후, 새로 받은 Java·Ghidra·Steamless와 다운로드 설치 ZIP·bootstrap 소스 ZIP을 자동 정리한다. 재실행에서도 캐시를 재검증한 다음 남은 소유 항목을 정리한다. `-Doctor`나 실패·중단 시에는 정리하지 않는다.
+- 기존 도구와 파일, 캐시·SQLite·Ghidra 분석 프로젝트·작업 사본·도서관 소스·조회용 Python은 보존한다. 도구에 파일을 추가했거나 수정했거나 링크/junction이 발견되면 해당 항목을 보존한다. 조회 스크립트는 기존/보존된 Python을 자동으로 찾으므로 빌드 도구가 없어도 동작한다.
+- 정리 결과는 `cleanup-report.json`과 `ready.json`의 `tool_cleanup`에 기록한다. 잠금·권한 문제로 정리를 못 해도 캐시 준비 결과와 구분해 보고한다. 소유 기록이 불분명한 항목을 강제로 지우지 않는다. 새 빌드 분석이나 추가 추출로 도구가 다시 필요해지면 필요한 도구만 다시 준비한다.
 
 ## 명령
 

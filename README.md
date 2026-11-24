@@ -25,7 +25,9 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/t3ferii/san14-grand-library
 powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\san14-library-bootstrap.ps1"
 ```
 
-준비 도구가 저장소를 내려받고 Python·Java·Ghidra·Steamless를 고정 버전과 SHA256으로 확인해 사용자 전용 폴더에 준비합니다. Steam 라이브러리에서 CE 한국어판을 찾아 **별도 사본만 언패킹**하고 최초 분석 → 함수·호출관계 추출 → SQLite 색인 → 표본 조회 검사까지 실행합니다. 게임 EXE를 실행하거나 설치본을 덮어쓰지 않습니다. Steam 구입 여부 자체를 인증하는 도구는 아닙니다.
+준비 도구는 기존 Python과 버전이 확인되는 Java·Ghidra·Steamless를 우선 사용하고, 부족한 도구만 고정 공식 배포본과 SHA256으로 확인해 사용자 전용 폴더에 준비합니다. Steam 라이브러리에서 CE 한국어판을 찾아 **별도 사본만 언패킹**하고 최초 분석 → 함수·호출관계 추출 → SQLite 색인 → 표본 조회 검사까지 실행합니다. 게임 EXE를 실행하거나 설치본을 덮어쓰지 않습니다. Steam 구입 여부 자체를 인증하는 도구는 아닙니다.
+
+캐시 검증까지 성공하면 프로그램이 새로 받은 **Java·Ghidra·Steamless와 설치 ZIP을 자동 정리**합니다. 기존 도구·기존 파일·수정된 도구는 보존하고, 실패·중단 시에는 재시도용 파일을 남깁니다. Python은 조회에도 필요하므로 기존 것을 사용하거나, 없으면 최소 embedded Python만 유지합니다. 캐시·색인·분석 프로젝트·작업 사본·도서관 소스는 그대로 남습니다. [기존 도구 재사용과 정리 기준](docs/SETUP.md#기존-도구-재사용과-완료-후-정리)
 
 최초 분석·디컴파일은 오래 걸릴 수 있습니다. 진행 로그 경로와 도구 생존 상태가 출력됩니다. 이후에는 동일한 명령을 실행해 캐시를 재사용합니다. 준비 과정에서 AI가 분석 코드를 새로 작성할 필요는 없습니다. 토큰 사용은 저장소 안내를 읽고 명령과 결과를 확인하는 데만 필요하며, 실제 다운로드·분석은 프로그램이 수행합니다.
 

@@ -21,6 +21,9 @@ import time
 import urllib.request
 import zipfile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import tool_lifecycle as lifecycle
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CACHE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'San14GrandLibrary'
 EXE = 'SAN14CE_KO.exe'
@@ -191,25 +194,80 @@ def download(url, path, expected):
 
 
 def inventory(directory):
-    return {p.relative_to(directory).as_posix(): digest(p) for p in sorted(directory.rglob('*')) if p.is_file() and p.name != '.verified.json'}
+    return {p.relative_to(directory).as_posix(): digest(p) for p in sorted(directory.rglob('*')) if p.is_file() and p != directory / '.verified.json'}
 
 
 def install_tool(name, spec, cache):
+    borrowed = discover_tool(name, spec) if name in ('java', 'ghidra', 'steamless') else None
+    if borrowed:
+        log(f'[existing] {name}: {borrowed}')
+        lifecycle.record_reused(cache, name, borrowed)
+        return borrowed
     dest = cache / 'tools' / f"{name}-{spec['version']}"
+    relative = dest.relative_to(cache).as_posix()
     proof = dest / '.verified.json'
     if proof.is_file():
         saved = read_json(proof)
         if saved.get('archive_sha256') == spec['sha256'] and saved.get('files') == inventory(dest):
+            lifecycle.finish_tool(cache, relative)
             log(f'[cached] verified {name} {spec["version"]}')
             return dest
         raise ValueError(f'Tool files changed: {dest}. Select a new cache root or inspect this tool directory.')
     archive = cache / 'downloads' / f'{name}.zip'
+    if archive.is_file() and digest(archive) != spec['sha256']:
+        raise ValueError(f'Existing archive changed; preserved: {archive}')
+    lifecycle.record_created(cache, f'downloads/{name}.zip', 'archive', name, sha256=spec['sha256'])
     download(spec['url'], archive, spec['sha256'])
+    if not lifecycle.record_created(cache, relative, 'tool', name, spec['version'], spec['sha256']):
+        raise ValueError(f'Unverified pre-existing tool directory; preserved: {dest}')
     log(f'Extracting {name} {spec["version"]}')
     safe_extract(archive, dest)
     log(f'Verifying extracted {name} files')
     write_json(proof, {'archive_sha256': spec['sha256'], 'files': inventory(dest)})
+    lifecycle.finish_tool(cache, relative)
     return dest
+
+
+def discover_tool(name, spec):
+    """Bounded env/PATH discovery. Borrow only the pinned, identifiable tool version."""
+    envs = {'java': ('SAN14_JAVA_HOME', 'JAVA_HOME'), 'ghidra': ('SAN14_GHIDRA_HOME', 'GHIDRA_HOME'),
+            'steamless': ('SAN14_STEAMLESS_HOME',)}[name]
+    candidates = [Path(os.environ[x]).expanduser() for x in envs if os.environ.get(x)]
+    executable = {'java': 'java.exe', 'ghidra': 'analyzeHeadless.bat', 'steamless': 'Steamless.CLI.exe'}[name]
+    found = shutil.which(executable)
+    if found:
+        candidates.append(Path(found).parent.parent if name in ('java', 'ghidra') else Path(found).parent)
+    for path in candidates:
+        path = path.resolve()
+        if os.name == 'nt' and any(c in str(path) for c in '()!%&^'):
+            continue  # batch launcher cannot safely receive these paths
+        try:
+            if name == 'ghidra':
+                text = (path / 'Ghidra/application.properties').read_text(encoding='utf-8')
+                if re.search(r'^application\.version=' + re.escape(spec['version']) + r'\s*$', text, re.M) and (path / 'support/analyzeHeadless.bat').is_file():
+                    return path
+            elif name == 'java':
+                text = (path / 'release').read_text(encoding='utf-8')
+                if re.search(r'^JAVA_RUNTIME_VERSION="' + re.escape(spec['version']) + r'(?:-[^"]*)?"', text, re.M) and (path / 'bin/java.exe').is_file():
+                    return path
+            elif spec.get('runtime_files'):
+                if all((path / rel).is_file() and digest(path / rel) == sha for rel, sha in spec['runtime_files'].items()):
+                    plugin_files = {p.relative_to(path).as_posix() for p in (path / 'Plugins').glob('*.dll')}
+                    expected_plugins = {x for x in spec['runtime_files'] if x.startswith('Plugins/') and x.endswith('.dll')}
+                    if plugin_files == expected_plugins:
+                        return path
+        except (OSError, ValueError):
+            continue
+    return None
+
+
+def cleanup_tools(cache, proof):
+    report = lifecycle.cleanup(cache)
+    saved = read_json(proof)
+    saved['tool_cleanup'] = report
+    saved['query_python'] = sys.executable
+    write_json(proof, saved)
+    log(f'Tool cleanup: {len(report["removed"])} removed, {len(report["preserved"])} preserved, {len(report["errors"])} errors; query Python retained; report: {cache / "cleanup-report.json"}')
 
 
 def find_one(directory, suffix):
@@ -369,7 +427,8 @@ def prepare(args):
     export = workspace / 'export'
     lock = read_json(ROOT / 'tools/dependencies.lock.json')
     scripts = ROOT / 'tools/ghidra_scripts'
-    recipe = hashlib.sha256((str(RECIPE_VERSION) + json.dumps(lock, sort_keys=True) + json.dumps(build, sort_keys=True) +
+    generation_lock = {name: {key: spec[key] for key in ('version', 'url', 'sha256')} if isinstance(spec, dict) else spec for name, spec in lock.items()}
+    recipe = hashlib.sha256((str(RECIPE_VERSION) + json.dumps(generation_lock, sort_keys=True) + json.dumps(build, sort_keys=True) +
                             ''.join(digest(x) for x in sorted(scripts.glob('*.java')))).encode()).hexdigest()
     with job_lock(cache):
         workspace.mkdir(parents=True, exist_ok=True)
@@ -377,6 +436,8 @@ def prepare(args):
         if args.verify_only or (proof.is_file() and read_json(proof).get('recipe') == recipe):
             require_hash(workspace / 'input/game.exe.unpacked.exe', expected)
             result = verify(export, expected, build['smoke_rvas'])
+            require_hash(game / EXE, packed_hash)
+            if proof.is_file(): cleanup_tools(cache, proof)
             print(json.dumps(result, indent=2)); log('[cached] ready; no download or analysis needed')
             return
         if shutil.disk_usage(cache).free < 8 * 2**30:
@@ -447,6 +508,7 @@ def prepare(args):
                            'sha256': expected, 'created_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
                            'reused_export': bool(args.reuse_export), 'tools': lock})
         require_hash(game / EXE, packed_hash)
+        cleanup_tools(cache, proof)
         print(json.dumps(result, indent=2))
         log(f'Ready. Private cache: {export}')
 
