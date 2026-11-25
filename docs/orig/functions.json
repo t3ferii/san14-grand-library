@@ -6,27 +6,27 @@
   "old_build": "1fbe6be7466a6646",
   "note": "키는 새 RVA(hex). old=옛 RVA. conf: 확정/코드/추정/미해결. curated=false 항목은 자동 색인(ctx만)",
   "counts": {
-   "curated": 343,
-   "auto": 618,
-   "total": 961,
+   "curated": 384,
+   "auto": 607,
+   "total": 991,
    "by_class": {
-    "AI 판단": 68,
+    "AI 판단": 83,
     "시설·건설": 19,
     "UI": 24,
-    "이동·경로": 23,
+    "이동·경로": 26,
     "인사": 34,
-    "전투·피해": 38,
-    "전법": 23,
+    "전투·피해": 45,
+    "전법": 30,
     "전법 계열": 1,
-    "점령·칸소유": 16,
+    "점령·칸소유": 17,
     "계략": 8,
-    "데이터 접근": 15,
+    "데이터 접근": 17,
     "내정·경제": 18,
-    "개성·정책 효과": 16,
+    "개성·정책 효과": 20,
     "능력치": 3,
     "보급·병참": 11,
     "외교": 10,
-    "이민족·도적": 3,
+    "이민족·도적": 5,
     "시간·상태기계": 6,
     "난이도·설정": 5,
     "난수": 2
@@ -695,12 +695,13 @@
    "curated": true,
    "name": "CCommandExecutionEmployNode Execute (임용 명령 실행 BT 노드)",
    "cls": "AI 판단",
-   "role": "임용 명령 실행 BT 노드 Execute. kind 0x6a4f6b51. 세력 BT 3회.",
+   "role": "등용(Employ) 명령 실행 BT 노드 Execute(「임용」이 아니라 등용 명령 발행: 인수 실행 무장·대상). kind 0x6a4f6b51. **군단** BT 3회(세력 BT 아님, ai/node_kinds.md 사용 횟수 열)",
    "io": "입력: node, context",
    "src": [
-    "ai/node_kinds.md RTTI"
+    "ai/node_kinds.md RTTI",
+    "[Codex 판독 2026-11-25·미검증]"
    ],
-   "conf": "확정(RTTI)",
+   "conf": "확정(RTTI) / 코드",
    "note": "",
    "docs_n": 3,
    "ctx": null,
@@ -917,15 +918,15 @@
    "old": "34F10",
    "status": "changed",
    "curated": true,
-   "name": "CDepartureNode Execute (출진 BT 노드)",
+   "name": "CDepartureNode Execute (부대편성출진)",
    "cls": "AI 판단",
-   "role": "출진 BT 노드 Execute. kind 0x5de944ee. 군단 BT 19회 사용. FIDELITY.md 옛 출진 함수 목록(295B0·2F2B0·34F10·32230·613A0·68CE0·69BD0) 중 하나",
-   "io": "입력: node, context",
+   "role": "인수: `[0]`무장 키(`+0x38`), `[1]`병력 int 키(`+0x3C`→cmd[2]), `[2]`진형 객체 키(`+0x40`→cmd[3]=`22F7A0`), `[3]`전법 후보 목록 키(`+0x44`; 진형 비트가 맞는 앞 3개 → cmd[5..7]), `[4]`행동 상수(`+0x48`→cmd[13]), `[5]`목표 키(`+0x4C`), `[11]`결과 부대 키(`+0x60`), `[12]`·`[13]`(`+0x64`·`+0x68`, 행동 8 건설일 때 시설 정의·둘째 칸 키). `[6..10]` 정수 다섯이 `+0x50..+0x5C` 네 칸(→cmd[17..20])에 들어가는 대응은 가설 A(`[6..9]` → `+0x50..+0x5C`, `[10]`은 칸 없음)로 실측 확정(2026-11-25, 부대 42개, ai/roles.md 6-4절). 행동별 목표: 1(이동)=목표 종류 9 칸(또는 종류 10이면 지역 중심 `+0x3A`, 종류 5이면 도시 `22F5B0`); 2·4=성(종류 5, `+0x4E`); 3·5=관문(종류 6, `+0x4E-0x33`); 6·10=시설(종류 0xB, `22F930`); **7=부대(종류 0x1B, `22F4A0`; 목표가 무효면 실패 2)**; 8=건설(종류 9 칸, `cmd[21]`=칸, `cmd[23]`=시설 종류 `22F6E0`); 0xE=칸. 실패 2 조건: 무장·무장의 군단 무효, 무장의 군단이 판단 중인 군단이 아님(`22E870`), 진형 객체 무효, 거점 자원(vtable `+0x90`) < 진형 `+0x9A`(비용), 무장이 거점 목록에 없음. 성공하면 `A2C60` → `1EDC30(cmd,1)` → 부대를 키 `+0x60`에 쓰고 1",
+   "io": "(노드, 문맥, 주체) → 1/2",
    "src": [
-    "ai/node_kinds.md RTTI",
-    "fidelity/FIDELITY.md 출진 함수 목록"
+    "ghidra_full.py func 35A70, 3.6절 호출자 표",
+    "origlib 군단 트리 params (1a4a447d, 2026-11-25)"
    ],
-   "conf": "확정(RTTI)",
+   "conf": "코드. `[6..10]` 대응은 실측 확정(가설 A)",
    "note": "",
    "docs_n": 0,
    "ctx": null,
@@ -1298,7 +1299,7 @@
    "curated": true,
    "name": "CRecruitOfficerSetNode Execute (등용 담당관 설정 BT 노드)",
    "cls": "AI 판단",
-   "role": "등용 담당관 설정 BT 노드 Execute. kind 0x16bf303f. 군단 BT 6회.",
+   "role": "모병 담당관 설정 BT 노드 Execute(「등용」이 아니라 거점 `+0xCA` 모병 담당 배치, [Codex 판독 2026-11-25·미검증]). kind `0x16bf303f`. 군단 BT 6회",
    "io": "입력: node, context",
    "src": [
     "ai/node_kinds.md RTTI"
@@ -1856,14 +1857,15 @@
    "old": "52F10",
    "status": "same",
    "curated": true,
-   "name": "CCommandExecutionGovernmentAutoNode Execute (내정 자동 명령 실행 BT 노드)",
+   "name": "CCommandExecutionGovernmentAutoNode Execute (시정 5줄 + 군사 자동 배치 실행 BT 노드)",
    "cls": "AI 판단",
-   "role": "내정 자동 명령 실행 BT 노드 Execute. kind 0x9a6f523b. 세력 BT 1회.",
+   "role": "내정이 아니라 **시정(관직) 5줄 + 군사 자동 배치**: 배치안 비용(신규 인원 + 군사 변경)을 군주 군단 명령서로 치르고 모자라면 행 0부터 현재 배치로 되돌려 맞춘다(상세 ai/node_kinds.md). kind `0x9a6f523b`. 세력 BT 1회",
    "io": "입력: node, context",
    "src": [
-    "ai/node_kinds.md RTTI"
+    "ai/node_kinds.md RTTI",
+    "[Sonnet 판독 2026-11-25·미검증]"
    ],
-   "conf": "확정(RTTI)",
+   "conf": "확정(RTTI) / 코드",
    "note": "",
    "docs_n": 6,
    "ctx": null,
@@ -2098,13 +2100,15 @@
    "new": "55310",
    "old": "54690",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "군단 거점 간 무장 이동 노드",
+   "cls": "AI 판단",
+   "role": "거점별 무장 수와 목표 인원을 비교해 부족 거점으로 최대 3건 1F2630 발행, 실패 시 2차 경로(+0xE7≠'I'). 상세 ai/node_kinds.md",
+   "io": "노드 인수 +0x38~+0x50",
+   "src": [
+    "ai/node_kinds.md 55310 행 (Sonnet g31 판독 + 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드) / 추정(하한·소모 필드 뜻)",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: | 0xa8b8d8d6 | CForceCommandMoveNode | 0x54690 | 0 | 3 | 0 | 0 | 미확보 |",
@@ -2112,9 +2116,7 @@
    "cited_by": [
     "docs/fidelity/node_kinds.md"
    ],
-   "engine_loc": [
-    "San14Sim/engine/rules/combat_formulas.h:11"
-   ]
+   "engine_loc": []
   },
   {
    "new": "56A40",
@@ -3072,7 +3074,7 @@
    "curated": true,
    "name": "CGetCanServePersonListNode Execute (임용 가능 무장 목록 BT 노드)",
    "cls": "AI 판단",
-   "role": "임용 가능 무장 목록 조회 BT 노드 Execute. kind 0x1870191c. 세력 BT 3회.",
+   "role": "등용 대상 무장 후보 목록 조회 BT 노드 Execute. kind 0x1870191c. **군단** BT 3회(세력 BT 아님; 군단 pseudo N791)",
    "io": "입력: node, context",
    "src": [
     "ai/node_kinds.md RTTI"
@@ -3111,13 +3113,16 @@
    "new": "7C680",
    "old": "7B6E0",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "CGetDelegationTargetNode Execute (위임목표조회)",
+   "cls": "AI 판단",
+   "role": "군단의 위임 목표(`+0x18` 번호, `+0x19` 종류 2 거점·7 세력·8 군단)를 객체로 바꿔 `[2]`에, 객체종류 값 5·0·1을 `[1]`에 쓴다. 그 밖 종류는 2",
+   "io": "(노드, 문맥) → 1/2",
+   "src": [
+    "ai/node_kinds.md N05 표",
+    "판단표 공통 준비 N173·N631·N645"
+   ],
+   "conf": "코드",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: | 0xad9a15d | CGetDelegationTargetNode | 0x7b6e0 | 0 | 7 | 1 | 0 | 미확보 |",
@@ -5772,13 +5777,16 @@
    "new": "16C830",
    "old": "16B880",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "전법 선택 확률(후보마다 1회)",
+   "cls": "전법",
+   "role": "p = u×P/100×t/100×f, 상한 100%; 3FDAF0(10000,1,공격 칸×c,대상 칸×2,…) < int(p×10000/100)이면 선택; c=5부터 후보마다 +1",
+   "io": "입력: 선택기, 후보 목록 / 출력: 선택 전법 또는 0",
+   "src": [
+    "rules_combat_effects.md E1",
+    "Sonnet g36 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정(구조) / 상수 미확인",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: | **인접지역 효과 비율(%/완전 점령 지역)** | `2B07C0` (호출 `2A8D40` +0x2A912D, `16B880` +0x16BC27); 기본 `141A4A6B8`, 컴 `141A47D00`(특급 16), `141A47",
@@ -6139,7 +6147,7 @@
    "curated": true,
    "name": "단계6 전법 호출",
    "cls": "전투·피해",
-   "role": "전법(173DD0)을 일반 피해가 대상 병력보다 작을 때만 호출. 모드 CCZ 사이트(16AF3B) — 옛 16FDD0; 함수 경계 주의(ghidra_full: 170870 안 중간 지점)",
+   "role": "전법(173DD0)을 일반 피해가 대상 병력보다 작을 때만 호출. 모드 CCZ 사이트(16AF3B) — 옛 16FDD0; 함수 경계 주의(ghidra_full: 170870 안 중간 지점). 보완(Sonnet g36 + 대조 2026-11-25): 상태 +0x20 < 기록 +0x12일 때만 173DD0, 170150은 부르지 않음",
    "io": "-",
    "src": [
     "combat6.md",
@@ -6259,7 +6267,7 @@
    "curated": true,
    "name": "부대 AI 전법 선택(750줄)",
    "cls": "AI 판단",
-   "role": "후보 점수(효과 종류 가중 141A48A78/84/90)로 전법 선택. 규칙이 아니라 선택 가중치 — 옛 172E20",
+   "role": "후보 점수(효과 종류 가중 141A48A78/84/90)로 전법 선택. 규칙이 아니라 선택 가중치 — 옛 172E20. 보완(Sonnet g36 + 대조 2026-11-25): 난이도<4면 3FDAF0(n,1,공격 id,k)로 무작위 순서, ≥4면 점수 정렬(168520, 방향 미해결); 최종 선택은 16C830. 해시 5·6번째 인수 미해결",
    "io": "-",
    "src": [
     "worldmap_spec_b.md §5.1"
@@ -7043,7 +7051,7 @@
    "curated": true,
    "name": "칸 소유 쓰기 입구 set_owner",
    "cls": "점령·칸소유",
-   "role": "막힘 판정(2C8AB0) 통과 시 242C70으로 소유 쓰기, 지역 갱신 비트(DAT_142144b30), 화면 이펙트. 거점 칸이면 이벤트 0x1E/0x1F·242340 — 옛 185B30(+1 알림 호출); 엔진 Game::paint",
+   "role": "막힘 판정(2C8AB0) 통과 시 242C70으로 소유 쓰기, 지역 갱신 비트(DAT_142144b30), 화면 이펙트. 거점 칸이면 이벤트 0x1E/0x1F·242340 — 옛 185B30(+1 알림 호출); 엔진 Game::paint 쓰기 후 world+0x30B20=1, DAT_142144B30 지역 비트(Sonnet g32 판독 대조 2026-11-25)",
    "io": "입력: 지도관리자, 칸, 새 세력, 이전 거점 세력, 표지. 출력: 변경 여부",
    "src": [
     "worldmap_spec.md §1.2"
@@ -8044,13 +8052,12 @@
    "old": "1EC890",
    "status": "same",
    "curated": true,
-   "name": "출진 명령 실행",
+   "name": "부대 act 14(0xE 점령 — 공식 이름, 이전 「약탈」) 분기",
    "cls": "AI 판단",
-   "role": "43A50이 만든 출진 명령을 실행 — 옛 1EC890; 모드 UI는 4AE150",
+   "role": "목표 거점이 있으면 `2ECF00(부대, 9, 목표)`로 명령을 바꾼다. 자원 약탈 식은 없음",
    "io": "-",
    "src": [
-    "worldmap_spec.md §3.4",
-    "sim.h"
+    "rules_tribes 9"
    ],
    "conf": "확정",
    "note": "옛 1EC890; 모드 UI는 4AE150",
@@ -8066,7 +8073,7 @@
     "docs/DESIGN.md"
    ],
    "engine_loc": [
-    "core/sim.h:25, rules/battle.cpp:63"
+    "(미구현)"
    ]
   },
   {
@@ -8403,20 +8410,24 @@
    "old": "1F28C0",
    "status": "same",
    "curated": true,
-   "name": "포상 실행",
+   "name": "포상 실행 / 주의 채택 명령 실행",
    "cls": "인사",
-   "role": "충성 += min(9,(75-상성)/15+3+난수(0/1)), 상한 100, 금 100 + 명령서 1(2E340→1F28C0 옛) — 옛 1F28C0; 대상 선정 2EEA0(옛 2E340)",
+   "role": "포상은 명령 거점이 금 100×대상 수 + 명령서 1회당 1. **`52FC0`은 명령 1회 실행이 아니라 후보를 정렬해 명령서가 닳거나 후보가 끝날 때까지 여러 항목을 연속 채택하는 반복 노드**(상세 ai/node_kinds.md `52FC0` 행; [Sonnet 판독 2026-11-25·미검증])",
    "io": "-",
    "src": [
-    "command_audit.md #8",
-    "RULES.md"
+    "lane_L1_5.md"
    ],
-   "conf": "확정",
+   "conf": "확정 / 코드",
    "note": "옛 1F28C0; 대상 선정 2EEA0(옛 2E340)",
    "docs_n": 0,
    "ctx": null,
    "given": "새 1F3C90",
-   "engine_loc": []
+   "engine_loc": [
+    "Game::reward / doctrine_action"
+   ],
+   "also": [
+    "52FC0"
+   ]
   },
   {
    "new": "1F42B0",
@@ -8719,10 +8730,11 @@
    "curated": true,
    "name": "계략 0x14·14·0x18 효과",
    "cls": "계략",
-   "role": "1FB170 계략 0x14(지역 건물 내구), 1FC530 계략 14(지역 개발 최대 항목·치안), 1FEF60 계략 0x18(인발 표식 `+0x1C6..`), 1ECD20 계략 0x14 결과 구간",
+   "role": "1FB170 계략 0x14(지역 건물 내구), 1FC530 계략 14(지역 개발 최대 항목·치안), 1FEF60 계략 0x18(인발 표식 `+0x1C6..`), 1ECD20 계략 0x14 결과 구간 계략 14 보완(2026-11-25, Gemini g19 + 대조): 대성공이면 2AA9E0 후보 칸·2D53F0 부대 생성(세력 0x33 도적, 개성 0x53~0x56·지방 코드 조건이면 이민족 0x2E~0x31), 부대를 못 만들면 등급 1로 강등. 우호도 −5는 실패·성공에만, 대성공 제외",
    "io": "-",
    "src": [
-    "L2 2·3차"
+    "L2 2·3차",
+    "rules_diplomacy §5.3"
    ],
    "conf": "확정",
    "note": null,
@@ -8833,7 +8845,7 @@
    "conf": null,
    "note": null,
    "docs_n": 4,
-   "ctx": "문서 문맥: lane_L4.md: | 0 | 매칸 | `2035D0` | 날짜 상태 비트 8·0x16이 켜졌을 때 이벤트 목록(`1EC7D0`) | 없음 | - |",
+   "ctx": "문서 문맥: lane_L4.md: | 0 | 매칸 | `2035D0` | 날짜 플래그 8·0x16일 때 명령 행동 맵을 돌며 `2439F0` → vcall `+0xA0`(명령 결과). 옛 표기 `1EC7D0`은 `1EC730` 내부 주소(2026-11-25 정정, [날짜 2절](rules_time.md)) | 없음 | - | ",
    "remap_status": "same",
    "cited_by": [
     "docs/PROGRESS.md",
@@ -9644,10 +9656,10 @@
    "old": "22DD10",
    "status": "same",
    "curated": true,
-   "name": "부대 진형 id 조회",
+   "name": "진형 번호 조회",
    "cls": "데이터 접근",
-   "role": "부대의 진형 id 번호 반환. rules_combat.md \"부대 진형 id\". extra = 1.5 if 진형(22F7A0) ∈ {6,14} && 지형코드 ∈ {5,6,8..11}. ai/conditions.md op 129에서 BE040(n) 진형 비교에 사용.",
-   "io": "입력: 부대. 출력: 진형 id",
+   "role": "부대의 진형 id 번호 반환. rules_combat.md \"부대 진형 id\". extra = 1.5 if 진형(`22F7A0`) ∈ {6,14} && 지형코드 ∈ {5,6,8..11}. ai/conditions.md op 129에서 `BE040(n)` 진형 비교에 사용",
+   "io": "입력: 진형 객체(22CAD0 결과) / 출력: 진형 번호 = (포인터 − world+0x77428)/200 (2026-11-25 정정, 디컴파일 대조)",
    "src": [
     "rules_combat.md 주소표 45",
     "rules_combat.md §103",
@@ -9985,13 +9997,15 @@
    "new": "232500",
    "old": "230AA0",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "세력 시정 코스트 상한",
+   "cls": "개성·정책 효과",
+   "role": "32DEF0(등급값 244280 + DAT_141A4B588(30)) + (보너스 적용이고 세력+0x1D1 bit2 켜짐·+0x1DB bit2 꺼짐이면 *(world+0x860B8)+0x44 s16). 난수 없음",
+   "io": "입력: 세력, 보너스 적용 / 출력: int",
+   "src": [
+    "Gemini g17 판독 + 작성자 대조 2026-11-25"
+   ],
+   "conf": "확정(코드) / 보너스 값 미확인",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: // RVA 230AA0 / 32BC90, observed levels 0..9; the optional bonus is",
@@ -10436,12 +10450,13 @@
    "curated": true,
    "name": "소속 거점 갱신",
    "cls": "점령·칸소유",
-   "role": "마을·도시·관문·항(지형 15~18) 칸 소유 변경 시 거점 소유 연동",
+   "role": "지역 객체 +0x35 = min(n,0x33); 소재 +0xE4 = 0x231+지역 번호이고 신분 +0xE6 == 5인 무장의 소속 +0xE2 = min(n,0x3D). 칸 소유 변경 연동(호출 사슬 186E60·26E780·1FD930)",
    "io": "-",
    "src": [
-    "worldmap_spec.md §1.2"
+    "worldmap_spec.md §1.2",
+    "2026-11-25 디컴파일 보완(옛 2409A0 = g27 입력)"
    ],
-   "conf": "코드",
+   "conf": "확정(코드)",
    "note": "",
    "docs_n": 0,
    "ctx": null,
@@ -10590,13 +10605,15 @@
    "new": "25A730",
    "old": "258D90",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "무장 시정 효과 레벨 누적",
+   "cls": "개성·정책 효과",
+   "role": "무장 정책(+0x14D, world+0x78D50)의 효과 칸 8개(정책+0x98..)마다 수집 핸들에서 효과 번호가 같은 항목에 min(10, 무장+0x182 + 2ABF60(무장,3))을 누적. 난수 없음",
+   "io": "입력: 무장, 수집 핸들 / void",
+   "src": [
+    "rules_domestic §8.1 (Gemini g24, 작성자 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드)",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: // RVA 26AA20/258D90/41C200: aggregate effects from ruler, advisor and active board.",
@@ -10604,9 +10621,7 @@
    "cited_by": [
     "engine/core/init.cpp"
    ],
-   "engine_loc": [
-    "San14Sim/engine/core/init.cpp:110"
-   ]
+   "engine_loc": []
   },
   {
    "new": "25A880",
@@ -10770,13 +10785,15 @@
    "new": "263520",
    "old": "261B70",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "시정 자동 배치 본체 (`53B80`이 부름)",
+   "cls": "AI 판단",
+   "role": "세력 사본에 시정 5줄 배치안과 새 군사를 고름: 기존 배치 유지 → 군사(지력 문턱, `24F570`) → 핵심 효과 4종 → 나머지(코스트·칸·명령서·효과 레벨 10 상한). 난수 없음. 상세 rules_domestic §8.1a",
+   "io": "입력: 세력, 사본, 줄별 출력 목록[5] / 반환: 군사 무장",
+   "src": [
+    "Gemini g15 판독 + 지휘 세션 대조 2026-11-25"
+   ],
+   "conf": "코드(골격) / 상수 값·정렬 비교 3개 미확인",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: // the original 261B70 board optimizer is not being reproduced here.",
@@ -10784,9 +10801,7 @@
    "cited_by": [
     "engine/ai/agent.cpp"
    ],
-   "engine_loc": [
-    "San14Sim/engine/rules/domestic_formulas.h:7"
-   ]
+   "engine_loc": []
   },
   {
    "new": "266780",
@@ -10971,12 +10986,12 @@
    "curated": true,
    "name": "지역 개발 최종 보정",
    "cls": "내정·경제",
-   "role": "담당관·정책 보정 — 옛 266B10",
-   "io": "-",
+   "role": "기본량 268600 + h4((개성 0x21 합 + p4)×B/100, 부호별 min/max ±1) + h5(B×p5/100) → max(1,·) → 설정 3EC920(0x1D) 배율. 난수 없음. 정책 효과 항은 없음 — 옛 266B10",
+   "io": "입력: 지역, 담당관, 항목, p4, p5 / 출력: int",
    "src": [
-    "lane_L1.md 개성 33~39"
+    "rules_domestic §4.1 (Gemini g20 판독, 작성자 대조 2026-11-25)"
    ],
-   "conf": "확정",
+   "conf": "확정(식) / p4·p5 호출 의미 미확인",
    "note": "옛 266B10",
    "docs_n": 5,
    "ctx": null,
@@ -11001,7 +11016,8 @@
    "io": "-",
    "src": [
     "build_remap.md §2",
-    "RULES.md"
+    "RULES.md",
+    "상세 rules_domestic §4.1 (Gemini g20, 2026-11-25 보완)"
    ],
    "conf": "확정",
    "note": "옛 266C50",
@@ -11368,14 +11384,14 @@
    "old": "26AA20",
    "status": "same",
    "curated": true,
-   "name": "세력 정책 효과 합 계산",
+   "name": "세력 정책 효과 수집",
    "cls": "개성·정책 효과",
-   "role": "활성 군사·시정 무장 정책 레벨 합산 — 옛 26AA20",
-   "io": "-",
+   "role": "핸들 목록 항목(+8 세력, +0xC 효과, +0x10 누적 레벨)을 비우고 군주(세력+0x10, 항상)·군사(+0x52, 모드≠0이면 +0x16C==0)·시정 5줄×7칸(모드≠0이면 보조값 세력+0x62+줄×0x1E+칸×2==0)의 무장마다 25A730 호출. 난수 없음 — 옛 26AA20",
+   "io": "입력: 세력, 수집 핸들, 모드(0 전원/1 활성만) / void",
    "src": [
-    "worldmap_spec_b.md §5.3"
+    "rules_domestic §8.1 (Gemini g24 + Sonnet g37 판독 2026-11-25, 작성자 디컴파일 대조)"
    ],
-   "conf": "추정",
+   "conf": "확정(코드)",
    "note": "옛 26AA20",
    "docs_n": 5,
    "ctx": null,
@@ -11418,12 +11434,12 @@
    "curated": true,
    "name": "치안 최종 보정",
    "cls": "내정·경제",
-   "role": "치안 최종 — 옛 26AE40",
-   "io": "-",
+   "role": "기본량 26C8C0 + (개성 0x22 합 + p3)×base/100 + p4 항 → max(1,·) → 설정 3EC920(0x1C) 배율 — 옛 26AE40",
+   "io": "입력: 지역, 담당관, p3, p4 / 출력: int",
    "src": [
-    "mechanisms_20261017/함수별_증거.md"
+    "rules_domestic §4.2 (Gemini g20 판독, 작성자 대조 2026-11-25)"
    ],
-   "conf": "확정",
+   "conf": "확정(식)",
    "note": "옛 26AE40",
    "docs_n": 5,
    "ctx": null,
@@ -11444,7 +11460,8 @@
    "role": "치안 기초값은 통솔 조회 — 옛 26AFA0",
    "io": "-",
    "src": [
-    "mechanisms_20261017/능력치.md"
+    "mechanisms_20261017/능력치.md",
+    "상세 rules_domestic §4.2 (2026-11-25 보완)"
    ],
    "conf": "확정",
    "note": "옛 26AFA0",
@@ -11540,13 +11557,15 @@
    "new": "26E780",
    "old": "26CE60",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "거점 소속 변경 계열(본문 미판독)",
+   "cls": "점령·칸소유",
+   "role": "26EEB0(거점 함락 적용)이 3곳, 2727F0·2D9A50·B3EE0·635A90이 부르는 1834바이트 함수. 242340을 부름",
+   "io": "-",
+   "src": [
+    "ai/unresolved.md 5절 (2026-11-25, 옛 26CE60 = g27 입력)"
+   ],
+   "conf": "미해결(본문)",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: - 점령 직전 `+0x4E`가 같은 거점으로 향하던 이동·파견 객체(`world+0xB0` 목록: `+0x34` 출발, `+0x35` 도착, `+0x3A` 지역 중심 칸)는 `1402409A0`/`140240CB0`/`26CE60`으",
@@ -11849,14 +11868,15 @@
    "old": "2784B0",
    "status": "same",
    "curated": true,
-   "name": "등용 평가",
+   "name": "등용 판정(점수식)",
    "cls": "AI 판단",
-   "role": "등용 성공 판정 전체 식(조건 53): 조기 종료(충성 100 이상·옛 군주·군주 신분·혈연) 뒤 `max(30,매력')x3/5 + (a25-aE)/5 - ((k+4)/2+18) x e x 5/100 + 45+(d0 mod 5) + 호감항(혐오 +15·친애 -15·포로 +15·혈연 +15) + 플레이어 가산(+10/+5/0) [+ 재야·포로 정책효과 10]` x m(의리 칸 k=-4/-3/-2 이면 1.5/1.3/1.1), 0..100 clamp, 성공 <=> d0 < 최종. 세부는 ai/conditions.md 53행",
-   "io": "(대상, 실행 무장, 난수 입출력)",
+   "role": "매력항·난이도 저항 e(60/65/70/70/70)·플레이어 가산(+10/+5/0). 상성·친족 항은 엔진 중립 — 옛 2784B0",
+   "io": "입력: (대상 T, 실행 무장 E, &roll)(`279DE0(T,E,&roll)`; 「군주, 대상」은 부정확, [Codex 판독 2026-11-25·미검증]). 출력: 성패",
    "src": [
-    "L3 5차"
+    "command_audit.md #10",
+    "difficulty.md 항 32"
    ],
-   "conf": "확정(식)/추정(혈연 분기 순서)",
+   "conf": "확정(식)/APPROX(상성)",
    "note": "옛 2784B0",
    "docs_n": 11,
    "ctx": null,
@@ -11870,7 +11890,7 @@
     "docs/fidelity/difficulty.md"
    ],
    "engine_loc": [
-    "rules/people.cpp recruit_chance(상성·혈연·의리 항은 중립 APPROX)"
+    "rules/difficulty.h:31, rules/people.cpp:1, rules/people.cpp:23"
    ]
   },
   {
@@ -12828,13 +12848,14 @@
    "curated": true,
    "name": "부대 거점 입성",
    "cls": "이동·경로",
-   "role": "부대가 도시·관문에 입성 시 거점에 병력·부상병 합산. 대상 거점 소속 세력(vt+0xB0)==부대 세력(22E690) 경로: 거점 +0x3C += 부대+0x16, +0x40 += 부대+0x18; 각각 0..거점 상한(vt+0xC8)으로 클램프. 지휘 무장 옛 소속(+0xE2) ≠ 도착 거점(+0x4E) && 종류 2 조건에서 적재량 기반 경험치(16A4E0, 공적 0x2E). 2DB9A0 도착 분기·2FAFD0(포로 처우)·43A50 출진 처리 등 광범위 호출.",
+   "role": "부대가 도시·관문에 입성 시 거점에 병력·부상병 합산. 대상 거점 소속 세력(vt+0xB0)==부대 세력(`22E690`) 경로: 거점 `+0x3C += 부대+0x16`, `+0x40 += 부대+0x18`; 각각 0..거점 상한(vt+0xC8)으로 클램프. 지휘 무장 옛 소속(`+0xE2`) ≠ 도착 거점(`+0x4E`) && 종류 2 조건에서 적재량 기반 경험치(`16A4E0`, 공적 0x2E). `2DB9A0` 도착 분기·`2FAFD0`(포로 처우)·`43A50` 출진 처리 등 광범위 호출 보완(Gemini g21 판독, 작성자 디컴파일 대조 2026-11-25): 세력 불일치면 조기 종료. 사기 = round((min(부대 사기, 세력 상한)×부대 병력 + 거점 사기×거점 병력)/두 병력 합)을 세력 상한으로 자름(243030). 초과분은 버려짐. 공적 수량의 금·군량은 거점 번호 < 0x34일 때만. 태수 +0x2E가 비면 지휘 무장으로 채움. 거점 세력 0이면 26EEB0 분기(뜻 미해독). 난수 없음(포로는 2FAFD0에서 해시)",
    "io": "입력: 부대, 거점",
    "src": [
     "rules_combat.md §10 U8",
     "rules_movement.md 행동 2·3",
-    "build_addresses.md 2A0CF0",
-    "SOURCES.json battle.cpp"
+    "build_addresses.md `2A0CF0`",
+    "SOURCES.json battle.cpp",
+    "rules_movement §11.2"
    ],
    "conf": "확정(코드)",
    "note": "",
@@ -13147,7 +13168,7 @@
    "curated": true,
    "name": "무장 관계 함수군",
    "cls": "데이터 접근",
-   "role": "2A8D50(p1, p2, 플래그) 관계 점수, 2A8C90 상성 등급(경계 11/30/47), 2B1DF0 친족 배율(2), 2CA530 \"서로 애호·혐오 없음 + 의형제 아님\", 2CBF80 의형제, 2CAE70 배우자, 2C7B30/2C92A0 부/모 일치, 2CAE20(a, b) b 가 a 의 부모, 2C5ED0 형제, 2A8010 상성 격차(원형, 최대 75), 2343A0(a, b) b 가 a 의 혐오 목록",
+   "role": "2A8D50(p1, p2, 플래그) 관계 점수, 2A8C90 상성 등급(경계 11/30/47), 2B1DF0 친족 배율(2), 2CA530 \"서로 애호·혐오 없음 + 의형제 아님\", 2CBF80 의형제, 2CAE70 배우자, 2C7B30/2C92A0 부/모 일치, 2CAE20(a, b) b 가 a 의 부모, 2C5ED0 형제, 2A8010 상성 격차(원형, 최대 75), 2343A0(a, b) b 가 a 의 혐오 목록 확인(2026-11-25 디컴파일): 2CBF80 = 의형제(+0xBC 그룹값), 2CAE70 = 배우자(+0xBA = 상대 번호), 2C5ED0 = 형제(+0xB4 부·+0xB6 모 번호가 0 아니고 같음)",
    "io": "-",
    "src": [
     "L2 3차"
@@ -13156,9 +13177,7 @@
    "note": null,
    "docs_n": 0,
    "ctx": "엔진 주석: // RVA 2A8D40 (6th round, docs/fidelity/combat6.md): common multiplier M of one side (unit or base) in the exact float order of the assembly",
-   "engine_loc": [
-    "San14Sim/engine/rules/combat_formulas.h:14"
-   ],
+   "engine_loc": [],
    "also": [
     "2A8D50",
     "2B1DF0",
@@ -13733,13 +13752,15 @@
    "new": "2AFAB0",
    "old": "2AD780",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "주 지배 효과 합산",
+   "cls": "데이터 접근",
+   "role": "(세력, 종류 1..13, &찾음, 기본값): 2B7140이 world+0xDC80.. 주 객체 중 주 표(world+0x85990) 효과 종류가 맞는 것을 모으고(게임 모드 14100E5B0 = 2·4면 빈 목록), 2C8800이 참인 항목의 2AF9F0 효과값을 합함. 없으면 기본값",
+   "io": "입력: 세력, 종류, 찾음*, 기본값 / 출력: int",
+   "src": [
+    "rules_people §4.1 (Sonnet g29 판독, 작성자 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드) / 2C8800 내부 미판독",
    "note": null,
    "docs_n": 5,
    "ctx": "문서 문맥: lane_L1.md: 탐색일수 단축 | 위치만 | `2331F0`(이동 일수) | `X = 35 x 거리 / (2AFAB0(세력,5)/2 + 10) / 12`, 일수 = `ceil(X)`; 효과 v > 0이면 `ceil((100 - v) x X x 0.01)`, 최소 ",
@@ -13748,9 +13769,7 @@
     "engine/rules/people.cpp",
     "docs/fidelity/pre6_tactics.md"
    ],
-   "engine_loc": [
-    "San14Sim/engine/rules/people.cpp:24"
-   ]
+   "engine_loc": []
   },
   {
    "new": "2B0070",
@@ -13816,7 +13835,7 @@
    "curated": true,
    "name": "헥스 이동 비용",
    "cls": "이동·경로",
-   "role": "BF1B0(지형 객체) + (hex+0x16≠0이면 x5000/100) [+ 불 칸 x5000/100] — 옛 2AE6F0",
+   "role": "BF1B0(지형 객체) + (불 포함 플래그≠0이고 칸+0x16≠0일 때만 int(+0x16×141A4D1F0)/100 = ×5000/100; 2026-11-25 정정: 이중 서술 제거, Sonnet g34 + 대조) — 옛 2AE6F0",
    "io": "-",
    "src": [
     "worldmap_spec.md §4.1",
@@ -13940,12 +13959,13 @@
    "curated": true,
    "name": "부대 수집(이동 case 7·8 앞)",
    "cls": "이동·경로",
-   "role": "이동 갱신 앞에서 부대를 모아 2DC550(50개 청크)에 넘김",
+   "role": "이동 갱신 앞에서 world+0x60 연결 목록(머리→꼬리)의 부대 중 2C9330이 참인 것만 꼬리에 모은 뒤 24C8C0으로 +0x14 내림차순 안정 정렬해 2DC550(50개 청크)에 넘김. 난수 없음",
    "io": "-",
    "src": [
-    "lane_L4.md §2"
+    "lane_L4.md §2",
+    "rules_time.md 2절 7·8행 (Gemini g18 판독 + 작성자 디컴파일 대조 2026-11-25)"
    ],
-   "conf": "확정",
+   "conf": "확정(코드)",
    "note": "",
    "docs_n": 0,
    "ctx": null,
@@ -14553,10 +14573,11 @@
    "curated": true,
    "name": "거점 월 수입·모병 합산",
    "cls": "내정·경제",
-   "role": "지역 수입 합 → 세력 효과 가산(14032E430) → 담당관 정액(0x47/0x48) → 상한(금 vtbl+0xB8, 군량 +0xC0) — 옛 2BBCB0",
+   "role": "지역 수입 합 → 명승 항(3306A0) → 담당관 정액(0x47/0x48) → 상한(금 vtbl+0xB8, 군량 +0xC0) — 옛 2BBCB0",
    "io": "-",
    "src": [
-    "dump_measurements.md:114"
+    "dump_measurements.md:114",
+    "상세 rules_domestic §2 (Gemini g26, 2026-11-25 대조)"
    ],
    "conf": "확정",
    "note": "옛 2BBCB0",
@@ -14848,13 +14869,15 @@
    "new": "2C5ED0",
    "old": "2C3B50",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "형제 판정",
+   "cls": "데이터 접근",
+   "role": "두 무장 번호가 다르고 +0xB4(부)나 +0xB6(모) 번호가 0이 아니며 같으면 1",
+   "io": "입력: 무장 a, b / 출력: bool",
+   "src": [
+    "rules_people §4.1 (Sonnet g29 판독, 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드)",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: // +B4 father, +B6 mother, +BA spouse, +BC sworn group, +C0 favorites[8] (helpers 2C5780, 2C6EF0, 2C8A70, 2C8AC0, 2C3B50, 2C9BD0, ",
@@ -14863,11 +14886,7 @@
     "engine/rules/people.cpp",
     "tests/r4_tests.cpp"
    ],
-   "engine_loc": [
-    "San14Sim/engine/rules/people.cpp:143",
-    "San14Sim/engine/rules/people.cpp:298",
-    "San14Sim/engine/rules/people.cpp:306"
-   ]
+   "engine_loc": []
   },
   {
    "new": "2C6590",
@@ -15027,13 +15046,15 @@
    "new": "2C8140",
    "old": "2C5D90",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "이벤트 72 게이트",
+   "cls": "이민족·도적",
+   "role": "설정 3EC340·3EC2E0≠0이면 0, 기한(G+0x17BC) 전이거나 G+0x16A8 bit23이면 0, +0x178 bit0 첫 세력 F가 없으면 0. 3FDAF0(100,1,플레이어 세력,년+월+일,0,0) ≤ 난이도별 문턱(D500/D508/D514/D520)이고 F의 거점이 플레이어 거점과 인접하면 1",
+   "io": "인수 없음 / 출력: 0/1",
+   "src": [
+    "rules_time.md 4.1절 72행 (디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드)",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: | AI 실행 확률(roll > 값이면 중단) | `2C5D90` +0x2C5EF6; `141A4A49C/A8/B4/C0` | 5/5/6/8/10 | 10 | 없음 |",
@@ -15129,13 +15150,16 @@
    "new": "2C9080",
    "old": "2C6CD0",
    "status": "same",
-   "curated": false,
-   "name": null,
-   "cls": null,
-   "role": null,
-   "io": null,
-   "src": [],
-   "conf": null,
+   "curated": true,
+   "name": "원거리 진형 판정",
+   "cls": "전투·피해",
+   "role": "진형 객체 벡터(+0xA8..+0xB0)가 0x20~0x23바이트면 가상 +0x48 반환, 아니면 +0xA6; &1. 세력 +0x193≥0x80이고 진형 번호 10이면 1. 진형 15·16 분기 없음",
+   "io": "입력: 세력, 진형 객체 / 출력: 0/1",
+   "src": [
+    "rules_combat.md 부록",
+    "Sonnet g38 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정 / 가상 +0x48 구현 미판독",
    "note": null,
    "docs_n": 0,
    "ctx": "엔진/문서 인용: 3. 대상 선택 `16F2D0`: 시전 부대의 위치 칸(`부대+0x2A`, 칸 번호 < 0xBD10 = 48,400)을 중심으로 반경 `iVar2 = (2C6CD0(세력, 소재지) != 0) + 1`(반경 1, 세력 영역 안이면 2)",
@@ -15143,11 +15167,7 @@
    "cited_by": [
     "docs/fidelity/pre6_tactics.md"
    ],
-   "engine_loc": [
-    "San14Sim/engine/core/init.cpp:21",
-    "San14Sim/engine/core/sim.h:44",
-    "San14Sim/engine/rules/battle.cpp:243"
-   ]
+   "engine_loc": []
   },
   {
    "new": "2C92A0",
@@ -15494,7 +15514,8 @@
    "role": "**정정(2026-11-17, 새 빌드 디컴파일)**: `2DA030(무장, 거점, 1, 0, 지정 번호)` = 빈 슬롯 `2AB710`을 골라 그 무장을 군주로 새 세력을 만들고, 거점 태수(`+0x2E`)를 바꾸고 거점 칸 소유를 넘김(`186E60` 호출은 이 이전 때문). 호출자 `2A6730`·`2E8100`(독립 추정)·이벤트 `SExecNewForce` `3A30A0`·`SExecNewForceResult` `3B5890`. 옛 \"지역 없는 칸 위 부대 칠하기\"는 옛→새 주소 대응 오류로 보임",
    "io": "-",
    "src": [
-    "rules_tribes.md 16절"
+    "rules_tribes.md 16절",
+    "rules_tribes 새 세력 절 보완(Sonnet g32, 2026-11-25)"
    ],
    "conf": "확정",
    "note": "옛 2D7C80",
@@ -16191,7 +16212,8 @@
     "rules_map.md §시정·인사·명령 진입",
     "action_schema.md GovernmentOfficer",
     "command_audit.md §6",
-    "rules_people.md 모드 본초학 주석"
+    "rules_people.md 모드 본초학 주석",
+    "상세 rules_domestic §8.1a (2026-11-25 보완: 줄 쓰기 보조값 신규 10, 줄 4는 41E7B0(세력,0xE)로 +0x15E)"
    ],
    "conf": "확정(코드)",
    "note": null,
@@ -16329,14 +16351,15 @@
    "old": "2F83D0",
    "status": "same",
    "curated": true,
-   "name": "포로 처분",
+   "name": "포로 군주 처분",
    "cls": "인사",
-   "role": "포로 석방·처형·등용 — 옛 2F83D0",
+   "role": "플레이어 포획 세력은 선택 창(807A60) 결과 1 = 해방, 그 밖은 처형(등용 선택지 없음). AI는 포로 군주 +0x15E 비트 9면 해방, 아니면 처형 표식(해시 3FDAF0(100,1,포로,포획 군주)<50 포함 규칙·혐오·고정 쌍 0x3A4/0x10A)·해방 표식(우호·의형제·배우자·부모자식·친애·혐오 아닌 혈족) 뒤 나머지는 해시 3FDAF0(100,10,…) < clamp(외교 칸+80,60,100). 처형 2979B0, 해방 261840/2ECA90. 반환 항상 1 — 옛 2F83D0",
    "io": "-",
    "src": [
-    "command_audit.md #12"
+    "command_audit.md #12",
+    "rules_people §6.3 (Gemini g23 판독, 작성자 디컴파일 대조 2026-11-25)"
    ],
-   "conf": "코드",
+   "conf": "확정(코드)",
    "note": "옛 2F83D0",
    "docs_n": 0,
    "ctx": null,
@@ -17590,7 +17613,7 @@
    "curated": true,
    "name": "난수 roll(100, …)",
    "cls": "난수",
-   "role": "계략·충성 등 판정용 난수 굴림 — 옛 3FB600",
+   "role": "계략·충성 등 판정용 해시 난수(상태 없음: 인수 합 + `G+0x45C` 시드 + `G+0x450`/k). 식은 [날짜 4.2절](rules_time.md) — 옛 3FB600 인수는 6개이며 디컴파일이 5·6번째(스택)를 생략한다. n은 해시값을 바꾸지 않고 마지막 나머지만 바꾼다(2026-11-25 호출 자리 바이트 대조). 소비처 상세 rules_time.md §4.2",
    "io": "-",
    "src": [
     "command_audit.md"
@@ -17617,7 +17640,7 @@
    "curated": true,
    "name": "난수 bounded(n)",
    "cls": "난수",
-   "role": "32비트 프로세스 전역 상태 기반. 초기 시드·다른 소비처 미확보(엔진 Rng: seed 매핑 APPROX) — 옛 3FBB00",
+   "role": "전역 상태 `DAT_141A4AB80` 전진형(n<2면 0·상태 불변). 시드 출처(`33CE60` 새 게임 타이머, `339CF0` 세이브, `42D5B0` 순 시작 재설정)·소비 단계 분류는 [날짜 4.2절](rules_time.md)(2026-11-25 코드) — 옛 3FBB00",
    "io": "-",
    "src": [
     "sim.h 주석"
@@ -17866,15 +17889,14 @@
    "old": "41C440",
    "status": "same",
    "curated": true,
-   "name": "정책 효과 합(부호 없는 합 변형, 시설 해방 조건용)",
+   "name": "정책 효과 활성 레벨 합",
    "cls": "개성·정책 효과",
-   "role": "(세력/연결 객체 vtbl+0x60, 효과 id)로 26C340을 불러 합을 반환. 호출자 2C6D40(시설 해방)·37210·40090·26E5E0·27BF20·2EA250 등. ghidra_full 확인(2026-11-07) — 옛 41C440(자동 대응; 지도 §3.2는 '옛 41C200'이라 적었으나 41C200의 새 번호는 41E570)",
-   "io": "입력: 세력/연결 객체, 효과 id. 출력: u64 합",
+   "role": "임시 항목을 전역 목록에 올리고 26C340(…,1) 호출 뒤 min(누적,10) 반환. 값 표(22DFD0)는 보지 않음(그건 41E570). 호출자 2C6D40(시설 해방 문턱 비교)·2EFA70(줄 4)·37210·40090·26E5E0·27BF20·2C6E10·2EA250·2EB020·2EB110·2F1780",
+   "io": "입력: 세력, 효과 번호 / 출력: u32 레벨 합(0..10)",
    "src": [
-    "worldmap_spec.md §3.2 항 8",
-    "ghidra_full callers"
+    "rules_domestic §8.1 (Sonnet g37 판독, 작성자 디컴파일 대조 2026-11-25)"
    ],
-   "conf": "확정(호출 관계)",
+   "conf": "확정(코드)",
    "note": "옛 41C440(자동 대응; 지도 §3.2는 '옛 41C200'이라 적었으나 41C200의 새 번호는 41E570)",
    "docs_n": 0,
    "ctx": null,
@@ -18126,7 +18148,7 @@
    "curated": true,
    "name": "불 피해(case 0x17)",
    "cls": "전투·피해",
-   "role": "B 칸(s∈{5,11})에 타일 불이 있는 칸 위 부대 피해",
+   "role": "B 칸(s∈{5,11})에 타일 불이 있는 칸 위 부대 피해. 지역 황폐·치안 판정에 176E70을 두 번 사용(2026-11-25)",
    "io": "-",
    "src": [
     "command_audit.md §15",
@@ -19960,15 +19982,23 @@
    "note": null,
    "docs_n": 0,
    "ctx": null,
-   "engine_loc": [],
-   "name": "계략 14 성공률",
+   "engine_loc": [
+    "Game::strat_rate / strat14_action"
+   ],
+   "name": "계략 14",
    "cls": "계략",
-   "role": "1E0890과 같은 꼴, 상수 미판독",
+   "role": "성공률·결과·효과(개발 최대값 −X, 치안 −Y). 엔진 구현(기본 꺼짐 `TU_L2` 4096) 계략 14 보완(2026-11-25, Gemini g19 + 대조): 대성공이면 2AA9E0 후보 칸·2D53F0 부대 생성(세력 0x33 도적, 개성 0x53~0x56·지방 코드 조건이면 이민족 0x2E~0x31), 부대를 못 만들면 등급 1로 강등. 우호도 −5는 실패·성공에만, 대성공 제외",
    "io": "-",
    "src": [
-    "lane_L2_4.md"
+    "lane_L2_5.md 3b",
+    "2026-11-08",
+    "rules_diplomacy §5.3"
    ],
-   "conf": "미해결(상수)"
+   "conf": "확정",
+   "also": [
+    "1ECF40",
+    "1FC530"
+   ]
   },
   {
    "new": "2EE750",
@@ -20345,7 +20375,7 @@
    "engine_loc": [],
    "name": "부대 판단표 진입",
    "cls": "AI 판단",
-   "role": "건너뛰기 조건(순서대로): ① AI 비활성, ② `부대+0x58`로 세력 획득(`22E560`)·`C21A0` 실패, ③ `2CB6C0(부대)!=0`(수동), ④ `부대+0x10==2`(군세 종류 2)이면 군단 행동설정`+0x14==0xC` 조건에서만 `9D870`으로 계획 획득·경유점 설정 후 리턴(그 밖 종류 2는 그냥 리턴), ⑤ `부대+0x37`(행동값)-0xB가 byte로 1 이하이면(== 0xB 또는 0xC) `C7E50(경유점)`·`C70F0(길찾기)`만 하고 리턴. 위 조건 모두 아니면 `B9920(AI, 부대)`으로 판단표 인스턴스 → vtable`+0x80`. 351바이트. 호출 `D4D00`(자리 `D4D2E`)",
+   "role": "건너뛰기 조건(순서대로): ① AI 비활성, ② `부대+0x58`로 세력 획득(`22E560`)·`C21A0` 실패, ③ `2CB6C0(부대)!=0`(수동), ④ `부대+0x10==2`(군세 종류 2)이면 군단 행동설정`+0x14==0xC` 조건에서만 `9D870`으로 계획 획득·경유점 설정 후 리턴(그 밖 종류 2는 그냥 리턴), ⑤ (2026-11-25 정정, Sonnet g30 판독 + 디컴파일 대조) `+0x10 ≠ 2`이면 `C7E50(경유점)`, 군세 종류가 마스크(8~11, 13~16, 21, 22)면 `C70F0(길찾기)`, 그다음 `부대+0x37`(행동값)이 0xB·0xC가 아닐 때만 판단표 실행. ~~옛 해석: 0xB·0xC이면 C7E50·C70F0만 하고 리턴~~ 위 조건 모두 아니면 `B9920(AI, 부대)`으로 판단표 인스턴스 → vtable`+0x80`. 351바이트. 호출 `D4D00`(자리 `D4D2E`)",
    "io": "(AI 관리자, 부대)",
    "src": [
     "ghidra_full.py func B65D0 (1a4a447d, 2026-11-25)"
@@ -20465,6 +20495,567 @@
     "ghidra_full.py func/callers (1a4a447d, 2026-11-25)"
    ],
    "conf": "확정(코드)"
+  },
+  {
+   "new": "24C8C0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "부대 목록 정렬(이동 누산기 내림)",
+   "cls": "이동·경로",
+   "role": "목록 저장소(DAT_1427D4130)의 목록 하나를 부대 +0x14(u16) 내림차순 안정 삽입 정렬(앞 노드보다 클 때만 앞으로, 같으면 유지). 노드 {+0 객체, +8 next, +0x10 prev}",
+   "io": "인수: 저장소, 목록 번호 / 없음",
+   "src": [
+    "rules_time.md 2절 7·8행 (Gemini g18 판독 + 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "2C9330",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "이동 대상 수집 조건",
+   "cls": "이동·경로",
+   "role": "부대가 그날 이동 처리 목록에 드는지(참=포함). 거절: 무효, +0x10==2이면서 233BB0(,3)≠0 또는 +0x26 bit1=0, +0x24≠0(저지), 2B7450==0xBD10, 2CB6C0≠0, 234DE0≠0, 2B75C0==0xBD10. 그 뒤 보조 목표 +0x3C·행동 +0x37별 목표 칸·주변 칸 검사, 끝에서 +0x37 ∈ {0xB,0xC}면 포함",
+   "io": "인수: 부대 / 출력: bool",
+   "src": [
+    "rules_movement.md 저지 게이지 행 (Gemini g18 판독, 앞쪽 거절만 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(거절·분기 구조) / 추정(하위 헬퍼 뜻)"
+  },
+  {
+   "new": "37DF00",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "목록 비우기 래퍼",
+   "cls": "이동·경로",
+   "role": "래퍼 +8의 목록 핸들이 있으면 크리티컬 섹션 안에서 1400186D0으로 그 목록을 비움",
+   "io": "인수: 래퍼",
+   "src": [
+    "rules_time.md 2절 (Gemini g18 판독 + 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "1696B0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "교전 쌍 정렬 비교",
+   "cls": "전투·피해",
+   "role": "키 순서: 대상 종류≠0xB면 기록 +0x10 byte 오름, +0x12 u16 오름 → 종류 같고 0xB면 시설 정의(world+0x73958)[+0x12]의 +0x2C 오름 / 종류 다르면 0x1B>5>6>0xB 앞 → 대상 id 오름 → 공격 기술자 +0x08 byte 내림, +0x0A u16 내림 → 공격 종류 0x1B>5>6 앞 → 공격 id 오름. 난수 없음",
+   "io": "입력: (ctx, 기록 a, b) / 출력: a가 앞이면 1",
+   "src": [
+    "rules_combat.md §5",
+    "Gemini g25 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정"
+  },
+  {
+   "new": "168020",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "교전 쌍 목록 정렬",
+   "cls": "전투·피해",
+   "role": "이중 연결 목록 삽입 정렬(두 번째 노드부터, 1696B0 참이면 앞으로). 171160이 쌍을 만든 뒤 ctx+0x90에 적용. 키가 모두 같은 두 기록은 뒤 기록이 앞으로 갈 수 있음(추정)",
+   "io": "입력: 목록 헤더 / 없음",
+   "src": [
+    "rules_combat.md §5",
+    "Gemini g25 판독 2026-11-25 (미대조)"
+   ],
+   "conf": "추정"
+  },
+  {
+   "new": "168E30",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "쌍 기록 연출 객체 정리",
+   "cls": "전투·피해",
+   "role": "기록 +0x28 객체의 +0x70 bit1 해제 후 3804E0, 포인터 0",
+   "io": "입력: 기록",
+   "src": [
+    "rules_combat.md §5",
+    "Gemini g25 판독 2026-11-25 (미대조)"
+   ],
+   "conf": "추정"
+  },
+  {
+   "new": "16FA40",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "칸 점유자 판정",
+   "cls": "전투·피해",
+   "role": "도시(5) → 관문(6) → 부대(0x1B, 234DE0==0일 때만; 참인 부대면 0xFF로 끝) → 시설(0xB) 순으로 하나",
+   "io": "입력: 칸 / 출력: 종류(0xFF 없음), id",
+   "src": [
+    "rules_combat.md §5",
+    "Gemini g25 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정"
+  },
+  {
+   "new": "2CC790",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "공격 사거리 판정",
+   "cls": "전투·피해",
+   "role": "R = 야전 (2C9080≠0)+1·도시 칸 3·관문 칸 2, 대상 칸이 도시면 R+1; 2ACB80≤R·병력>0·2CC630 적대면 1; 혼란 +0x23·거점 +0x49면 0, 도발이면 고정 목표 일치 필요",
+   "io": "입력: 공격 칸, 대상 칸 / 출력: 0/1",
+   "src": [
+    "rules_combat.md §7",
+    "Sonnet g35 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정"
+  },
+  {
+   "new": "17E690",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "전법 대상 후보 판정",
+   "cls": "전법",
+   "role": "부대: 17E810≠0 + (고정 목표 일치 또는 +0x25==0이고 +0x37 조건); 세력 비교; 거점: 17E9A0≠0 + (+0x4B==0 또는 고정 목표 일치)",
+   "io": "입력: 공격·대상 기술자 / 출력: 0/1",
+   "src": [
+    "rules_combat_effects.md E1",
+    "Sonnet g36 판독 2026-11-25 (미대조)"
+   ],
+   "conf": "추정"
+  },
+  {
+   "new": "2E6BD0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "화계 명령 실행기",
+   "cls": "전법",
+   "role": "부대 목록 전부; +0x37==0x10·+0x23..25가 0·목표 칸 불 없음·경유점 없음·적대 건물이고 2ACB80==1(도시 2)이면 2E62E0",
+   "io": "입력: 없음",
+   "src": [
+    "rules_combat_effects.md E8",
+    "Sonnet g34 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정"
+  },
+  {
+   "new": "2E62E0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "화계 실행",
+   "cls": "전법",
+   "role": "269BC0 확률로 3FDAF0(100,1,목표 칸,2×부대 칸,무장,0) ≤ p면 성공, 실패면 269930으로 같은 굴림 재판정(역화), 실패 사기 −141A4BD10, 성공 경험·관계 변동, 불 세기 → 점화 2E5DA0",
+   "io": "입력: 부대, 칸",
+   "src": [
+    "rules_combat_effects.md E8",
+    "Sonnet g34 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정(흐름) / 상수 미확인"
+  },
+  {
+   "new": "269BC0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "화계 성공 확률",
+   "cls": "전법",
+   "role": "방어 측 0x19면 0, 공격 측 0x19면 100, 아니면 지력 차/2 + 지형 + 상태 + 보너스",
+   "io": "입력: 무장, 칸, 알림 / 출력: %",
+   "src": [
+    "rules_combat_effects.md E8",
+    "Sonnet g34 판독 2026-11-25 (미대조)"
+   ],
+   "conf": "추정"
+  },
+  {
+   "new": "269930",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "화계 역화 확률",
+   "cls": "전법",
+   "role": "(지형/5 + c×방어 지력/100 − 공격 지력/2) + 141A4D32C, 하한 141A4D344",
+   "io": "입력: 부대, 칸 / 출력: %",
+   "src": [
+    "rules_combat_effects.md E8",
+    "Sonnet g34 판독 2026-11-25 (미대조)"
+   ],
+   "conf": "추정"
+  },
+  {
+   "new": "176E70",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "확률 판정 보조",
+   "cls": "전법",
+   "role": "p를 141345C4C로 자르고, p>0이면 roll = 3FDAF0(10000,k,a,b,c,d), roll < int(p×c8c/c4c)면 참. 호출자 43E660뿐(지역 황폐·치안 판정). 옛 해석 「지역 치안 감소」는 정정",
+   "io": "입력: float p, 굴림 출력*, 해시 인수 / 출력: bool",
+   "src": [
+    "rules_combat.md U12",
+    "Sonnet g34 판독 + 작성자 디컴파일 대조 2026-11-25"
+   ],
+   "conf": "확정"
+  },
+  {
+   "new": "257090",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "시정 자동 배치 정렬 비교자",
+   "cls": "개성·정책 효과",
+   "role": "노드 {무장, +8 점수, +0xC 가중치}. 250290→257090(레벨×효과수 우선), 2504F0→257480(레벨, 효과수 순), 2503C0→257240(곱, 효과수, 분기). 순서는 rules_domestic §8.1a",
+   "io": "입력: 노드 2개 / 출력: bool(왼쪽이 앞)",
+   "src": [
+    "Gemini g17 판독 + 작성자 대조 2026-11-25"
+   ],
+   "conf": "확정(코드) / 노드 필드 이름 추정"
+  },
+  {
+   "new": "232350",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "무장 시정 배치 코스트",
+   "cls": "개성·정책 효과",
+   "role": "max(1, 무장+0x182 + 정책+0xA2); 군주 검사 생략=0이고 군주와 +0x14C가 같으면 출력 플래그=1, −DAT_141A4B0E4(3), 최소 1. 난수 없음",
+   "io": "입력: 무장, 출력 플래그*, 군주 검사 생략 / 출력: u32",
+   "src": [
+    "Gemini g17 판독 + 작성자 대조 2026-11-25"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "2B94B0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "이벤트 72 이민족 출병",
+   "cls": "이민족·도적",
+   "role": "게이트 2C8140 통과 뒤 이민족 거점 장수를 가장 가까운 플레이어 거점으로 출병(1EDC30). 해시 1회는 게이트 안",
+   "io": "인수 없음",
+   "src": [
+    "rules_time.md 4.1절 72행 (Sonnet g33 판독, 게이트·문턱·유형 코드 디컴파일 대조 2026-11-25)"
+   ],
+   "conf": "확정(코드) / 추정(목록 A·E 추가 방식)"
+  },
+  {
+   "new": "B29250",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "블랙보드 정수 쓰기",
+   "cls": "AI 판단",
+   "role": "블랙보드의 임계 구역(`+8` 객체 `+0x10`)에 들어가 키(32비트 해시)가 같은 항목이 있으면 값을 덮어쓰고 종류 칸을 2로 둔다. 값은 8바이트 칸에 zero-extend. 덮어쓰기는 저장소 `+0x18` 바이트 플래그가 0이 아닐 때만이고 **플래그가 0이면 항상 끝에 추가**(읽기 `B28BB0`는 첫 항목; 플래그 값은 판단표 파일 `IBBG` 청크 `+0x10` 바이트 = 1로 읽혀 덮어쓰기, 메모리 미확인), 없을 때는 끝에 추가·용량이 차면 `B28B30`으로 확장(실패 시 0) [Sonnet 판독 2026-11-25·미검증]. 성공 여부를 char로 반환. 읽기 쪽 짝은 `B28BB0`(정수)·`B28D20`(객체)",
+   "io": "(블랙보드, 키, 값) → char",
+   "src": [
+    "ghidra_full.py func/callers (1a4a447d, 2026-11-25)",
+    "사용 예 AI_TacticsMod/src/native_ai_nodes.inl:910"
+   ],
+   "conf": "코드(앞부분만 판독)"
+  },
+  {
+   "new": "43830",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "지역 점령 출진 명령 채우기",
+   "cls": "AI 판단",
+   "role": "`27A00`에서만 호출. `(노드, 무장, 목표 칸 객체, cmd, 병력)`. `[0]`=무장, `[3]`=진형(`43020()`의 `22F7A0`), `[4]`=`43660`, `[2]`=병력(`433C0`, ai/roles.md 6-3b D04 보강 2; 거점 `+0x9C`==0이면 1000으로 두고 진형을 가장 점수 높은 것으로 다시 고름), `[13]`=1(이동), `[14]`=9(칸), `[15]`=목표 칸(`22F830`), `[17..20]`=1,0,0,2, 끝에서 `D3C70(무장, 진형, cmd)`",
+   "io": "위와 같음",
+   "src": [
+    "ghidra_full.py func 43830 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "26D660",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "모드별 우방 판정(군주 성향 가중합)",
+   "cls": "AI 판단",
+   "role": "`(모드, 세력1, 세력2)`. 같은 세력 0. 동맹 바이트 하위 7비트 > 5(또는 두 세력 `+0x12` bit1)·우호도 등급 5(`2AF940`)·세력2 군주가 세력1 군주 혐오 목록(`22D280`, 무장 `+0xD0`)에 없음일 때만(4차 정정) 점수 −60(두 군주 `+0x17A` ≥ 20이면 −10) + 가중합(세력1 군주 적성 `+0x16A`·`+0x16C`·`+0x16E`·`+0x178`·`+0x17C`) > 0 이면 1. 가중치 모드 0..3 = (2,6,4,2,0)·(2,2,0,2,4)·(4,0,0,0,4)·(0,0,2,4,2)",
+   "io": "호출: `28D20`(모드 0), District 19 `88780`(1·2), 조건 160",
+   "src": [
+    "ai/unresolved.md 3-4"
+   ],
+   "conf": "확정(식)/뜻 가설"
+  },
+  {
+   "new": "2AA2F0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "군단 접경 적 도시 목록",
+   "cls": "AI 판단",
+   "role": "군단 거점마다 인접 거점(`230D60`) 중 세력 1..51, 관문·항구(0x34..0x3D) 아님, `2C5C50`(같은 편)==0, 이민족 아님인 도시를 중복 없이 모음",
+   "io": "호출: District 19",
+   "src": [
+    "ai/unresolved.md 3-4"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "232CC0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "군단 군정 등급 / 세력 등급별 군정 상한",
+   "cls": "AI 판단",
+   "role": "`232CC0` = 군단 `+0x24` × 100(`141A4B9B4`) / `232C50(세력)` = 군정 비율 %, 25·50·75(`141A4B9C0`·`9C8`·`9D4`) 이상이면 2·3·4, 아니면 1. `232C50` = 세력 `+0x47` 묶음(1·2·3·10·11·12 / 4·5 / 6·7 / 그 밖)별 상수 200000·150000·100000·50000(EXE 초기값, 직접 쓰기 xref 없음 — 12바이트 간격 표 모양이라 일괄 로더 여부는 X10 실측으로 닫음; 4차)",
+   "io": "호출: District 20",
+   "src": [
+    "ai/unresolved.md 3-1"
+   ],
+   "conf": "확정(식)"
+  },
+  {
+   "new": "2D9530",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "거점 출진 가능 무장 목록 / 정리",
+   "cls": "AI 판단",
+   "role": "`2D9530` = 소재 거점·인발 표식·`+0x15E` bit0·부대 소속 거름. `2A26B0` = 중상 무장(소속 거점 vcall `+0x68`==0이면)과 대신할 무장이 없는 군주를 뺌",
+   "io": "호출: Foothold 32, `2FE10`, `2AB90`, `BBEC0`, 수송 UI `7328F0`",
+   "src": [
+    "ai/unresolved.md 3-4"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "276C0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "자동 칠하기 방어 출진 보조: 군세 경로의 지역 통과 / 군세가 지역에 묶임",
+   "cls": "AI 판단",
+   "role": "`276C0(_, 군세, 목표 칸, 지역)`: 군세 소속 부대마다 경로(`185710` 1·0x21·2) 칸 중 지역 일치 → 1. `27920(_, 군세, 지역)`: 군세 칸 목록 `+0x18`·목표(`+0x14` 종류, `+0x16`)의 지역 일치 → 1. 호출: `2CBC0`만(`2CFEB`·`2D0F9`·`2D19B`)",
+   "io": "→ 0/1",
+   "src": [
+    "ai/roles.md 2-3-5"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B19B0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "도시 쌍별 지역 목록 지도 예외표",
+   "cls": "AI 판단",
+   "role": "두 거점이 모두 도시일 때 고정 번호 쌍 13개에 대해 지역 목록에서 특정 지역(`world+0x6CAF0`[n])을 빼거나 비우고 다시 채움(2704바이트, 쌍별 표는 ai/roles.md 2-3-5). 호출: `2AB90`(`2AE8F`), `BC4F0`(`BDEFA`)",
+   "io": "(거점A, 거점B, 지역 목록) → 목록 수정",
+   "src": [
+    "ai/roles.md 2-3-5"
+   ],
+   "conf": "코드((32,13) 갈래 세부 미판독)"
+  },
+  {
+   "new": "BB3C0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "시설 효과 범위",
+   "cls": "AI 판단",
+   "role": "덮어쓰기 벡터(정의 `+0x50..+0x58`)가 0x4C바이트면 vcall `+0x48`(정의 `+0x2C` 분류, 항목 3, 종류)로, 아니면 정의 `+0x37` 바이트. 시설 종류(`22F6E0`)가 9·10·16이 아니고 `3ED810` 참이면 `3EC920(…, 0x25)` 값을 더한다(기록 `368F20(0x25, …)`). 상수 getter가 아니다. 호출 9곳: 위보 해소 `CF150`(함정 정의), 시설 효과 대상 목록 `2AD8F0`(이 값을 고리 반경 `2A9C90`으로 씀), 건설 진행 `2EA410`, `1819A0`·`191EB0`·`2AD730`·`348800`·`35AEA0`",
+   "io": "(시설 정의) → 범위",
+   "src": [
+    "ai/roles.md 7-5",
+    "functions.md `2AD8F0`"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "22D280",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "무장 혐오 목록 / 친애 목록",
+   "cls": "AI 판단",
+   "role": "`22D280` = 무장 `+0xD0` 8칸(혐오), `22FDA0` = `+0xC0` 8칸(친애)을 객체 목록으로. 셋째 인수 ≠ 0이면 번호 0x13ED~ 100개를 `world+0x84F30` 표로 바꿔 읽음. 쓰는 곳: 조건 47 `ABEF0`→`22D280`, 조건 48 `AD2F0`→`22FDA0`, 무장정보 28→`22FDA0`·29→`22D280`, `26D660`→`22D280`, 관계 점수 `2A8D50`(친애 +, 혐오 −)",
+   "io": "(무장, 출력 목록, 특수 치환)",
+   "src": [
+    "rules_people.md 친애·혐오",
+    "ai/conditions.md 47·48"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B7DC0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "부대 경유 칸 고르기",
+   "cls": "AI 판단",
+   "role": "인수 (부대, 지역 객체(+0x3A 중심 칸), 후보 칸 목록, 결과 목록, 정렬 방식). 예산 (int)2B2550(부대,22CAD0,0,0,0)×0x78에서 185710(…,1,1,2) 길 비용을 빼며 후보 중 현재 칸에서 거리 ≥ 2인 첫 칸을 경유 칸으로 최대 5개. 난수 없음",
+   "io": "인수: 위 5개 / 출력: 결과 목록",
+   "src": [
+    "ai/roles.md 6-1절 (Gemini g22 판독 + 디컴파일 대조 2026-11-25; 입력 B9070은 옛 RVA, 현재 BA100)"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "22EDF0",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "군단 → 군단장 소속 거점",
+   "cls": "AI 판단",
+   "role": "+0x12(u16 군단장 무장 번호, <0x1771이면 world+0x158 표, 아니면 world+0x73A50)의 무장 +0xE2로 32E3B0 호출",
+   "io": "인수: 군단 / 출력: 거점 객체",
+   "src": [
+    "ai/node_kinds.md 정정 기록 (2026-11-25 디컴파일)"
+   ],
+   "conf": "확정(코드)"
+  },
+  {
+   "new": "376020",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [
+    "Game::duel_fight"
+   ],
+   "name": "접전 장면 진입 / 사망 판정·허용",
+   "cls": "전투·피해",
+   "role": "사망은 hp 0 뒤 허용 술어(혈연·애호·군주·포로 등) 보완(Sonnet g39 + 작성자 디컴파일 대조 2026-11-25): 376A70 = 게이트 376540 통과 뒤 M=max(능력0..4), T=int(max(0,141A4C39C−M)×(+0x161+1)×c)/(141A4C3A4×2)를 0..30으로 자르고 + 승자 부대 효과 0x52, 설정 q%; 3FDAF0(100,1,무장 번호,부대 번호) < T면 사망. 376FB0(일격) = c에 141A4C364를 더 곱하고 상한 60, 해시 4번째 인수 = 승자 +0xE2. 376540 = 패자 +0xF1≠0·신분 1~3·같은 세력·관계 술어·+0xB2 같음·+0x15E bit9·효과 0x35면 0. 상세 rules_combat.md §9.5",
+   "io": "-",
+   "src": [
+    "lane_L2_5.md"
+   ],
+   "conf": "확정",
+   "also": [
+    "376A70",
+    "376FB0",
+    "376540"
+   ]
   }
  ],
  "globals": [
