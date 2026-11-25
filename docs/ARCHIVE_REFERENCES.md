@@ -5,10 +5,12 @@
 | 과거 논리 경로 | 자료 성격 | 현재 조회 방법 |
 |---|---|---|
 | `San14Sim/docs/fidelity/` | 이전 주제별 유도·실측·정정 | 공개 분야별 통합 문서를 우선하고 누락된 근거는 로컬 캐시에서 재확인 |
+| `San14Library/archive/` (`fidelity/`, `RULES.md` 등) | 2026-11-25 San14Sim을 은퇴시키며 옛 문서·실측 기록을 옮긴 보관소. 문서의 `San14Library/archive/…` 인용은 위 `San14Sim/docs/…`와 같은 자료 | 위와 같음 |
+| `San14Library/reports/2026-11-25_판독/` (`sN`·`cN`·`gN`) | 판단표 노드·원작 함수 정적 판독 보고서 원문(Sonnet·Codex·Gemini). 문서의 「판독 2026-11-25·미검증」 표시가 가리킴 | 가설로 취급. 「코드 확인」 표시만 대조된 사실이며 나머지는 `library.ps1 func …`로 재확인 |
 | `AI_TacticsMod/research/ghidra_full/` | 원작 코드 전수 추출 | `library.ps1 func/callers/callees/xref ...` |
 | `AI_TacticsMod/research/decomp_cache/` | 주소별 코드·asm 추출 | 새 로컬 캐시와 검증된 분석 사본의 바이트를 조회 |
 | `REA_Analysis/` | 초기 조사와 AI 데이터 추출 | 공개된 AI 통합 해석·자료 위치 문서, `library.ps1 data bt` |
-| `San14Sim/engine/` | 별도 시뮬레이터의 구현·근사 | 원작 의미의 증거로 대신하지 않음. 이 저장소에는 미포함 |
+| `San14Sim/engine/` | 별도 시뮬레이터의 구현·근사(2026-11-25 삭제, 공개 문서에서 엔진 대응 칸·절도 걷어 냄) | 원작 의미의 증거로 대신하지 않음. 이 저장소에는 미포함 |
 | `reference_mod/` | 타 모더 자료·참고 분석 | 바이너리와 소스 미포함. 해당 자료의 권리·배포 조건을 별도 확인 |
 
 새 기여는 공개된 기존 설명과 자신의 대상 빌드에서 재현할 수 있는 RVA·조회 명령·해석으로 보완한다. 과거 문서의 줄번호는 해당 역사 출처의 줄번호이며 이관 후 줄번호와 같다고 가정하지 않는다.

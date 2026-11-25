@@ -1,6 +1,6 @@
 # 원작 아카이브 형식: 0002 rdb 묶음 · 0002/data · 0005 bin (K4, 2026-11-07)
 
-범위: `0002/*.rdb`(+ `.rdb.bin<뱅크>`), `0002/data/*.file`, `0005/00N.bin`. 코드: `San14Sim/origlib/rdb.py`, `San14Sim/origlib/bin0005.py`, 시험 `San14Sim/tests/test_origlib_rdb.py`(6개 통과). 산출물: `San14Sim/origlib_out/rdb/`(21MB, 원본 내용 사본 없음).
+범위: `0002/*.rdb`(+ `.rdb.bin<뱅크>`), `0002/data/*.file`, `0005/00N.bin`. 코드: `San14Library/origlib/rdb.py`, `San14Library/origlib/bin0005.py`, 시험 `San14Library/tests/test_origlib_rdb.py`(6개 통과). 산출물: `San14Sim/origlib_out/rdb/`(21MB, 원본 내용 사본 없음).
 정책(사용자 2026-11-07): 한국어(KO)만. 언어 표지가 KO이거나 없는(중립) 항목만 내용 해독, 다른 언어(EN/JP/SC/TC) 항목은 목록에만 둔다. 소리·영상은 목록만.
 확신도 표기: **확정**(코드·덤프 근거) / 추정 / 미해결. 주소(RVA)는 이 문서에 없다(파일 형식만 다룬다).
 
@@ -119,9 +119,9 @@ rdb·0005에는 언어별 폴더가 없고, 언어 표지는 **이름 안의 접
 - `rdb.classify(a, e)`(항목 요약 dict), `rdb.export_catalog(outdir)`, `rdb.export_data_files(outdir)`, `rdb.parse_sprite_table/parse_g1t_head/parse_dok/parse_lcsk_head`, `rdb.lang_class/lang_tokens`, `rdb.open_data_file/read_data_file`.
 - `bin0005.portrait_location(face_id, kind)` → `(파일 번호, 0 기반 항목)`; `portrait_identity(파일 번호, 항목)`은 `(얼굴 번호, 종류)` 역변환이다. `bin0005.open(n)` → `.entries`, `.raw(i)`, `.read(i)`(G1T 바이트), `.head(i)`; `bin0005.export_catalog(outdir)`은 각 항목에 `face_id`와 `portrait_kind`를 포함한다. `bin0005.unpack_zp1(bytes)`.
 - 모듈 이름이 내장 `open`을 가리므로 `from origlib import rdb; rdb.open(...)` 형태로 쓴다. CLI·`__init__.py` 등록은 K3 소유(보고만).
-- 재생성: `python -X utf8 -c "import sys;sys.path.insert(0,'San14Sim/origlib');import rdb,bin0005;rdb.export_catalog('San14Sim/origlib_out/rdb');rdb.export_data_files('San14Sim/origlib_out/rdb');bin0005.export_catalog('San14Sim/origlib_out/rdb')"`(약 30초, 메모리 1GB 이하, 읽기 전용).
+- 재생성: `python -X utf8 -c "import sys;sys.path.insert(0,'San14Library/origlib');import rdb,bin0005;rdb.export_catalog('San14Library/origlib_out/rdb');rdb.export_data_files('San14Sim/origlib_out/rdb');bin0005.export_catalog('San14Sim/origlib_out/rdb')"`(약 30초, 메모리 1GB 이하, 읽기 전용).
 
-## 7. 산출물 (`San14Sim/origlib_out/rdb/`)
+## 7. 산출물 (`San14Library/origlib_out/rdb/`, 보관하지 않음 — 6절 명령으로 다시 만든다)
 `system|KIDSSystemResource|ScreenLayout|FieldEditor4|CharacterEditor|MaterialEditor|RRPreview.jsonl`(항목별 한 줄: archive·idx·ktid·type·type_name·category·dsize·locator·bank_file·offset·entry_size·magic·info·lang), `data_files.jsonl`(12), `bin0005.jsonl`(645), `sprites_ko.jsonl`(KO·중립 스프라이트 표 6,118개 내용).
 
 ## 8. 충돌 · 미해결

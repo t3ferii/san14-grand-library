@@ -1,6 +1,6 @@
 # 원작 AI 행동 트리·룰베이스 통합 (K2)
 
-작성 2026-11-07. 기준 빌드: Steam buildid 25953386, 해제본 `1a4a447d`(AI_TacticsMod/docs/SESSION_RULES.md 7절). 게임·REA·Codex 미실행. 판단표 `0000/bt_exce.bin` 을 **현재 파일에서 재파싱**했고, 조건 함수는 `ghidra_full.py` 현재 빌드 추출본을 직접 읽었다. 시뮬은 원작 AI 판단을 복제하지 않으므로(RULES) 이 자료는 조사·참고용이다.
+작성 2026-11-07. 기준 빌드: Steam buildid 25953386, 해제본 `1a4a447d`(AI_TacticsMod/docs/SESSION_RULES.md 7절). 게임·REA·Codex 미실행. 판단표 `0000/bt_exce.bin` 을 **현재 파일에서 재파싱**했고, 조건 함수는 `ghidra_full.py` 현재 빌드 추출본을 직접 읽었다. 이 자료는 조사·참고용이다.
 
 확신도: **확정**(판단표 노드·코드 직접 확인) / **추정**(구조+문맥) / **미해결**. 새 확정 사실은 해당 절·파일에 추가한다.
 
@@ -9,7 +9,7 @@
 1. **원본 판단표가 바뀌었다.** 현재 `0000/bt_exce.bin`(SHA `315f16d0f27cf511...`)은 옛 분석 파일과 다르다. 군단 트리 10,312 -> **10,790**(+478), 세력·군세·부대는 동일. 옛 문서의 군단 N번호는 모두 어긋난다(예: 옛 N711 = 현재 N722, 옛 N1883 = 현재 N1917). 변환표: `ai/diff_bt_exce.md`. 노드 종류는 그대로 232종, 조건 op 13·14(모병·훈련 담당관 있음)만 새로 쓰인다.
 2. **조건 함수 132종의 의미를 정리했다.** 확정 53 / 추정 57 / 미해결 22(이전에는 미해석 107종; L3b·L3 5차에서 확정 계열 116 / 순수 추정 16 / 미해결 0 으로 갱신: ai/conditions.md). 옛 RVA(`C2610` switch)는 현재 `C36A0` 으로 바뀌어 대부분의 개별 조건 함수 주소가 달라졌다. 전수표 `ai/conditions.md`.
 3. 군단 판단표는 **행동설정 0(또는 플레이어 소속)/1/2 세 분기**(N722/N4513/N8015)가 같은 역할 묶음을 반복하고, 일반 거점 공격 5노드(방식 8/9/10/11/22)는 분기 0 에만 있다.
-3-1. 교차 검증: K3 의 `origlib.load_bt()` 파서(San14Sim/origlib/misc0000)와 이 문서의 재파싱(REA 파서)을 4개 트리 11,495 노드 전부 대조해 종류·부모·자식 수·인수(부호 있는 값은 32비트로 환산)가 일치함(불일치 0, 실행 확인). 노드 수 10,790 은 K3 통지와 같다.
+3-1. 교차 검증: K3 의 `origlib.load_bt()` 파서(San14Library/origlib/misc0000)와 이 문서의 재파싱(REA 파서)을 4개 트리 11,495 노드 전부 대조해 종류·부모·자식 수·인수(부호 있는 값은 32비트로 환산)가 일치함(불일치 0, 실행 확인). 노드 수 10,790 은 K3 통지와 같다.
 4. **AI 판단표는 0002 rdb·fixdata 가 아니라 평문 `0000/bt_exce.bin`, 수식은 `0000/param_s.bin` 에 있다.** AI 모드는 두 파일을 쓰지 않는다. 형식·위치: `ai/data_locations.md`.
 5. **충돌 2건**: (a) 문서(rules_tribes.md, lane_L3.md)의 호출 사슬 `442200 -> 44F2F0 -> 43DCB0` 은 현재 빌드에서 AI 관리자로 이어지지 않는다(§8), (b) 조건 110 은 코드가 군단 +0x17(방침)을 읽는데 ai_trace 문서는 "중시항목"으로 추정했다.
 
@@ -126,10 +126,10 @@
 | REA_Analysis/*_행동트리.pseudo.cpp (4개) | 낡음 | 구조 래퍼 11,017 노드. 현재는 ai/pseudo_*.txt 로 대체 |
 | REA_Analysis/predicates_recovered.md, predicates_partial.md, condition137_score.md | 현재와 일치 확인 | 조건 118/121/137/138/146 필드 해석(현재 빌드 코드로 재확인: 118=+0x11, 121=bit1, 137, 138, 146=+0x140) |
 | REA_Analysis/data_model.md | 현재 | 객체 필드 표(세력·군단·무장·도시·지역·부대) |
-| San14Sim/docs/fidelity/node_kinds.md, node_kinds.json | 옛 빌드 RVA | kind->클래스 목록. 현재 RVA 는 ai/node_kinds.md 로 대체 |
-| San14Sim/docs/fidelity/conditions.json | 옛 빌드(C2610) | 조건 switch 167칸 호출 대상. 현재 C36A0 에서 다시 뽑음(op 2 의 옛 ACD10 -> 현재 ADC70 등 대부분 바뀜) |
-| San14Sim/docs/fidelity/lane_L3.md, lane_L4.md | 현재(단, 43DCB0 호출 사슬은 충돌) | 날짜 상태기계 44DEE0, 이민족 호출 구조 |
-| San14Sim/docs/fidelity/build_remap.md, rva_map/functions.tsv | 현재 | 옛->현재 RVA 변환 |
+| San14Library/archive/fidelity/node_kinds.md, node_kinds.json | 옛 빌드 RVA | kind->클래스 목록. 현재 RVA 는 ai/node_kinds.md 로 대체 |
+| San14Library/archive/fidelity/conditions.json | 옛 빌드(C2610) | 조건 switch 167칸 호출 대상. 현재 C36A0 에서 다시 뽑음(op 2 의 옛 ACD10 -> 현재 ADC70 등 대부분 바뀜) |
+| San14Library/archive/fidelity/lane_L3.md, lane_L4.md | 현재(단, 43DCB0 호출 사슬은 충돌) | 날짜 상태기계 44DEE0, 이민족 호출 구조 |
+| San14Library/archive/fidelity/build_remap.md, rva_map/functions.tsv | 현재 | 옛->현재 RVA 변환 |
 | AI_TacticsMod/research/AI_Analysis/all_behaviors/render_all_trees.py, node_catalog.json, recovered_node_map.json, 한국어변수대응.json | 재사용 | 한국어 표기 규칙·변수 이름·노드 클래스 한국어. 현재 트리에 다시 적용 |
 | AI_TacticsMod/research/AI_Analysis/all_behaviors/AI_행동패턴_읽기.md, *_의사코드.txt | 개념 유효 / 군단 N번호 낡음 | 영역별 흐름·수치. 번호는 diff_bt_exce.md 로 변환 |
 | AI_TacticsMod/research/AI_Analysis/deep/분석근거.md, formula_expressions.json | 유효 | 전투력·성향·수식 100개 |

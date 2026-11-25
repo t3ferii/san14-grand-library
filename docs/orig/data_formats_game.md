@@ -1,13 +1,13 @@
 # 삼국지14 원본 데이터 파일 형식 — 게임 데이터 해체 (0000 · 0001_KO · 0004 · 0010_KO · DLC)
 
-생성: `python -X utf8 -m origlib.gen_doc` (San14Sim 에서). 코드: `San14Sim/origlib/`, 시험: `San14Sim/tests/test_origlib.py`, 사용법: `San14Sim/origlib/README.md`.
+생성: `python -X utf8 -m origlib.gen_doc` (San14Library 에서). 코드: `San14Library/origlib/`, 시험: `San14Library/tests/test_origlib.py`, 사용법: `San14Library/origlib/README.md`.
 이 문서의 표(필드·미해결 분포·stride·opcode 통계)는 파일에서 직접 측정해 만든 것이고, 해석 문장은 아래 근거 약어를 단다.
 
 범위: 한국어(KO)와 언어 무관 폴더만 (사용자 2026-11-07). 0001_EN/JP/SC/TC·0010_EN/JP/SC/TC·DLC 다른 언어 폴더는 다루지 않는다. 0002·0005 아카이브는 `data_formats_archives.md`(K4).
 
-확신도: **확정** = 편집기 오라클/교차 대조/이미 검증된 엔진 표/덤프 일치(근거 약어 표기), **추정** = 값 패턴만, **미해결** = 스펙에 없는 바이트(값 분포 실측 수록). 주의: 이 파일들의 필드 의미는 EXE 읽기 코드(ghidra_full)로 새로 확인한 것이 아니라 참고 모드 분석서(FRM 등)와 기존 엔진 표 + 이번 실측이다 — 코드 확인이 필요한 필드는 미해결/추정으로 남겼다.
+확신도: **확정** = 편집기 오라클/교차 대조/이미 검증된 표/덤프 일치(근거 약어 표기), **추정** = 값 패턴만, **미해결** = 스펙에 없는 바이트(값 분포 실측 수록). 주의: 이 파일들의 필드 의미는 EXE 읽기 코드(ghidra_full)로 새로 확인한 것이 아니라 참고 모드 분석서(FRM 등)와 기존 표 + 이번 실측이다 — 코드 확인이 필요한 필드는 미해결/추정으로 남겼다.
 
-근거 약어: FRM=reference_mod/Modding_DOCS/format/FIXDATA_RECORD_MAP.md · FSIG=FIXDATA_SIGNATURE.md · MISC=MISC_DATA_FILES.md · SBM=SCENARIO_BODY_MAP.md · SGM=SAVE_GENERAL_MAP.md · SCF=SAVE_CITY_FACTION_MAP.md · REA6=REA_Analysis/1022_REA_분석_전체합본.md 6절 · WT=San14Sim/tools/worldmap_tables.py·gen_facility_tables.py(엔진 검증 표) · EXT=San14Sim/tools/extract/*.py · ORIG=origlib 시험이 기존 data/*.json과 대조 · MEAS=이번 실측.
+근거 약어: FRM=reference_mod/Modding_DOCS/format/FIXDATA_RECORD_MAP.md · FSIG=FIXDATA_SIGNATURE.md · MISC=MISC_DATA_FILES.md · SBM=SCENARIO_BODY_MAP.md · SGM=SAVE_GENERAL_MAP.md · SCF=SAVE_CITY_FACTION_MAP.md · REA6=REA_Analysis/1022_REA_분석_전체합본.md 6절 · WT=San14Library/archive/tools/worldmap_tables.py·gen_facility_tables.py(검증 표) · EXT=San14Library/archive/tools/extract/*.py · ORIG=origlib 시험이 기존 data/*.json과 대조 · MEAS=이번 실측.
 
 ## 1. 파일 인벤토리 (무엇이 어디)
 
@@ -759,7 +759,7 @@ API: `origlib.load_fixdata()` -> `{키: [레코드 dict]}` (각 dict 에 `_id`, 
 
 ### 3.z fixdata 정정·충돌 메모
 
-- **정정(해결, L1)**: 기존 `data/tables/terrain.json` 은 51행이었지만 지형 표(ID 8)는 **31행**이다(헤더 `(8,31)`). 뒤 20행은 시설 표 앞부분 바이트였다. `tools/extract/terrain_table.py` 가 origlib 로 31행을 다시 만들고 엔진은 31행을 요구한다. 지도 칸의 지형 ID 는 1..24 뿐이라 영향 없음 (확정, 헤더).
+- **정정(해결, L1)**: 기존 `data/tables/terrain.json` 은 51행이었지만 지형 표(ID 8)는 **31행**이다(헤더 `(8,31)`). 뒤 20행은 시설 표 앞부분 바이트였다. `tools/extract/terrain_table.py` 가 origlib 로 31행을 다시 만들었다. 지도 칸의 지형 ID 는 1..24 뿐이라 영향 없음 (확정, 헤더).
 - **정정**: 시설 표(ID 9)의 레코드 수는 31(ids 0..30)이며 이름 필드는 레코드 +0x00(10B)에 있다 (`gen_facility_tables.py` 의 FAC_NAMES 수동 표는 이 이름과 일치).
 - 도시 레코드 +0x27 u8 은 슬롯 번호(0..51)와 같다 (MEAS) — FRM 에 없던 필드.
 
@@ -1270,11 +1270,11 @@ API: `origlib.load_scenario(id)` -> `Scenario`(name/year/month/category/chain, `
 
 ### 4.z 시나리오 정정·충돌 메모
 
-- **정정(해결, L1)**: 세력 레코드 우호도 배열은 `+0x02` 부터 **52칸**(`+0x35` 까지, 인덱스 = 세력 슬롯, 자기 칸 100)이다. 덤프 1940601 의 세력 행(`+0x14` 부터 51칸 = 런타임 `+0x13+슬롯`)과 51 x 51 = 2601 칸이 모두 일치한다. 옛 `extract.py` 는 `+0x13` 에서 읽어 17칸 밀려 있었다. 시나리오 파일의 세력 슬롯 번호와 도시·무장의 `force` 번호(= 런타임 번호 13,14,15,16..)는 다르다(슬롯 21 = 런타임 16 등): 엔진 행렬은 지배자 무장의 `force` 로 슬롯을 변환한다(`extract.py`).
+- **정정(해결, L1)**: 세력 레코드 우호도 배열은 `+0x02` 부터 **52칸**(`+0x35` 까지, 인덱스 = 세력 슬롯, 자기 칸 100)이다. 덤프 1940601 의 세력 행(`+0x14` 부터 51칸 = 런타임 `+0x13+슬롯`)과 51 x 51 = 2601 칸이 모두 일치한다. 옛 `extract.py` 는 `+0x13` 에서 읽어 17칸 밀려 있었다. 시나리오 파일의 세력 슬롯 번호와 도시·무장의 `force` 번호(= 런타임 번호 13,14,15,16..)는 다르다(슬롯 21 = 런타임 16 등): 변환은 지배자 무장의 `force` 로 슬롯을 찾는다(`extract.py`).
 - **정정(해결, L1)**: 관문 레코드 +3/+7/+11 = (금, 군량, 병사) 이다. 덤프 1940601 관문 52..61 의 병사 3000/0/3000/0/0/2000/3000/2000/1000/2000 이 `+0x0B` 와 일치하고 금·군량은 둘 다 0 이다. 중립 관문의 덤프 내구는 최대의 절반(4000/8000, 2500/5000)이다(시나리오 내구는 최대값).
 - **정정**: 지역 레코드 시작이 청크 base-2 (SBM 의 0x57FC) — 지역 표 한 곳만 청크 base 와 어긋남.
 - **정정(해결, L1)**: 도시 규모는 도시 레코드 +0x14 = 런타임 +0xB8 이다(덤프 1940601 51/51 일치). 시나리오 03·57·8 은 내구 2000/3000/4000 과 1:1 이나 마제(31)는 수춘·강릉이 규모 2·내구 2000 이라 내구로 유도하면 틀린다. 영웅집결(8, 251년)은 전 도시 규모 1. 규모는 플레이 중 도시별로 1→2→3 으로 올라간다(덤프: 1→2 가 196~208년, 2→3 이 202~217년, 도시마다 다른 달; 조건은 rules_domestic 5절 27B4B0 규칙으로 확정). `bases[].size` 가 이 값을 담는다.
-- **해결(L1)**: 기존 `data/scenarios/*.json` 은 11-04 생성, 게임 파일은 11-05 15:21 갱신이라 무장 743 의 개성 순서 한 건이 달랐다(집합은 같음). `tools/extract/extract.py` 를 origlib 호출로 바꿔 4개 시나리오를 다시 만들었다(시험 `tests/test_l1_data.py` 가 JSON = 재생성 결과를 지킨다). 개성은 9칸 중 앞 8칸만 JSON 에 둔다(엔진은 앞 5칸 사용).
+- **해결(L1)**: 기존 `data/scenarios/*.json` 은 11-04 생성, 게임 파일은 11-05 15:21 갱신이라 무장 743 의 개성 순서 한 건이 달랐다(집합은 같음). `tools/extract/extract.py` 를 origlib 호출로 바꿔 4개 시나리오를 다시 만들었다(시험 `tests/test_l1_data.py` 가 JSON = 재생성 결과를 지킨다). 개성은 9칸 중 앞 8칸만 JSON 에 둔다.
 - 표 7(3001x6B)은 칸 슬롯 표로 보임: `u16 칸 번호, u8 시설(0/1 도시 51/2 관문 10), u8 세력, u16 내구` — 도시 51 + 관문 10 이 표 1·2 의 내구와 일치(추정).
 - 표 31 은 오프닝 내레이션 8줄 (213B: u8 종류, u32 a, u32 b, 204B 문장 UTF-16LE). 시험 `Scn` 에 문장 확인 없음, CLI 로 `scenario 2 narration` 확인.
 

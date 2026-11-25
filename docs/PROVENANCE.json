@@ -4,105 +4,105 @@
   "files": [
     {
       "path": "docs/orig/ai_behavior.md",
-      "source": "San14Sim/docs/orig/ai_behavior.md",
-      "source_sha256": "1a0f7d55522216597ebcd38a3bef92cc8485474e9593d141ebaba19afb970726",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; public reading order and omitted generated outputs clarified"
+      "source": "San14Library/docs/orig/ai_behavior.md",
+      "source_sha256": "b24418a49732314f89a7f5ac01bff116be807fdce128c64655e86c6d9e60db8a",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; public reading order and omitted generated outputs clarified; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/build_addresses.md",
-      "source": "San14Sim/docs/orig/build_addresses.md",
-      "source_sha256": "3a0fe5e2791ba5b4bb5d1d89b9e39e7bd611b12f601934c151848ac648233c22",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/build_addresses.md",
+      "source_sha256": "7cfcbf33a7651e59ad9b6cae81f3c3f1eba4aeae9f2facf1390e389911d1fec2",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/data_formats_archives.md",
-      "source": "San14Sim/docs/orig/data_formats_archives.md",
-      "source_sha256": "1fef2f9550995afbae2853624db6147c1267e487134fb0cbc88ef930f50cd4e9",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/data_formats_archives.md",
+      "source_sha256": "8c09516532b93717599376719df12a2ee3841d0770418bd78a0b98081cb6c6b5",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/data_formats_game.md",
-      "source": "San14Sim/docs/orig/data_formats_game.md",
-      "source_sha256": "185eeac1862e885b880bc02f8968847bb9f8f5d833722c2543d60792ffbca2d2",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/data_formats_game.md",
+      "source_sha256": "9340beb49f97d84340016bc400f8dd36d08a49e9fa5337ecd871b66f157913fd",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/functions.md",
-      "source": "San14Sim/docs/orig/functions.md",
-      "source_sha256": "5ba3fa43244a4ccd226c862ed6d1e7fca3b3b961f2683aa0b082ce3349e115df",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/functions.md",
+      "source_sha256": "45035cfe8843ad3544cf4bee4076dde7d6d7d85c895a7cd30cc35862bdd0d9cd",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_combat.md",
-      "source": "San14Sim/docs/orig/rules_combat.md",
-      "source_sha256": "84404d8557f0d0e23e720046111c76381d05d37a2f267d8a81c1214d292d2178",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_combat.md",
+      "source_sha256": "4e51670f16782b39c05c85d0f733305247bb174986aa277ff0ec16c0109616a0",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_combat_effects.md",
-      "source": "San14Sim/docs/orig/rules_combat_effects.md",
-      "source_sha256": "294505cf705eb4775c1cd54eb3ddea9573f0a0272715c3a937b4a6afdfcd9678",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/rules_combat_effects.md",
+      "source_sha256": "0306da9d66edbc16c073597ced8a1ba8122fee0431180081979c913c8ea658b2",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_diplomacy.md",
-      "source": "San14Sim/docs/orig/rules_diplomacy.md",
-      "source_sha256": "21b4d310efbf59734700244281a164335753b61cc18ca71e9031943ff8bd477b",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_diplomacy.md",
+      "source_sha256": "e0cae15680a4d7931e1e4b137c55363a61792b202b4285299c7e896f9fb88fd1",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_domestic.md",
-      "source": "San14Sim/docs/orig/rules_domestic.md",
-      "source_sha256": "51173820b78fab07fe15871bfef7c4a5b066a8b3f087d8cfbd2c6795e8a6bea7",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_domestic.md",
+      "source_sha256": "617eeb4af8d3f27937f6128669fc267a4bc4d5d81de73cde22b0d7382839e6e9",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_movement.md",
-      "source": "San14Sim/docs/orig/rules_movement.md",
-      "source_sha256": "a36d6ba442f00f719c82735e5e40732f1f7c7e8c10f2919cecdaeb1ce0d7a305",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/rules_movement.md",
+      "source_sha256": "3ace9a871f7d25d123b600b4262d5cb33643ab3b92250e5cb2a9bc081dbb2160",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_movement_supply.md",
-      "source": "San14Sim/docs/orig/rules_movement_supply.md",
-      "source_sha256": "0d8fb504defce3eb4d0f2478800ee80472cd18b5a4294f8ec8564e3f5f00a864",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/rules_movement_supply.md",
+      "source_sha256": "7fa0cdd319cb4ce9715711e23edb32d96dd86e3725daf8ed7e842118e294c4eb",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_people.md",
-      "source": "San14Sim/docs/orig/rules_people.md",
-      "source_sha256": "8c410071d6693f2340466a4ab817ebfe037ecb37275ec5ba8cee11760fc7e22c",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_people.md",
+      "source_sha256": "9bcc27d0112a63039e0bd6e48b9a076b2012d3fe35bb5ac570ee71fb5748de24",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_time.md",
-      "source": "San14Sim/docs/orig/rules_time.md",
-      "source_sha256": "537495bfc2c9b0a6e07f85f7ae1c1c586df42a6c8dd03dafa168b23a2a0d6bc8",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_time.md",
+      "source_sha256": "2f88f638180b05cd87af92bf4ca269cfb5d11fb1fcbd4be58c09d642ac81573c",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/rules_tribes.md",
-      "source": "San14Sim/docs/orig/rules_tribes.md",
-      "source_sha256": "004ac530a9b5a1469d7576cee8228bc389d528283020f1fa79c06be516edd3aa",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/rules_tribes.md",
+      "source_sha256": "0efd9727553b0899caf8d76606fe2cc7c6eec4d54c6f1a62f9022fac39fac9e2",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/structs.md",
-      "source": "San14Sim/docs/orig/structs.md",
-      "source_sha256": "2b297e206581fa056bc291acb61d1d79562a7c3393f0d0df034b7072ac4eca34",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained"
+      "source": "San14Library/docs/orig/structs.md",
+      "source_sha256": "a32378414158e5b610a6c1a8b46cee1c52158d445dfa6bab19c381cb31f0884b",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; clearly separate San14Sim implementation-comparison sections replaced by scope notices, original section numbers retained; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ui_native.md",
-      "source": "San14Sim/docs/orig/ui_native.md",
-      "source_sha256": "64d13f0626009919f0aaff2f80ae8cd1b46e5f33d73151d7ab83d301ebb501eb",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ui_native.md",
+      "source_sha256": "bcdb1209673570916133ac61f02bbad4c1da0aa494fb8dffc890e1bae6650049",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/conditions.md",
-      "source": "San14Sim/docs/orig/ai/conditions.md",
-      "source_sha256": "41fda891dd63fe9c0dd698efad9b7fefeacb4f6a6b05222d243dc53372368c67",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/conditions.md",
+      "source_sha256": "37f90a75c51fcd8b9f5feb8a598cdf5060cb4f62b702ab35ed6e76a7a50cefb6",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/data_locations.md",
@@ -118,21 +118,21 @@
     },
     {
       "path": "docs/orig/ai/formulas.md",
-      "source": "San14Sim/docs/orig/ai/formulas.md",
-      "source_sha256": "e306f73b416704fcf67cdd5e3aa1b18984fe030eee23ec6c7eaaf433f2baa713",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/formulas.md",
+      "source_sha256": "09bbc5985a0c578ad255b55bf60dfd274eb9069e7c5a084a0d17e797fe3372c9",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/node_kinds.md",
-      "source": "San14Sim/docs/orig/ai/node_kinds.md",
-      "source_sha256": "76e8a474fa1741de7cf70b09e726fe9efef956abedd07b8a1705f52e717b9762",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/node_kinds.md",
+      "source_sha256": "f910c15ea36b1d4012e962db29dd0c9614024180b681d4809fa31cb784946bcd",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/roles.md",
-      "source": "San14Sim/docs/orig/ai/roles.md",
-      "source_sha256": "c6fd8ab2b7361e97d29eff41f6f86a4468daaf62378d58ed681a08bf91e7752a",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/roles.md",
+      "source_sha256": "04fb03b589281968290464a95299198498cd30e7b4370164daf4e93c8ea4c554",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/rulebase.md",
@@ -142,27 +142,27 @@
     },
     {
       "path": "docs/orig/ai/schedule.md",
-      "source": "San14Sim/docs/orig/ai/schedule.md",
-      "source_sha256": "ad5e6a4561bc95d947ab2ceab9a9e1033ab75a77c3570ca602eaa32d5ac255e9",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/schedule.md",
+      "source_sha256": "09f2326984d6d6656c6ab909baab4bf49d6e36b0a558bc988b32fc46221d49d0",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/ai/unresolved.md",
-      "source": "San14Sim/docs/orig/ai/unresolved.md",
-      "source_sha256": "e23b9c6e805989c677a1b934107c6268fb44973d8d2e65952ad304a1bcfcd196",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed"
+      "source": "San14Library/docs/orig/ai/unresolved.md",
+      "source_sha256": "ccf8a0ff4a11e0dc85adde83db75eb4c0db03d0fe03b172e12c9c583617fea5b",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; trailing whitespace removed; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/functions.json",
-      "source": "San14Sim/docs/orig/functions.json",
-      "source_sha256": "181fdbd0f480e05e212de4e54c0b28119ca55c90181496ab7eac1e033cb16a22",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+      "source": "San14Library/docs/orig/functions.json",
+      "source_sha256": "6d2d73c6745b57be0e4990a40fa0768396ce663a19bcba551e208037c5c9493f",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/structs.json",
-      "source": "San14Sim/docs/orig/structs.json",
-      "source_sha256": "9889ebb2b78866880e76390e827395f8e22eb7b3b98b419cbb99140f66924b84",
-      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations"
+      "source": "San14Library/docs/orig/structs.json",
+      "source_sha256": "8995c6166c0fd6be8beabcd09ad7ec741c2ce01ced0a18dd9d2192851d4227e2",
+      "transform": "UTF-8/LF; personal user profile paths redacted; historical source paths retained as citations; 2026-11-25 re-sync from San14Library (simulator engine columns/fields removed, 5th static node-reading pass merged; public scope notices kept)"
     },
     {
       "path": "docs/orig/event_opcodes.json",

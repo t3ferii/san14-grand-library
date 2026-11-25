@@ -81,33 +81,32 @@
 ## 3. 변환 방법
 
 1. **함수 시작 주소**: `functions.tsv`(열: old, new, size_old, size_new, status, evidence, kind) — 옛 RVA 정렬. 함수 안 중간 주소는 같은 크기이면 같은 오프셋이 유지된다(`same-asm(mid)`). 이 폴더의 `functions.json` 키가 새 RVA, `old` 필드가 옛 RVA.
-2. **도구**: `python -X utf8 AI_TacticsMod/tools/rva_remap.py map <RVA>`(함수·내부 주소·vtable 슬롯·데이터), `rva_remap.py all`(대응표 재생성 약 2분), `San14Sim/tools/build_remap.py`(San14Sim 문서·소스가 인용한 RVA 전수 대응·렌더), `tools/pe_const.py`(양쪽 PE 상수).
+2. **도구**: `python -X utf8 AI_TacticsMod/tools/rva_remap.py map <RVA>`(함수·내부 주소·vtable 슬롯·데이터), `rva_remap.py all`(대응표 재생성 약 2분), `San14Library/archive/tools/build_remap.py`(문서가 인용한 RVA 전수 대응·렌더), `tools/pe_const.py`(양쪽 PE 상수).
 3. **판정 순서**: 수동 판정(`b_verdicts.json`, BUILD_25953386_REMAP §5.1)이 자동 대응보다 우선. 예: `BF7A40→1137FF0`은 자동 대응이 틀렸고 수동 판정으로 고정(5바이트 getter, 쌍둥이 `BFA210` 아님).
-4. **엔진 소스 주석 RVA는 이미 새 빌드 값**이다. tests/·docs/·tools/의 RVA와 test 이름은 옛 값 그대로(sim.h 머리말, build_remap.md §1). `Data::build`가 공식 집합을 고른다(1=새, 0=옛; 덤프 비교 도구용).
-5. **모드 DLL의 주소 관리**: 중앙 주소표 도입이 REMAP §4의 권고이고, 현재는 `tools/gen_signatures.py`가 `b_verdicts.json`을 읽어 빌드별 RVA·바이트 가드(§5.4)를 낸다. 모르는 빌드에서는 probe 불일치로 해당 기능만 꺼진다(PATCH_RESILIENCE.md).
+4. **모드 DLL의 주소 관리**: 중앙 주소표 도입이 REMAP §4의 권고이고, 현재는 `tools/gen_signatures.py`가 `b_verdicts.json`을 읽어 빌드별 RVA·바이트 가드(§5.4)를 낸다. 모르는 빌드에서는 probe 불일치로 해당 기능만 꺼진다(PATCH_RESILIENCE.md).
 
-## 4. 불변/변경 판정 요약 (규칙 함수 엔진 인용분 build_remap.md §2)
+## 4. 불변/변경 판정 요약 (규칙 함수 인용분 build_remap.md §2)
 
-- 엔진이 공식을 따온 함수 중 **본문 불변** 다수(명령어열·상수 동일). 단 **호출 사슬 변경** 표시가 붙은 것은 하위 호출이 바뀐 것: 대표 4종 ① `22FCE0→231770` 능력 getter에 bit14/item 7B 검사 추가(무해) ② `2B07C0→2B2A90` 인접 모드 게이트 ③ `2B21A0/2B2440/2A9E50/2AA2E0/2B0290` 정책 효과 0x30 지형 항(현 표 e=0이라 휴면) ④ `185B30→186E60` 소유 변경에 알림 호출 +1(이벤트만).
-- 상수: 규칙 함수·호출 사슬에서 값이 바뀐 **.data 상수는 `266C50`(새 268600)의 3개(300→360)뿐**. 엔진 인용 .data/.rdata 상수 173개는 짝지은 새 주소에서 같은 값.
+- 규칙 공식 함수 중 **본문 불변** 다수(명령어열·상수 동일). 단 **호출 사슬 변경** 표시가 붙은 것은 하위 호출이 바뀐 것: 대표 4종 ① `22FCE0→231770` 능력 getter에 bit14/item 7B 검사 추가(무해) ② `2B07C0→2B2A90` 인접 모드 게이트 ③ `2B21A0/2B2440/2A9E50/2AA2E0/2B0290` 정책 효과 0x30 지형 항(현 표 e=0이라 휴면) ④ `185B30→186E60` 소유 변경에 알림 호출 +1(이벤트만).
+- 상수: 규칙 함수·호출 사슬에서 값이 바뀐 **.data 상수는 `266C50`(새 268600)의 3개(300→360)뿐**. 인용 .data/.rdata 상수 173개는 짝지은 새 주소에서 같은 값.
 - `same` 641 / `data_pair` 166 / `not_rva` 33 / `changed_aligned` 28 / `manual:same-asm` 16 / `manual:same-hook` 13 / `data_eq` 12 / `same-asm(mid)` 11 / `data_ref` 11 / `changed_unaligned` 7 / `data_diff` 4 / `unmatched` 1 / `data_assumed` 1 (build_remap.json 944 항목 집계).
 
 ## 5. 공식·동작이 바뀐 함수 (build_remap.md §2에서 '변경' 판정)
 
 | 옛 | 새 | 내용(요약) |
 |---|---|---|
-| `22FCE0` | `231770` | ability getter (callee of most formulas): person word +0x15E bit 14 now gates the item-0x7B "stat = 100" override (ability index 4); the inline "difficulty / computer-force" test became the helper 407E0 (+0xE6 != 1, 234AB0 == 0, bit 14 == 0, byte +0x1BC) = same logic. Items are not modelled -> engine unchanged. |
-| `266C50` | `268600` | domestic development (commerce/agriculture/barracks): instruction-identical, but the three multipliers DAT_141a49f78/6C/84 (old) -> DAT_141a4cfe0/D4/EC (new) changed 300 -> 360 (x1.2 growth). ENGINE CHANGED: development_base gain 360 (300 for Data::build == 0). `22FCE0`->`231770`: ability getter bit-14/item 7B (see 22FCE0) |
-| `2695D0` | `26AF80` | supply consumption: the old subtracted term int(policy effect 0x40 x base/100) for unit classes 11..13 on terrain 14/24 is gone; the rest (base 40/30/10, tile reduction +0x19, effect 0xB/0x14 terms, 0x43 foreign-territory term, 3EA400 expert term) is the same. The simulator never modelled the removed term -> unchanged. |
-| `29EDE0` | `2A0CF0` | unit enters a site: the type-2 follow-up block (second capacity clamp + experience award) now only runs when officer word +0xE2 != army word +0x4E; the troop/wounded clamps are instruction-identical. Condition meaning unknown; simulator body unread (APPROX unchanged). |
-| `2A9E50` | `2AC0A0` | defender B: same NEW (100 + e)/100 term after "+ 1.0 / durability" and before the flank factor (param_5 != 0); constants identical; engine wired, inert. |
-| `2AA2E0` | `2AC5A0` | pasung (army siege power): same NEW term after max(1, ...) (no param_5 test); constants identical (100.0 kept in a register instead of reloaded); engine wired, inert. |
+| `22FCE0` | `231770` | ability getter (callee of most formulas): person word +0x15E bit 14 now gates the item-0x7B "stat = 100" override (ability index 4); the inline "difficulty / computer-force" test became the helper 407E0 (+0xE6 != 1, 234AB0 == 0, bit 14 == 0, byte +0x1BC) = same logic. |
+| `266C50` | `268600` | domestic development (commerce/agriculture/barracks): instruction-identical, but the three multipliers DAT_141a49f78/6C/84 (old) -> DAT_141a4cfe0/D4/EC (new) changed 300 -> 360 (x1.2 growth). `22FCE0`->`231770`: ability getter bit-14/item 7B (see 22FCE0) |
+| `2695D0` | `26AF80` | supply consumption: the old subtracted term int(policy effect 0x40 x base/100) for unit classes 11..13 on terrain 14/24 is gone; the rest (base 40/30/10, tile reduction +0x19, effect 0xB/0x14 terms, 0x43 foreign-territory term, 3EA400 expert term) is the same. |
+| `29EDE0` | `2A0CF0` | unit enters a site: the type-2 follow-up block (second capacity clamp + experience award) now only runs when officer word +0xE2 != army word +0x4E; the troop/wounded clamps are instruction-identical. Condition meaning unknown. |
+| `2A9E50` | `2AC0A0` | defender B: same NEW (100 + e)/100 term after "+ 1.0 / durability" and before the flank factor (param_5 != 0); constants identical; inert. |
+| `2AA2E0` | `2AC5A0` | pasung (army siege power): same NEW term after max(1, ...) (no param_5 test); constants identical (100.0 kept in a register instead of reloaded); inert. |
 | `2B0290` | `2B2550` | move cost: same NEW (100 + e)/100 term (e = effect 0x30, terrain byte +0x42 in {2,4}); the 0x3B/0x3C force-effect block is unchanged (its "(flags>>1)&1" test became the helper 711B0(unit,1)); constants identical. |
-| `2B07C0` | `2B2A90` | adjacent-region effect: the computer-force override (difficulty 3 -> 16, 4 -> 24 percent) no longer tests 3EB2A0 (standard-mode flag), so it also applies in expert mode; for the standard mode the simulator uses the values are identical (4 / 16 / 24, constants re-read). Prologue push r15 -> r14. |
-| `2B21A0` | `2B4460` | unit attacker A: NEW last factor (100 + e)/100, e = policy effect 0x30 (22DB30) of the force, only if e > 0 and terrain byte +0x42 of the tile object in {2,4} and param_5 != 0 (unit participants only); constants identical. e = 0 in every table -> inert; engine: terrain_policy_pct wired (combat_formulas.h). |
-| `2B2440` | `2B4750` | siege attack input of a unit: same NEW (100 + e)/100 term as 2B4460; constants identical; engine wired, inert. |
+| `2B07C0` | `2B2A90` | adjacent-region effect: the computer-force override (difficulty 3 -> 16, 4 -> 24 percent) no longer tests 3EB2A0 (standard-mode flag), so it also applies in expert mode; for the standard mode the values are identical (4 / 16 / 24, constants re-read). Prologue push r15 -> r14. |
+| `2B21A0` | `2B4460` | unit attacker A: NEW last factor (100 + e)/100, e = policy effect 0x30 (22DB30) of the force, only if e > 0 and terrain byte +0x42 of the tile object in {2,4} and param_5 != 0 (unit participants only); constants identical. e = 0 in every table -> inert. |
+| `2B2440` | `2B4750` | siege attack input of a unit: same NEW (100 + e)/100 term as 2B4460; constants identical; inert. |
 
-규칙 영향 요약: 새 빌드 규칙 변경 = ①지역 개발 증가 300→360(`268600`) ②정책 효과 0x30 지형 항 4함수(휴면) ③부대 군량 `26AF80`에서 효과 0x40 감소 항 삭제 ④인접효과 `2B2A90` 숙련 모드 적용 범위 확대 ⑤`2A0CF0`(옛 29EDE0) 입성 후속 블록 조건 변경(미모델). 그 외 엔진 규칙은 본문 불변(RULES.md 42절, build_remap.md §2).
+규칙 영향 요약: 새 빌드 규칙 변경 = ①지역 개발 증가 300→360(`268600`) ②정책 효과 0x30 지형 항 4함수(휴면) ③부대 군량 `26AF80`에서 효과 0x40 감소 항 삭제 ④인접효과 `2B2A90` 숙련 모드 적용 범위 확대 ⑤`2A0CF0`(옛 29EDE0) 입성 후속 블록 조건 변경. 그 외 규칙은 본문 불변(build_remap.md §2).
 
 ## 6. 데이터·전역 주소 (새 / 옛)
 
@@ -176,5 +175,5 @@ world 구조체(`image+0x277DF18`→`image+0x2780F60`)의 필드 오프셋 22종
 
 ## 12. 출처
 
-- 기준·방법: San14Sim/docs/fidelity/build_remap.md(.json) · AI_TacticsMod/docs/BUILD_25953386_REMAP.md · BUILD_25953386_COMBAT.md · SESSION_RULES.md §7 · GHIDRA_PERSISTENT.md · AI_TacticsMod/research/rva_map/1fbe6be7_to_1a4a447d/{functions.tsv,data.tsv,addr_table.json,summary.json,b_verdicts.json,impact_summary.json}.
+- 기준·방법: San14Library/archive/fidelity/build_remap.md(.json) · AI_TacticsMod/docs/BUILD_25953386_REMAP.md · BUILD_25953386_COMBAT.md · SESSION_RULES.md §7 · GHIDRA_PERSISTENT.md · AI_TacticsMod/research/rva_map/1fbe6be7_to_1a4a447d/{functions.tsv,data.tsv,addr_table.json,summary.json,b_verdicts.json,impact_summary.json}.
 - 오래된 서술(변환 필요): AI_TacticsMod/docs/NATIVE_FUNCTIONS.md(444 RVA 중 옛 시작 318, changed 35), REA_Analysis/*, pre6_*·combat6·r4/r5·calendar. 상태 판정은 functions.md §8 / structs.md §9.

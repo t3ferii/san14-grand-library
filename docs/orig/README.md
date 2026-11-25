@@ -30,6 +30,6 @@
 
 ## 초기 이관 자료의 한계
 
-기존 조사에서 인용한 `San14Sim/docs/fidelity`, `AI_TacticsMod/research`, `REA_Analysis` 등은 공개 패키지에 포함되지 않는다. 문서 안의 경로는 역사 출처를 식별하기 위한 것이며 실행할 지침이 아니다. [이전 출처 안내](../ARCHIVE_REFERENCES.md)를 따른다. 전수 AI 트리·원작 대량 추출물은 로컬 데이터 리더로 조회한다.
+기존 조사에서 인용한 `San14Sim/docs/fidelity`(2026-11-25부터 `San14Library/archive`), `San14Library/reports`, `AI_TacticsMod/research`, `REA_Analysis` 등은 공개 패키지에 포함되지 않는다. 문서 안의 경로는 역사 출처를 식별하기 위한 것이며 실행할 지침이 아니다. [이전 출처 안내](../ARCHIVE_REFERENCES.md)를 따른다. 전수 AI 트리·원작 대량 추출물은 로컬 데이터 리더로 조회한다.
 
 함수 의미·오프셋을 모드에 쓸 때는 문서의 서술뿐 아니라 대상 빌드의 바이트·호출자·ABI를 확인한다. [대도서관 규칙](../LIBRARY_RULES.md)과 [AI 조회 순서](../AI_WORKFLOW.md)를 따른다.
