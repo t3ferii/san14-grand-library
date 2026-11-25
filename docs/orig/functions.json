@@ -1,33 +1,34 @@
 {
  "meta": {
-  "generated": "2026-11-17",
+  "generated": "2026-11-25",
   "scope": "FUNC",
   "baseline_build": "1a4a447d14e68c40 (Steam buildid 25953386)",
   "old_build": "1fbe6be7466a6646",
   "note": "키는 새 RVA(hex). old=옛 RVA. conf: 확정/코드/추정/미해결. curated=false 항목은 자동 색인(ctx만)",
   "counts": {
-   "curated": 334,
-   "auto": 671,
-   "total": 952,
+   "curated": 343,
+   "auto": 618,
+   "total": 961,
    "by_class": {
-    "AI 판단": 29,
-    "시설·건설": 18,
-    "UI": 20,
-    "이동·경로": 21,
-    "인사": 32,
+    "AI 판단": 68,
+    "시설·건설": 19,
+    "UI": 24,
+    "이동·경로": 23,
+    "인사": 34,
     "전투·피해": 38,
     "전법": 23,
-    "점령·칸소유": 15,
+    "전법 계열": 1,
+    "점령·칸소유": 16,
     "계략": 8,
+    "데이터 접근": 15,
     "내정·경제": 18,
-    "개성·정책 효과": 14,
-    "데이터 접근": 6,
+    "개성·정책 효과": 16,
     "능력치": 3,
     "보급·병참": 11,
     "외교": 10,
     "이민족·도적": 3,
     "시간·상태기계": 6,
-    "난이도·설정": 4,
+    "난이도·설정": 5,
     "난수": 2
    },
    "conflicts": 9
@@ -20296,6 +20297,174 @@
     "rules_people.md §9.1"
    ],
    "conf": "확정"
+  },
+  {
+   "new": "B6A40",
+   "old": "옛 B59B0",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "세력 판단표 진입",
+   "cls": "AI 판단",
+   "role": "AI 켜짐(`+0x30`)과 `C21A0(AI, 세력)` 검사 뒤 `C9320(세력)`(사전 처리)·`BDF60(AI, 세력)`으로 세력 판단표 인스턴스 획득. `*(세력+0x20D)=0` 초기화 후 vtable`+0x80` 뿌리 실행, `세력+0x20D`가 0이 아니면 `B28300` 후 재실행(군단`+0x2A`·군세`+0x38`과 같은 형태). 끝에 `B4A40(세력)`(5KB 세력 판단 사후 처리: 군단·군세 명령 반영). 188바이트. 호출 `D4DE0`(자리 `D4DF7`)",
+   "io": "(AI 관리자, 세력)",
+   "src": [
+    "ghidra_full.py func B6A40 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B6B00",
+   "old": "옛 B5A70",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "군세 판단표 진입",
+   "cls": "AI 판단",
+   "role": "`22E560(군세)`로 군세 세력 획득 후 `C21A0(AI, 세력)` 검사. `C0DA0(AI, 군세)`로 군세 판단표 인스턴스 획득. 판단 전: 군세 소속 모든 부대의 경유점 5칸을 `2F05A0(부대, i, 0xBD10)`으로 클리어. 최대 10회 반복(`iVar6<=9`): `*(군세+0x38)=0` 후 군세 부대 목록 체크 → vtable`+0x80` 뿌리 실행, `군세+0x38`이 1이면 `B28300` 후 `iVar6+1`. 끝에 `CE7E0(군세)`·`B0EA0(AI_ptr, 군세)` 사후 처리, 결과가 3이 아니면 `B28300`. 490바이트. 호출 `D4E20`(자리 `D4E5E`)",
+   "io": "(AI 관리자, 군세)",
+   "src": [
+    "ghidra_full.py func B6B00 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B65D0",
+   "old": "옛 B5540",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "부대 판단표 진입",
+   "cls": "AI 판단",
+   "role": "건너뛰기 조건(순서대로): ① AI 비활성, ② `부대+0x58`로 세력 획득(`22E560`)·`C21A0` 실패, ③ `2CB6C0(부대)!=0`(수동), ④ `부대+0x10==2`(군세 종류 2)이면 군단 행동설정`+0x14==0xC` 조건에서만 `9D870`으로 계획 획득·경유점 설정 후 리턴(그 밖 종류 2는 그냥 리턴), ⑤ `부대+0x37`(행동값)-0xB가 byte로 1 이하이면(== 0xB 또는 0xC) `C7E50(경유점)`·`C70F0(길찾기)`만 하고 리턴. 위 조건 모두 아니면 `B9920(AI, 부대)`으로 판단표 인스턴스 → vtable`+0x80`. 351바이트. 호출 `D4D00`(자리 `D4D2E`)",
+   "io": "(AI 관리자, 부대)",
+   "src": [
+    "ghidra_full.py func B65D0 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B2EB30",
+   "old": "옛 B2C260",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [
+    "문맥+0xc"
+   ],
+   "name": "선택 노드 실행",
+   "cls": "AI 판단",
+   "role": "자식 조건(vtable`+0x38`)을 순서 배열(`문맥+0x28`)로 순회, true인 첫 번째 자식 번호를 `문맥+0xc`에 저장 → 3(실행 중) 반환; 모두 false면 2(실패); 입력 `*param_2`가 1 또는 3이면 즉시 중단(1·3 반환). `인스턴스+0x34`=1 플래그 세움. 231바이트",
+   "io": "(인스턴스, 현재인덱스*, 문맥, .., world)",
+   "src": [
+    "ghidra_full.py func B2EB30 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B2E960",
+   "old": "옛 B2C090",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [
+    "문맥+0xc"
+   ],
+   "name": "순서/시퀀스 노드 실행",
+   "cls": "AI 판단",
+   "role": "B2EB30과 동일 구조이나 모두 false면 1(실패) 반환; 입력이 2 또는 3이면 즉시 중단",
+   "io": "(인스턴스, 현재인덱스*, 문맥, .., world)",
+   "src": [
+    "ghidra_full.py func B2E960 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B2EA50",
+   "old": "옛 B2C180",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [
+    "문맥+0xc"
+   ],
+   "name": "전체검토 노드 실행",
+   "cls": "AI 판단",
+   "role": "`*param_2==3`이면 즉시 3(이어 실행); 나머지는 B2EB30 동일 구조(모두 false → 1). 215바이트",
+   "io": "(인스턴스, 현재인덱스*, 문맥, .., world)",
+   "src": [
+    "ghidra_full.py func B2EA50 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B28300",
+   "old": "옛 B25A50",
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "문맥 정리(문맥 풀 초기화)",
+   "cls": "AI 판단",
+   "role": "인스턴스 내 모든 노드 `vtable+0x10`(리셋) 호출 후 `인스턴스+0x30=-1`·`+0x38=0`으로 스택·빠른 슬롯 비움. 판단 결과 3(실행 중)이면 B6730/B6A40/B6B00이 이 함수를 호출하지 않아 문맥이 다음 순까지 남음. 117바이트",
+   "io": "(인스턴스)",
+   "src": [
+    "ghidra_full.py func B28300 (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "B6730",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "군단 판단표 실행",
+   "cls": "AI 판단",
+   "role": "AI 켜짐(`DAT_141B9D4F0+0x30`)과 `C21A0(AI, 세력)` 검사 뒤 군단의 판단표 인스턴스(`BB2E0(AI, 군단)`)를 얻는다. 블랙보드 키 `0x6FF4E238`(`\"CAUTION_TROOPS_LIST\"` 해시)의 목록을 `B28D20`으로 획득·`37DF00`으로 초기화 후, `world+0x80BA8..+0x81B50` 경계군세(CCautionTroops) 포인터 배열(최대 501항목; `+0x14`=군단번호, vtable`+0x18`=활성 여부)에서 현재 군단 번호(`22F650`)와 일치하는 항목을 그 목록에 넣는다(`18D50`, CriticalSection 보호). 그다음 `군단+0x2A = 0`으로 두고 인스턴스 `+8` 객체의 vtable `+0x80`(뿌리 실행)을 부르며, 실행 뒤 `군단+0x2A`가 0이 아니면 `B28300(인스턴스)` 후 다시 부른다(`군단+0x2A`는 판단표 내부 노드가 1로 쓴다). 끝에 `235150(세력 AI 체크)`, 결과가 3(실행 중)이 아니면 `B28300`, `B28DE0`으로 `\"CAUTION_TROOPS_LIST\"` 목록에서 현재 군단 소속 항목을 제거·정리한다. 775바이트. 호출자는 `D4D70`(자리 `D4DBE`) 하나",
+   "io": "(관리자+0x18의 값, 군단)",
+   "src": [
+    "ghidra_full.py func/callers (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "코드"
+  },
+  {
+   "new": "22F190",
+   "old": null,
+   "status": null,
+   "curated": true,
+   "note": null,
+   "docs_n": 0,
+   "ctx": null,
+   "engine_loc": [],
+   "name": "거점 중심 칸",
+   "cls": "데이터 접근",
+   "role": "거점(도시·관문) 객체 `+0x4E`(건물 id, 0xBB9 미만)로 world `+0x6DA98` 건물 표를 읽고, 건물이 유효(`331780`)하면 건물 `+0x10`(칸), 아니면 `0xBD10`. 77바이트",
+   "io": "(거점) → u16 칸",
+   "src": [
+    "ghidra_full.py func/callers (1a4a447d, 2026-11-25)"
+   ],
+   "conf": "확정(코드)"
   }
  ],
  "globals": [
