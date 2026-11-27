@@ -20,6 +20,7 @@
 | 함수 | [functions.md](functions.md), [functions.json](functions.json) |
 | 구조체·필드 | [structs.md](structs.md), [structs.json](structs.json) |
 | 빌드 간 주소 | [build_addresses.md](build_addresses.md) |
+| 턴 주기 함수 전수(리프트 실행 기록: 호출 수·비용) | [cycle/README.md](cycle/README.md) — 10일 턴 → 컴퓨터 전략 → 10일 진행에서 돈 함수 3,937개 전부, 해석은 분류별 쪽에 합쳐 있다 |
 | 전투 | [교전·피해식](rules_combat.md), [전법·개성·효과](rules_combat_effects.md) |
 | 이동·병참 | [이동](rules_movement.md), [병참·보급](rules_movement_supply.md) |
 | 날짜·이벤트 | [날짜 처리](rules_time.md), [이벤트 opcode 색인](event_opcodes.json) |

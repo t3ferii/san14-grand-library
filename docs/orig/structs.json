@@ -1,16 +1,16 @@
 {
  "meta": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-27",
   "scope": "STRUCT",
   "baseline_build": "1a4a447d14e68c40 (Steam buildid 25953386)",
   "note": "오프셋은 두 빌드 동일(build_remap.md §1). 필드 conf: 확정/추정/충돌/미해결",
   "counts": {
    "structs": 26,
-   "fields": 360,
+   "fields": 364,
    "by_conf": {
-    "확정": 329,
+    "확정": 334,
     "추정": 18,
-    "미해결": 8,
+    "미해결": 7,
     "코드": 4,
     "충돌": 1
    },
@@ -35,6 +35,22 @@
      "meaning": "도시 객체 표(stride 0x168, 객체 앵커 +0x34). 도시 id 0~0x33",
      "src": "DM 주소 기준점",
      "conf": "확정"
+    },
+    {
+     "off": "+0xDC80",
+     "width": "-",
+     "name": "state_table",
+     "meaning": "주(州) 객체 표 23칸(8B 포인터; fixdata 표 `state`와 같은 번호). 도시 `+0xCE`(byte) 가 번호, `935F0`이 조회(범위 밖은 0번). 주 `+0x30`(byte) = state.geo(0..17) = 지방 이점 번호(`92AE0`)",
+     "src": "L3 5차(`A5B10`·`935F0`·`2C9120`)",
+     "conf": "확정"
+    },
+    {
+     "off": "+0x85990",
+     "width": "-",
+     "name": "geo_advantage_table",
+     "meaning": "지방 이점 객체 표 18칸(주 `+0x30` 색인, 0 = 없음). 객체 `+0x95`(byte) = 기준 도시 수 cap(+0xA0..A8 목록이 5원소면 vcall +0x48 로 계산), 번호 `22F440`(조건 140)",
+     "src": "L3 5차(`93480`·`2C9120`)",
+     "conf": "확정(위치·기준값)/추정(이점 효과 내용)"
     },
     {
      "off": "+0xDED8",
@@ -136,7 +152,7 @@
      "off": "+0x78490",
      "width": "table",
      "name": "rank_post_table",
-     "meaning": "관직 순위 표 — 엔진 미추출 항목(approx_inventory S8/D3)",
+     "meaning": "관직 순위 표",
      "src": "approx_inventory.md S8",
      "conf": "추정"
     },
@@ -199,10 +215,10 @@
     {
      "off": "+0x85A90",
      "width": "list",
-     "name": "hidden_object_list",
-     "meaning": "숨은 물건(명품·전법서) 목록 — 정적 데이터에 없음",
-     "src": "approx_inventory.md P6",
-     "conf": "미해결"
+     "name": "scenery_table",
+     "meaning": "명승(Scenery) 표 101칸(간격 0x78). 객체 `+0x5C` = 칸, `+0x5F` bit0, `+0x64`/`+0x66`/`+0x68`/`+0x6C` = 투자·발전 필드(`8B190` case 44 조건: +0x64==1, +0x6C 1..5, +0x66==0, +0x68<1). 이전 \"숨은 물건 목록\" 해석은 정정",
+     "src": "L3b 2차(`8FFA0`, `2826B0`)",
+     "conf": "확정(표 종류)/추정(필드 이름)"
     },
     {
      "off": "+0x85DF0",
@@ -243,6 +259,22 @@
      "meaning": "부대 연결 목록 핸들(`*핸들` = 목록 번호). 노드 `{+0 부대, +8 next, +0x10 prev}`",
      "src": "`2B2390`·`24C8C0` (2026-11-25 판독, 디컴파일 대조)",
      "conf": "확정(위치·노드 모양)/미해결(용도)"
+    },
+    {
+     "off": "+0x80",
+     "width": "-",
+     "name": "base_link_list",
+     "meaning": "거점(도시·관문) 연결 목록 핸들. `32E3B0`이 거점 번호(객체 `+0x4E`, 0x3E 미만)로 찾고, 번호 0이면 city_table 0번, 못 찾으면 목록 첫 항목을 돌려준다",
+     "src": "`32E3B0` (2026-11-27 판독, 디컴파일 대조)",
+     "conf": "확정(위치·검색 키)/추정(내용 = 거점)"
+    },
+    {
+     "off": "+0x90",
+     "width": "-",
+     "name": "city_link_list",
+     "meaning": "도시 연결 목록 핸들. 도시 `+0xCE` = 주 번호(`2ABCD0`이 같은 주의 도시를 모은다). 교전 참가자 순회가 부대 목록 다음에 돈다",
+     "src": "functions.md `B2D30` 검토 행; rules_combat.md 참가자 순회(`171160`); `2ABCD0`",
+     "conf": "확정"
     },
     {
      "off": "+0x872C0",
